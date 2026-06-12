@@ -1,7 +1,6 @@
 [package]
-name = "cafetaria"
+name = "utility"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-utility = { path = "../utility" }
