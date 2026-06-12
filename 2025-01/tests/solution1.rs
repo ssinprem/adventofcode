@@ -1,8 +1,7 @@
 use secret_entrance::part1::*;
+use utility::test_case;
 
-#[test]
-fn basic() {
-    let input = 
+test_case!(basic, solution1, 3,
 "L68
 L30
 R48
@@ -13,68 +12,26 @@ L1
 L99
 R14
 L82
-".to_string();
-    let expect = 3;
-    let output = solution1(input.clone());
-    assert_eq!(output, expect);
+");
 
-    let output = solution2(input.clone());
-    assert_eq!(output, expect);
+test_case!(double_large_rotation, solution1, 0,
+"R1000
+L2000");
 
-    let output = solution3(input.clone());
-    assert_eq!(output, expect);
-
-    let output = solution4(input.clone());
-    assert_eq!(output, expect);
-}
-
-#[test]
-fn double_large_rotation() {
-    let input = "
-R1000
-L2000".to_string();
-    let expect = 0;
-    let output = solution1(input);
-    assert_eq!(output, expect);
-}
-
-#[test]
-fn boundary_extact_zero_landing() {
-    let input = "
-L50
+test_case!(boundary_extact_zero_landing, solution1, 3,
+"L50
 R100
 L100
-R5
-"
-    .to_string();
-    let expect = 3;
-    let output = solution1(input);
-    assert_eq!(output, expect);
-}
+R5");
 
-#[test]
-fn passing_thru_0_without_end_onit() {
-    let input = "
-L60
+test_case!(passing_thru_0_without_end_onit, solution1, 0,
+"L60
 R20
 R80
-"
-    .to_string();
-    let expect = 0;
-    let output = solution1(input);
-    assert_eq!(output, expect);
-}
+");
 
-#[test]
-fn no_hits() {
-    let input = "
-R10
+test_case!(no_hits, solution1, 0,
+"R10
 L20
 R5
-L3
-"
-    .to_string();
-    let expect = 0;
-    let output = solution1(input);
-    assert_eq!(output, expect);
-}
+L3");

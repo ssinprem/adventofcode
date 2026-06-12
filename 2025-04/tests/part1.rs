@@ -1,9 +1,8 @@
 use print_dept::part1::*;
+use utility::test_case;
 
-#[test]
-fn example() {
-
-    let file = "..@@.@@@@.
+test_case!(example, solve, 13,
+"..@@.@@@@.
 @@@.@.@.@@
 @@@@@.@.@@
 @.@@@@..@.
@@ -12,7 +11,4 @@ fn example() {
 .@.@.@.@@@
 @.@@@.@@@@
 .@@@@@@@@.
-@.@.@@@.@.".to_string();
-
-    assert_eq!(solve(file), 13);
-}
+@.@.@@@.@.");

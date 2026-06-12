@@ -1,8 +1,8 @@
 use secret_entrance::part2::*;
+use utility::test_case;
 
-#[test]
-fn basic() {
-    let input = "
+test_case!(basic, solution1, 6,
+"
 L68
 L30
 R48
@@ -13,129 +13,67 @@ L1
 L99
 R14
 L82
-".to_string();
-    let expect = 6;
-    let output = solution1(input);
-    assert_eq!(output, expect);
-}
+");
 
-#[test]
-fn at_crossing_zero_once() {
-    let input = "
+test_case!(at_crossing_zero_once, solution1, 4,
+"
 R60
 L20
 R20
 L20
-".to_string();
-    let expect = 4;
-    let output = solution1(input);
-    assert_eq!(output, expect);
-}
+");
 
-#[test]
-fn over_round() {
-    let input = "
+test_case!(over_round, solution1, 6,
+"
 R100
 L100
 R200
 L200
-".to_string();
-    let expect = 6;
-    let output = solution1(input);
-    assert_eq!(output, expect);
-}
+");
 
-#[test]
-fn no_rotation() {
-    let input = "".to_string();
-    let expect = 0;
-    let output = solution1(input);
-    assert_eq!(output, expect);
-}
+test_case!(no_rotation, solution1, 0, "");
 
-#[test]
-fn single_large_rotation() {
-    let input = "R1000".to_string();
-    let expect = 10;
-    let output = solution1(input);
-    assert_eq!(output, expect);
-}
+test_case!(single_large_rotation, solution1, 10, "R1000");
 
-#[test]
-fn double_large_rotation() {
-    let input = "
+test_case!(double_large_rotation, solution1, 30,
+"
 R1000
-L2000".to_string();
-    let expect = 30;
-    let output = solution1(input);
-    assert_eq!(output, expect);
-}
+L2000");
 
-#[test]
-fn boundary_extact_zero_landing() {
-    let input = "
+test_case!(boundary_extact_zero_landing, solution1, 3,
+"
 L50
 R100
 L100
 R5
-"
-    .to_string();
-    let expect = 3;
-    let output = solution1(input);
-    assert_eq!(output, expect);
-}
+");
 
-#[test]
-fn passing_thru_0_without_end_onit() {
-    let input = "
+test_case!(passing_thru_0_without_end_onit, solution1, 2,
+"
 L60
 R20
 R80
-"
-    .to_string();
-    let expect = 2;
-    let output = solution1(input);
-    assert_eq!(output, expect);
-}
+");
 
-#[test]
-fn no_hits() {
-    let input = "
+test_case!(no_hits, solution1, 0,
+"
 R10
 L20
 R5
 L3
-"
-    .to_string();
-    let expect = 0;
-    let output = solution1(input);
-    assert_eq!(output, expect);
-}
+");
 
-#[test]
-fn back_to_start() {
-    let input = "
+test_case!(back_to_start, solution1, 0,
+"
 R10
 L20
 R10
-"
-    .to_string();
-    let expect = 0;
-    let output = solution1(input);
-    assert_eq!(output, expect);
-}
+");
 
-#[test]
-fn test_50_0_90() {
-    let input = "
+test_case!(test_50_0_90, solution1, 7,
+"
 L150
 L110
 R120
 L110
-"
-    .to_string();
-    let expect = 7;
-    let output = solution1(input);
-    assert_eq!(output, expect);
-}
-
+");
