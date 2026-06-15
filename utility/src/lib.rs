@@ -13,3 +13,26 @@ fn $fn_name() {
 }
     };
 }
+
+#[macro_export]
+macro_rules! test_cases {
+    (
+        $fn_name:ident,
+        $solver1:path,
+        $expect1:expr,
+        $solver2:path,
+        $expect2:expr,
+        $input:expr
+    ) => {  paste::paste! {
+#[test]
+fn [< $fn_name _part1 >]() {
+    let input = $input.to_string();
+    assert_eq!($solver1(input),$expect1);
+}
+
+#[test]
+fn [< $fn_name _part2 >]() {
+    let input = $input.to_string();
+    assert_eq!($solver2(input),$expect2);
+}
+}}}
