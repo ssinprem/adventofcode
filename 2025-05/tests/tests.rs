@@ -1,9 +1,7 @@
 use cafetaria::*;
-use utility::test_cases;
+use utility::test_case_n;
 
-test_cases!(example, 
-    part1::solve, 3,
-    part2::solve, 14,
+test_case_n!(example, 
 "3-5
 10-14
 16-20
@@ -14,11 +12,12 @@ test_cases!(example,
 8
 11
 17
-32");
+32",
+    part1: (part1::solve, 3),
+    part2: (part2::solve, 14)
+);
 
-test_cases!(no_overlap, 
-    part1::solve, 4,
-    part2::solve, 6,
+test_case_n!(no_overlap, 
 "1-3
 10-12
 
@@ -28,22 +27,24 @@ test_cases!(no_overlap,
 4
 10
 12
-13");
+13",
+    part1: (part1::solve, 4),
+    part2: (part2::solve, 6)
+);
 
-test_cases!(complete_swallow_intervals,
-    part1::solve, 3,
-    part2::solve, 10,
+test_case_n!(complete_swallow_intervals,
 "1-10
 3-7
 
 2
 5
 7
-11");
+11",
+    part1: (part1::solve, 3),
+    part2: (part2::solve, 10)
+);
 
-test_cases!(perfectly_touching_intervals,
-    part1::solve, 4,
-    part2::solve, 16,
+test_case_n!(perfectly_touching_intervals,
 "5-15
 16-20
 
@@ -52,4 +53,7 @@ test_cases!(perfectly_touching_intervals,
 15
 16
 20
-21");
+21",
+    part1: (part1::solve, 4),
+    part2: (part2::solve, 16)
+);

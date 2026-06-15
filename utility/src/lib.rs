@@ -36,3 +36,22 @@ fn [< $fn_name _part2 >]() {
     assert_eq!($solver2(input),$expect2);
 }
 }}}
+
+#[macro_export]
+macro_rules! test_case_n {
+    (
+        $fn_name:ident,
+        $input:expr,
+        $( $part:ident: ($solver:path, $expect:expr) ),+
+    ) => {
+        paste::paste! {
+            $(
+                #[test]
+                fn [< $fn_name _ $part >]() {
+                    let input = $input.to_string();
+                    assert_eq!($solver(input), $expect);
+                }
+            )+
+        }
+    };
+}
