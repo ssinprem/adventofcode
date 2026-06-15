@@ -1,7 +1,9 @@
-use print_dept::part2::*;
-use utility::test_case;
+use print_dept::*;
+use utility::test_cases;
 
-test_case!(example, solve, 43,
+test_cases!(example,
+    part1::solve, 13,
+    part2::solve, 43,
 "..@@.@@@@.
 @@@.@.@.@@
 @@@@@.@.@@
