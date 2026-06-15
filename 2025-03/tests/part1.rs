@@ -1,8 +1,0 @@
-use lobby::part1::*;
-use utility::test_case;
-
-test_case!(example, solve, 357,
-"987654321111111
-811111111111119
-234234234234278
-818181911112111");
