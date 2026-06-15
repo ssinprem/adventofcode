@@ -32,7 +32,7 @@ pub mod part1 {
             for (x, char) in line.chars().enumerate() {
                 if char == '@' {
                     let adj_rolls = crate::ADJ_OFFSET.map(|(dy,dx)| {
-                        if let Some(mut x) = grid.lines().nth((y as isize +dy) as usize)
+                        if let Some(x) = grid.lines().nth((y as isize +dy) as usize)
                             .and_then(|nline| nline.chars().nth((x as isize +dx) as usize)) {
                             if x == '@' {
                                 1
