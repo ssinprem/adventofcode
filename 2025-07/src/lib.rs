@@ -67,45 +67,46 @@ pub mod part1 {
 
 pub mod part2 {
     use std::collections::HashMap;
-    use crate::{STATE::{BEAM, NONE, SPITTER}, print_map};
 
     pub fn solve(file: String) -> u64 {
+        // the map with col position and timelines used this cell
+        let mut timelines = HashMap::<usize, u64>::new();
         let mut count = 0;
-        let mut map = HashMap::new();
-        let mut currs = Vec::<(usize,usize)>::new();
-        let height = file.lines().count();
-        for (y,line) in file.lines().enumerate() {
-            for (x, char) in line.chars().enumerate() {
-                map.insert((x,y), match char {
-                    'S' => { currs.push((x,y+1)); BEAM },
-                    '^' => SPITTER,
-                    _ => NONE
-                });
-            }
-        }
-        while let Some(curr) = currs.pop() {
-            if curr.1 >= height {
-                count += 1;
-                continue;
-            }
-
-            match map.get(&curr) {
-                Some(NONE) => currs.push((curr.0,curr.1+1)),
-                Some(SPITTER) => {
-                    if curr.0 != 0 {
-                        currs.push((curr.0-1,curr.1+1));
+        let grid: Vec<&str> = file.lines().filter(|l| !l.is_empty()).collect();
+        let width = grid[0].len();
+        
+        let s_col = grid[0].find('S').expect("Cannot find 'S'");
+        timelines.insert(s_col, 1);
+        for line in grid.iter().skip(1) {
+            for (x, var) in timelines.clone() {
+                match line.chars().nth(x) {
+                    // follow through the beam
+                    Some('.') => {},
+                    // remove below and split to adjectcent
+                    // in case touch the side end timeline, add the counter
+                    Some('^') => {
+                        timelines.remove(&x);
+                        if x > 0 {
+                            timelines.entry(x-1)
+                                .and_modify(|v| { *v += var;})
+                                .or_insert(var);
+                        } else {
+                            count += var;
+                        }
+                        if x < width-1 {
+                            timelines.entry(x+1)
+                                .and_modify(|v| { *v += var;})
+                                .or_insert(var);
+                        } else {
+                            count += var;
+                        }
                     }
-                    currs.push((curr.0+1,curr.1+1));
-                },
-                None => { },
-                _ => { unreachable!() }
-            }
-            if count % 10000000 == 0 {
-                println!("end {count} , remain {},  current {:?}", currs.len(), curr);
-                print_map(map.clone(), currs.iter().copied().collect());
+                    _ => {},
+                }
             }
         }
-        println!("end {count} , remain {}", currs.len());
+        // end the last line, add with remaining timelines
+        count += timelines.values().sum::<u64>();
         count
     }
 }
