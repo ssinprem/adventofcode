@@ -22,3 +22,44 @@ test_case_n!(example,
     part1: (part1::solve, 21),
     part2: (part2::solve, 40)
 );
+
+test_case_n!(clean_run,
+"...S...
+.......
+.......
+.......
+",
+    part1: (part1::solve, 0),
+    part2: (part2::solve, 1)
+);
+
+test_case_n!(out_of_bounds,
+"S.
+^.
+..
+",
+    part1: (part1::solve, 1),
+    part2: (part2::solve, 1)
+);
+
+test_case_n!(cascading_splits,
+"...S...
+...^...
+..^.^..
+.......
+",
+    part1: (part1::solve, 3),
+    part2: (part2::solve, 4)
+);
+
+test_case_n!(path_merging,
+"...S...
+...^...
+.......
+..^.^..
+...^...
+.......
+",
+    part1: (part1::solve, 4),
+    part2: (part2::solve, 6)
+);
