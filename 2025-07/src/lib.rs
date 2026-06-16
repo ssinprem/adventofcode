@@ -63,48 +63,36 @@ pub mod part2 {
     use std::collections::HashMap;
     use crate::STATE::{self, BEAM, SPITTER, NONE};
 
-    fn split(mut map :HashMap<(usize,usize), STATE>, curr: (usize,usize)) -> u64 {
-        let w = map.keys().max_by_key(|(x,_y)| x ).unwrap().0;
-        let h = map.keys().max_by_key(|(_x,y)| y ).unwrap().1;
-        let mut x = curr.0;
-        let mut y = curr.1;
-        while y < h {
-            while x < w {
-                let cell = map.get(&(x,y)).unwrap();
-                if cell == &NONE {
-                    if map.get(&(x,y-1)) == Some(&BEAM) {
-                        map.insert((x,y), BEAM);
-                    }
-                } else if cell == &SPITTER {
-                    if map.get(&(x,y-1)) == Some(&BEAM) {
-                        let mut map_l = map.clone();
-                        let mut map_r = map.clone();
-                        map_l.insert((x-1,y), BEAM);
-                        map_r.insert((x+1,y), BEAM);
-                        return split(map_l.clone(), (x+2,y)) +
-                               split(map_r.clone(), (x+2,y))
-                    }
+    fn start(map :HashMap<(usize,usize), STATE>, mut curr: (usize,usize), height: usize) -> u64 {
+        while curr.1 < height {
+            match map.get(&curr) {
+                Some(NONE) | Some(BEAM) =>  { curr.1 += 1 },
+                Some(SPITTER) =>  {
+                    return start(map.clone(), (curr.0-1, curr.1), height) +
+                           start(map.clone(), (curr.0+1, curr.1), height);
                 }
-                x += 1;
+                _ =>  { return 0; }
             }
-            x = 0;
-            y += 1;
         }
-        print!("!");
+        // print!("!");
+        // println!("end at {curr:?}");
         1
     }
 
     pub fn solve(file: String) -> u64 {
         let mut map = HashMap::new();
+        let mut curr = (0,0);
+        let height = file.lines().count();
         for (y,line) in file.lines().enumerate() {
             for (x, char) in line.chars().enumerate() {
                 map.insert((x,y), match char {
-                    'S' => BEAM,
+                    'S' => { curr = (x,y); BEAM },
                     '^' => SPITTER,
                     _ => NONE
                 });
             }
         }
-        split(map.clone(), (0,1))
+        // Start with 'S'
+        start(map.clone(), curr, height)
     }
 }
