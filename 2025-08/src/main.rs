@@ -5,6 +5,6 @@ use playground::*;
 fn main() -> Result<(), Box<dyn Error>>{
     let file = read_to_string("./input.txt")?;
     println!("part1 = {}", part1::solve(file.clone(), 1000));
-    println!("part2 = {}", part2::solve(file.clone(), 1000));
+    println!("part2 = {}", part2::solve(file.clone()));
     Ok(())
 }

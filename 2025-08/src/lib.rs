@@ -111,7 +111,69 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String, _cnt: u64) -> u64 {
+    use std::{collections::{HashMap, HashSet}};
+    use crate::JBox;
+
+    pub fn solve(file: String) -> u64 {
+        let mut dists  = HashMap::<(JBox,JBox),u64>::new();
+        let jboxs: Vec::<JBox> = file.lines().filter(|line| !line.is_empty())
+            .map(|line| {
+                let str_arr = line.splitn(3,",")
+                    .map(|str| str.to_string())
+                    .collect::<Vec<String>>();
+                JBox::new(str_arr)
+            }
+            )
+            .collect();
+        let size = jboxs.len();
+        for i in 0..size {
+            let ibox = jboxs.get(i).unwrap();
+            for j in i+1..jboxs.len() {
+                let jbox = jboxs.get(j).unwrap();
+                dists.insert((*ibox,*jbox), ibox.dist(*jbox));
+            }
+        }
+        println!("jbox : {} boxs", size);
+        println!("possible pairs : {}", dists.len());
+        let mut circuits = Vec::<HashSet<JBox>>::new();
+        let mut rank: Vec<((JBox, JBox), u64)> = dists.into_iter().collect();
+        rank.sort_by(|a,b| b.1.cmp(&a.1));
+
+        while let Some(entry) = rank.pop() {
+            // println!("{:?}", entry);
+            let key = entry.0;
+            if circuits.iter().any(|c| c.contains(&key.0) || c.contains(&key.1))
+            {
+                let exists = circuits.iter().filter(|c| c.contains(&key.0) ||  c.contains(&key.1)).collect::<Vec<&HashSet<JBox>>>();
+                let mut  new_circuit = exists.iter().fold(
+                    HashSet::new(), |mut new, circuit| {
+                        for jbox in circuit.iter() {
+                            new.insert(*jbox);
+                        }
+                        new
+                });
+                new_circuit.insert(key.0);
+                new_circuit.insert(key.1);
+                
+                // println!("merged [{}] {:?}", new_circuit.len(), new_circuit);
+                circuits = circuits.iter().filter(|target| !exists.contains(target))
+                    .cloned()
+                    .collect::<Vec<HashSet<JBox>>>();
+                if new_circuit.len() == size {
+                    println!("{:?}", key);
+                    return (key.0.x * key.1.x) as u64
+                }
+                circuits.push(new_circuit);
+
+            } else {
+                let mut circuit = HashSet::<JBox>::new();
+                circuit.insert(key.0);
+                circuit.insert(key.1);
+                // println!("new        {:?}", circuit);
+                circuits.push(circuit);
+            }
+        }
+
         0
     }
 }
