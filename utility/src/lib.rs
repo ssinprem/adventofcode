@@ -42,14 +42,14 @@ macro_rules! test_case_n {
     (
         $fn_name:ident,
         $input:expr,
-        $( $part:ident: ($solver:path, $expect:expr) ),+
+        $( $part:ident: ($solver:path, $expect:expr $(, $args:expr)*) ),+
     ) => {
         paste::paste! {
             $(
                 #[test]
                 fn [< $fn_name _ $part >]() {
                     let input = $input.to_string();
-                    assert_eq!($solver(input), $expect);
+                    assert_eq!($solver(input $(, $args)*), $expect);
                 }
             )+
         }
