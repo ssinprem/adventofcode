@@ -9,6 +9,16 @@ impl Seat {
         Self { x, y }
     }
 
+    pub fn new_str(c: &[String]) -> Self {
+        Self {
+            x: c.first()
+                .unwrap_or(&"0".to_string())
+                .parse::<u64>()
+                .unwrap(),
+            y: c.get(1).unwrap_or(&"0".to_string()).parse::<u64>().unwrap(),
+        }
+    }
+
     pub fn new(c: Vec<String>) -> Self {
         Self {
             x: c.first().unwrap_or(&"0".to_string()).parse::<u64>().unwrap(),
@@ -56,105 +66,135 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    use std::collections::{HashMap, HashSet};
+    use std::cmp::{ max, min};
     use crate::Seat;
-
+    use std::collections::{HashMap, HashSet};
     pub fn solve(file: String) -> u64 {
-        let mut areas = HashMap::<(Seat, Seat), u64>::new();
-        let reds = file.lines().filter(|line| !line.is_empty())
+        let red_tiles = file
+            .lines()
+            .filter(|line| !line.is_empty())
             .map(|line| {
-                let str_arr = line.split(",")
-                    .map(|str| str.to_string())
-                    .collect();
-                Seat::new(str_arr)
-            }).collect::<Vec<Seat>>();
-        println!("initial Red point {}", reds.len());
-        for i in 0..reds.len() {
-            let iseat = reds.get(i).unwrap();
-            for j in i+1..reds.len() {
-                let jseat = reds.get(j).unwrap();
-                areas.insert((*iseat,*jseat), iseat.area(*jseat));
-            }
-        }
-        println!("calulate possible areas {} max-> {:?}", areas.len(), areas.iter().max_by_key(|item| item.1));
-
-        let mut greens = HashSet::<(u64,u64)>::new();
-        for i in 0..reds.len() {
-            let iseat = reds.get(i).unwrap();
-            for j in i+1..reds.len() {
-                let jseat = reds.get(j).unwrap();
-                if iseat.x == jseat.x {
-                    for y in iseat.y.min(jseat.y)..=iseat.y.max(jseat.y) {
-                        greens.insert((iseat.x as u64, y as u64));
-                    } 
-                } else if iseat.y == jseat.y {
-                    for x in iseat.x.min(jseat.x)..=iseat.x.max(jseat.x) {
-                        greens.insert((x as u64, iseat.y as u64));
-                    }
-                }
-            }
-        }
-        println!("initial Green line for Red point  {}", greens.len());
-
-        // fill inside the with odd-even rules
-        let start = (
-            greens.iter().min_by_key(|item| item.0 ).unwrap().0,
-            greens.iter().min_by_key(|item| item.1 ).unwrap().1
-        );
-        let end = (
-            greens.iter().max_by_key(|item| item.0 ).unwrap().0,
-            greens.iter().max_by_key(|item| item.1 ).unwrap().1
-        );
-
-        // for y in start.1..=end.1 {
-        //     println!("{y}");
-        //     let mut cnt = 0;
-        //     for x in start.0..=end.0 {
-        //         if greens.contains(&(x,y)) && !greens.contains(&(x+1,y)) {
-        //             cnt+=1;
-        //         } else if !greens.contains(&(x,y)) && greens.contains(&(x+1,y)) {
-        //             cnt+=1;
-        //         }
-        //         if cnt % 2 == 1 {
-        //             greens.insert((x,y));
-        //         }
-        //     }
-        // }
-        // println!("fill the Green areas in Green line {}",greens.len());
-
-        // let mut ignore_list = Vec::new();
-        let mut rank: Vec<(((u64,u64), (u64,u64)), u64)> = areas.iter()
-            .map(|item| {
-                (
-                    (
-                        (item.0.0.x, item.0.0.y),
-                        (item.0.1.x, item.0.1.y)
-                    ),
-                    *item.1
-                )
+                let str_arr = line
+                    .split(',')
+                    .map(|s| s.to_string())
+                    .collect::<Vec<String>>();
+                Seat::new_str(&str_arr)
             })
-            .collect();
-        rank.sort_by_key(|item| std::cmp::Reverse(item.1));
-        'find_outring: for max in rank.iter() {
-                println!("max {:?}",max);
-                let seat_a = max.0.1;
-                let seat_b = max.0.0;
-                for x in seat_a.0.min(seat_b.0)..=seat_a.0.max(seat_b.0) {
-                    let mut cnt = 0;
-                    for y in seat_a.1.min(seat_b.1)..=seat_a.1.max(seat_b.1) {
-                        if greens.get(&(x,y)).is_none() && greens.get(&(x,y+1)).is_some() {
-                            cnt += 1;
-                        } else if greens.get(&(x,y)).is_some() && greens.get(&(x,y+1)).is_none() {
-                            cnt += 1;
-                        }
-                        if cnt > 1 {
-                            continue 'find_outring;
+            .collect::<Vec<Seat>>();
+
+        let red_set: HashSet<Seat> = red_tiles.iter().cloned().collect();
+
+        let mut x_coords = HashSet::new();
+        let mut y_coords = HashSet::new();
+        for &p in &red_tiles {
+            x_coords.insert(p.x);
+            y_coords.insert(p.y);
+        }
+
+        let mut sorted_x: Vec<u64> = x_coords.into_iter().collect();
+        let mut sorted_y: Vec<u64> = y_coords.into_iter().collect();
+        sorted_x.sort();
+        sorted_y.sort();
+
+        let x_map: HashMap<u64, usize> =
+            sorted_x.iter().enumerate().map(|(i, &x)| (x, i)).collect();
+        let y_map: HashMap<u64, usize> =
+            sorted_y.iter().enumerate().map(|(i, &y)| (y, i)).collect();
+
+        let mut grid = vec![vec![false; sorted_x.len()]; sorted_y.len()];
+
+        let mut boundary = HashSet::new();
+        for i in 0..red_tiles.len() {
+                let p1 = red_tiles[i];
+                let p2 = red_tiles[(i + 1) % red_tiles.len()];
+    
+                boundary.insert(p1);
+    
+                if p1.x == p2.x {
+                    for y in min(p1.y, p2.y)..=max(p1.y, p2.y) {
+                        boundary.insert(Seat { x: p1.x, y });
+                    }
+                } else {
+                    // p1.y == p2.y
+                    for x in min(p1.x, p2.x)..=max(p1.x, p2.x) {
+                        boundary.insert(Seat { x, y: p1.y });
+                    }
+                }
+
+        }
+
+        for y_idx in 0..sorted_y.len() {
+            let y = sorted_y[y_idx];
+            let mut crossings = Vec::new();
+            for i in 0..red_tiles.len() {
+                let p1 = red_tiles[i];
+                let p2 = red_tiles[(i + 1) % red_tiles.len()];
+                if p1.x == p2.x {
+                    // vertical edge
+                    if (p1.y <= y && p2.y > y) || (p2.y <= y && p1.y > y) {
+                        crossings.push(p1.x);
+                    }
+                }
+            }
+            crossings.sort();
+
+            let mut is_inside = false;
+            let mut cross_iter = crossings.iter().peekable();
+
+            for x_idx in 0..sorted_x.len() {
+                let x = sorted_x[x_idx];
+
+                while let Some(&cross_x) = cross_iter.peek() {
+                    if *cross_x <= x {
+                        is_inside = !is_inside;
+                        cross_iter.next();
+                    } else {
+                        break;
+                    }
+                }
+
+                if is_inside || boundary.contains(&Seat { x, y }) {
+                    grid[y_idx][x_idx] = true;
+                }
+            }
+        }
+
+        for p in red_set.iter() {
+            grid[y_map[&p.y]][x_map[&p.x]] = true;
+        }
+
+        let mut max_area = 0;
+
+        for i in 0..red_tiles.len() {
+            for j in i + 1..red_tiles.len() {
+                let p1 = red_tiles[i];
+                let p2 = red_tiles[j];
+
+                let x_start_idx = *x_map.get(&min(p1.x, p2.x)).unwrap();
+                let x_end_idx = *x_map.get(&max(p1.x, p2.x)).unwrap();
+                let y_start_idx = *y_map.get(&min(p1.y, p2.y)).unwrap();
+                let y_end_idx = *y_map.get(&max(p1.y, p2.y)).unwrap();
+
+                let mut is_valid_rect = true;
+                'rect_check: for y_idx in y_start_idx..=y_end_idx {
+                    for x_idx in x_start_idx..=x_end_idx {
+                        if !grid[y_idx][x_idx] {
+                            is_valid_rect = false;
+                            break 'rect_check;
                         }
                     }
                 }
-            return max.1;
-        } 
-        return 0;
+
+                if is_valid_rect {
+                    let area = p1.area(p2);
+                    if area > max_area {
+                        max_area = area;
+                    }
+                }
+            }
+        }
+
+        max_area
     }
 }
 
