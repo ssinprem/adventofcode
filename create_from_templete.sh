@@ -15,6 +15,9 @@ if [ -d ./$name ]; then
     exit 1;
 fi
 
+pwd=$(pwd)
 cp -r _template $name
-find $name -type f -exec sed -i 's/package_name/'$package'/g' {} +
+find $name -type f -exec sed -i 's@package_name@'$package'@g' {} +
+find $name -type f -exec sed -i 's@path_name@'$pwd'@g' {} +
+find $name -type f -exec sed -i 's@directory_name@'$name'@g' {} +
 ./refresh.sh
