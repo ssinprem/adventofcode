@@ -146,7 +146,7 @@ pub fn valid_put_yard(map: Vec<Vec<bool>>, patterns: &HashMap<usize, Vec<Vec<boo
             ] {
                 if let Ok(new_yard) = put_yard(map.clone(), pattern, x, y, rot) {
                     let new_amounts: Vec<_> = amounts.clone().iter().skip(1).copied().collect();
-                    // println!("remain {} , {}", new_pattern.len(), display(&new_yard));
+                    // println!("remain {} {:?} , {}", new_amounts.len(), new_amounts, display(&new_yard));
                     if valid_put_yard(new_yard, patterns, new_amounts) {
                         return true;
                     }
