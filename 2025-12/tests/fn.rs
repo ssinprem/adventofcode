@@ -160,7 +160,7 @@ fn test_display_yard_with_pattern() {
             vec![true, false, true],
             vec![true, false, true],
         ];
-    let result = put_yard(map.clone(), &pattern, 0, 0, Transform::Non);
+    let result = put_yard(map.clone(), &pattern, 0, 0);
     assert!(result.is_ok());
     let new_map = result.unwrap();
     assert_eq!(display(&new_map),
@@ -172,13 +172,13 @@ fn test_display_yard_with_pattern() {
 ....
 ....
 ");
-    let result = put_yard(new_map.clone(), &pattern, 1, 1, Transform::Non);
+    let result = put_yard(new_map.clone(), &pattern, 1, 1);
     assert!(result.is_err());
-    let result = put_yard(new_map.clone(), &pattern, 1, 1, Transform::RotLeft);
+    let result = put_yard(new_map.clone(), &transform(&pattern, Transform::RotLeft), 1, 1);
     assert!(result.is_err());
-    let result = put_yard(new_map.clone(), &pattern, 1, 1, Transform::RotRight);
+    let result = put_yard(new_map.clone(), &transform(&pattern, Transform::RotRight), 1, 1);
     assert!(result.is_err());
-    let result = put_yard(new_map.clone(), &pattern, 1, 1, Transform::RotHalf);
+    let result = put_yard(new_map.clone(), &transform(&pattern, Transform::RotHalf), 1, 1);
     assert!(result.is_ok());
     let new_map = result.unwrap();
 assert_eq!(display(&new_map),
@@ -190,4 +190,44 @@ assert_eq!(display(&new_map),
 ....
 ....
 ");
+}
+
+#[test]
+fn test_check_variat_full() {
+    let pattern = vec![
+        vec![true, false, false],
+        vec![true, false, false],
+        vec![false, false, false],
+    ];
+    assert_eq!(get_varints(&pattern).len(), 8)
+}
+
+#[test]
+fn test_check_variat_half() {
+    let pattern = vec![
+        vec![true, false, false],
+        vec![false, false, false],
+        vec![false, false, false],
+    ];
+    assert_eq!(get_varints(&pattern).len(), 4)
+}
+
+#[test]
+fn test_check_variat_quad() {
+    let pattern = vec![
+        vec![false, true, false],
+        vec![false, true, false],
+        vec![false, true, false],
+    ];
+    assert_eq!(get_varints(&pattern).len(), 2)
+}
+
+#[test]
+fn test_check_variat_same() {
+    let pattern = vec![
+        vec![false, false, false],
+        vec![false, true, false],
+        vec![false, false, false],
+    ];
+    assert_eq!(get_varints(&pattern).len(), 1)
 }

@@ -1,6 +1,6 @@
 
 use regex::Regex;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 #[derive(Debug, Copy, Clone)]
 pub enum Transform {
@@ -77,16 +77,13 @@ pub fn put_yard (
     map: Vec<Vec<bool>>,
     pattern: &[Vec<bool>],
     target_x: usize,
-    target_y: usize,
-    direction: Transform
+    target_y: usize
 ) -> Result<Vec<Vec<bool>>,String> {
     let size = pattern.len();
-    let rotate_pattern = transform(pattern, direction);
-
     let mut new_map = map.clone();
     for y in 0..size {
         for x in 0..size {
-            let cell = rotate_pattern.get(y).expect("cannot get cell by y {y}")
+            let cell = pattern.get(y).expect("cannot get cell by y {y}")
                               .get(x).expect("cannot get pattern by x {x}");
             let target = new_map.get_mut(target_y + y).expect("cannot access target y")
                               .get_mut(target_x + x).expect("cannot access target x");
@@ -114,8 +111,8 @@ pub fn display (map: &[Vec<bool>]) -> String {
 }
 
 #[allow(clippy::needless_range_loop)]
-pub fn transform (map: &[Vec<bool>], trans: Transform) -> Vec<Vec<bool>> {
-    let size = map.len();
+pub fn transform (pattern: &[Vec<bool>], trans: Transform) -> Vec<Vec<bool>> {
+    let size = pattern.len();
     if size == 0 {
         return Vec::new();
     }
@@ -132,7 +129,7 @@ pub fn transform (map: &[Vec<bool>], trans: Transform) -> Vec<Vec<bool>> {
                 Transform::FlipInc => (size - 1  - new_x, size - 1 - new_y),
                 Transform::FlipDec => (new_x, new_y),
             };
-            new_map[new_y][new_x] = map[old_y][old_x];
+            new_map[new_y][new_x] = pattern[old_y][old_x];
         }
     }
     new_map
@@ -142,23 +139,31 @@ pub fn generate_yard(width: usize, height: usize) -> Vec<Vec<bool>> {
     vec![vec![false; width]; height ]
 }
 
-pub fn valid_put_yard(map: Vec<Vec<bool>>, patterns: &HashMap<usize, Vec<Vec<bool>>>, amounts: Vec<usize>) -> bool {
+pub fn get_varints(pattern: &[Vec<bool>]) -> Vec<Vec<Vec<bool>>> {
+    let mut set = HashSet::new();
+    for rot in Transform::get_members() {
+        set.insert(transform(pattern, rot));
+    }
+    set.iter().map(|p| p.clone()).collect()
+}
+
+pub fn valid_put_yard(map: Vec<Vec<bool>>, patterns_variants: &HashMap<usize, Vec<Vec<Vec<bool>>>>, amounts: Vec<usize>) -> bool {
     if amounts.is_empty() {
         println!("{}", display(&map));
         return true;
     }
     let &idx = amounts.first().expect("cannot get id from list");
-    let pattern = patterns.get(&idx).expect("cannot get pattern");
-    let size = pattern.len();
+    let pattern_variants = patterns_variants.get(&idx).expect("cannot get pattern");
+    let size = pattern_variants.first().expect("cannot get pattern size").len();
     let width = map.first().expect("cannot get first line").len();
     let height = map.len();
     for y in 0..=(height - size) {
         for x in 0..=(width - size) {
-            for rot in Transform::get_members() {
-                if let Ok(new_yard) = put_yard(map.clone(), pattern, x, y, rot) {
+            for pattern_trans in pattern_variants {
+                if let Ok(new_yard) = put_yard(map.clone(), &pattern_trans, x, y) {
                     let new_amounts: Vec<_> = amounts.clone().iter().skip(1).copied().collect();
                     // println!("remain {} {:?} , {}", new_amounts.len(), new_amounts, display(&new_yard));
-                    if valid_put_yard(new_yard, patterns, new_amounts) {
+                    if valid_put_yard(new_yard, patterns_variants, new_amounts) {
                         return true;
                     }
                 } else {
@@ -176,6 +181,18 @@ pub mod part1 {
     pub fn solve(file: String) -> u64 {
         let (patterns, yards) =  crate::parse(file);
         let mut count = 0;
+        let patterns_variant: HashMap<usize, Vec<Vec<Vec<bool>>>> = patterns.iter()
+            .map(|(idx, pat)| {
+                (*idx, get_varints(pat))
+            }).collect();
+        
+        for (idx, variants) in &patterns_variant {
+            print!("{idx}: [{}]", variants.len());
+            for v in variants {
+                print!("{}", display(&v));
+            }
+        }
+
         for ((width, height), quota) in yards {
             let map = generate_yard(width, height);
             let pattern_set = quota.iter()
@@ -184,8 +201,19 @@ pub mod part1 {
                     id
                 }).collect::<Vec<usize>>()
             }).collect::<Vec<usize>>();
+            // calculate all part area
+            let part_area = pattern_set.iter().map(|idx| {
+                patterns.get(idx).expect("Cannot get pattarn by id")
+                    .iter().map(|line| {
+                        line.iter().filter(|&b| *b)
+                        .count()
+                    }).sum::<usize>()
+            }).sum::<usize>();
+
             println!("{width}x{height} :");
-            if valid_put_yard(map, &patterns, pattern_set) {
+            if part_area > width*height {
+                println!("   oversize {part_area} > {}", width*height);
+            } else if valid_put_yard(map, &patterns_variant, pattern_set) {
                 count += 1;
             }
         }
