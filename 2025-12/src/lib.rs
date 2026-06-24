@@ -12,6 +12,7 @@ pub enum Transform {
     FlipVir
 }
 
+#[allow(clippy::type_complexity)]
 pub fn parse(file: String) -> (HashMap<usize,Vec<Vec<bool>>>, Vec<((usize,usize),HashMap<usize, u32>)>) {
     let mut map_pattern = HashMap::new();
     let mut vec_yard = Vec::new();
@@ -58,7 +59,7 @@ pub fn parse(file: String) -> (HashMap<usize,Vec<Vec<bool>>>, Vec<((usize,usize)
 
 pub fn put_yard (
     map: Vec<Vec<bool>>,
-    pattern: &Vec<Vec<bool>>,
+    pattern: &[Vec<bool>],
     target_x: usize,
     target_y: usize,
     direction: Transform
@@ -73,7 +74,7 @@ pub fn put_yard (
                               .get(x).expect("cannot get pattern by x {x}");
             let target = new_map.get_mut(target_y + y).expect("cannot access target y")
                               .get_mut(target_x + x).expect("cannot access target x");
-            if *cell == true {
+            if *cell {
                 if *target {
                     return Err("Cell {x},{y} is already place".to_string());
                 } else {
@@ -85,7 +86,7 @@ pub fn put_yard (
     Ok(new_map)
 }
 
-pub fn display (map: &Vec<Vec<bool>>) -> String {
+pub fn display (map: &[Vec<bool>]) -> String {
     ("\n".to_string() + map.iter().map(|line| {
         line.iter().map(|&cell| {
             match cell {
@@ -96,7 +97,8 @@ pub fn display (map: &Vec<Vec<bool>>) -> String {
     }).collect::<String>().as_str()).to_string()
 }
 
-pub fn transform (map: &Vec<Vec<bool>>, trans: Transform) -> Vec<Vec<bool>> {
+#[allow(clippy::needless_range_loop)]
+pub fn transform (map: &[Vec<bool>], trans: Transform) -> Vec<Vec<bool>> {
     let size = map.len();
     if size == 0 {
         return Vec::new();
@@ -119,11 +121,11 @@ pub fn transform (map: &Vec<Vec<bool>>, trans: Transform) -> Vec<Vec<bool>> {
 }
 
 pub fn generate_yard(width: usize, height: usize) -> Vec<Vec<bool>> {
-    vec![vec![false; width as usize]; height as usize ]
+    vec![vec![false; width]; height ]
 }
 
 pub fn valid_put_yard(map: Vec<Vec<bool>>, patterns: &HashMap<usize, Vec<Vec<bool>>>, amounts: Vec<usize>) -> bool {
-    if amounts.len() == 0 {
+    if amounts.is_empty() {
         println!("{}", display(&map));
         return true;
     }
@@ -142,10 +144,8 @@ pub fn valid_put_yard(map: Vec<Vec<bool>>, patterns: &HashMap<usize, Vec<Vec<boo
                 Transform::FlipHor,
                 Transform::FlipVir
             ] {
-                let result = put_yard(map.clone(), pattern, x, y, rot);
-                if result.is_ok() {
-                    let new_yard = result.unwrap();
-                    let new_amounts: Vec<_> = amounts.clone().iter().skip(1).map(|p| p.clone()).collect();
+                if let Ok(new_yard) = put_yard(map.clone(), pattern, x, y, rot) {
+                    let new_amounts: Vec<_> = amounts.clone().iter().skip(1).copied().collect();
                     // println!("remain {} , {}", new_pattern.len(), display(&new_yard));
                     if valid_put_yard(new_yard, patterns, new_amounts) {
                         return true;
