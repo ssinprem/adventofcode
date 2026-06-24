@@ -97,6 +97,38 @@ fn test_display_rotate_flip_v () {
 }
 
 #[test]
+fn test_display_rotate_flip_i () {
+    let pattern = 
+        vec![
+            vec![true, false, false],
+            vec![true, false, false],
+            vec![true, true,  false],
+        ];
+    assert_eq!(display(&transform(&pattern, Transform::FlipInc)), 
+"
+...
+#..
+###
+")
+}
+
+#[test]
+fn test_display_rotate_flip_d () {
+    let pattern = 
+        vec![
+            vec![true, false, false],
+            vec![true, false, false],
+            vec![true, true,  false],
+        ];
+    assert_eq!(display(&transform(&pattern, Transform::FlipDec)), 
+"
+###
+..#
+...
+")
+}
+
+#[test]
 fn test_display_yard_empty() {
     let map = generate_yard(4, 6);
     assert_eq!(display(&map),

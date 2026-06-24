@@ -9,7 +9,23 @@ pub enum Transform {
     RotHalf,
     RotLeft,
     FlipHor,
-    FlipVir
+    FlipVir,
+    FlipInc,
+    FlipDec,
+}
+impl Transform {
+    fn get_members() -> Vec<Self> {
+        vec![
+            Self::Non,
+            Self::RotRight,
+            Self::RotHalf,
+            Self::RotLeft,
+            Self::FlipHor,
+            Self::FlipVir,
+            Self::FlipInc,
+            Self::FlipDec,
+        ]
+    }
 }
 
 #[allow(clippy::type_complexity)]
@@ -113,6 +129,8 @@ pub fn transform (map: &[Vec<bool>], trans: Transform) -> Vec<Vec<bool>> {
                 Transform::RotHalf => (size - 1 - new_y, size - 1 - new_x),
                 Transform::FlipVir => (new_y, size - 1 - new_x),
                 Transform::FlipHor => (size - 1 - new_y, new_x),
+                Transform::FlipInc => (size - 1  - new_x, size - 1 - new_y),
+                Transform::FlipDec => (new_x, new_y),
             };
             new_map[new_y][new_x] = map[old_y][old_x];
         }
@@ -136,14 +154,7 @@ pub fn valid_put_yard(map: Vec<Vec<bool>>, patterns: &HashMap<usize, Vec<Vec<boo
     let height = map.len();
     for y in 0..=(height - size) {
         for x in 0..=(width - size) {
-            for rot in [
-                Transform::Non,
-                Transform::RotLeft,
-                Transform::RotRight,
-                Transform::RotHalf,
-                Transform::FlipHor,
-                Transform::FlipVir
-            ] {
+            for rot in Transform::get_members() {
                 if let Ok(new_yard) = put_yard(map.clone(), pattern, x, y, rot) {
                     let new_amounts: Vec<_> = amounts.clone().iter().skip(1).copied().collect();
                     // println!("remain {} {:?} , {}", new_amounts.len(), new_amounts, display(&new_yard));
