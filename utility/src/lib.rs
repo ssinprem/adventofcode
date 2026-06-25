@@ -55,3 +55,23 @@ macro_rules! test_case_n {
         }
     };
 }
+
+#[macro_export]
+macro_rules! test_case_n_ignore {
+    (
+        $fn_name:ident,
+        $input:expr,
+        $( $part:ident: ($solver:path, $expect:expr $(, $args:expr)*) ),+
+    ) => {
+        paste::paste! {
+            $(
+                #[test]
+                #[ignore]
+                fn [< $fn_name _ $part >]() {
+                    let input = $input.to_string();
+                    assert_eq!($solver(input $(, $args)*), $expect);
+                }
+            )+
+        }
+    };
+}

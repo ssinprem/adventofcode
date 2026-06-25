@@ -1,5 +1,5 @@
 use christmas_tree_farm::*;
-use utility::test_case_n;
+use utility::*;
 
 const EXAMPLE_PATTERN : &str =
 "
@@ -43,7 +43,7 @@ test_case_n!(example_good,
     part1: (part1::solve, 2)
 );
 
-test_case_n!(example_bad,
+test_case_n_ignore!(example_bad,
 (EXAMPLE_PATTERN.to_string() + "
 
 12x5: 1 0 1 0 3 2

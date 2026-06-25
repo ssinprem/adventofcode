@@ -137,7 +137,7 @@ pub mod part2 {
         println!("possible pairs : {}", dists.len());
         let mut circuits = Vec::<HashSet<JBox>>::new();
         let mut rank: Vec<((JBox, JBox), u64)> = dists.into_iter().collect();
-        rank.sort_by(|a,b| b.1.cmp(&a.1));
+        rank.sort_by_key(|b| std::cmp::Reverse(b.1));
 
         while let Some(entry) = rank.pop() {
             // println!("{:?}", entry);

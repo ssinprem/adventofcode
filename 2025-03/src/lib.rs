@@ -32,7 +32,7 @@ pub(crate) fn solven(file: String, target: usize) -> u64 {
         stack.iter().fold(0, |acc, &n| acc*10 + n )
     })
     // .inspect(|f| {println!("{f}")})
-    .sum::<u64>() as u64
+    .sum::<u64>()
 }
 
 pub mod part1 {

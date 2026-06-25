@@ -1,4 +1,6 @@
 use regex::Regex;
+
+#[allow(clippy::type_complexity)]
 pub fn parse(line : &str) -> Option<(Vec<bool>, Vec<Vec<usize>>, Vec<i32>)> {
     let re_line = Regex::new(
         r"(?m)\[([.#]+)\] (\(.+\) )+\{([0-9,]+)\}"
@@ -56,7 +58,7 @@ pub mod part1 {
                 (1..2_i32.pow(switchs.len() as u32))
                 .fold(switchs.len(), |min, sws| {
                     let mut temp_light = lights.clone();
-                    for sw in 0..switchs.len() {
+                    for (sw, _item) in switchs.iter().enumerate() {
                         if (sws >> sw) % 2 == 1 {
                             temp_light = press(temp_light, switchs[sw].clone());
                         }
@@ -105,20 +107,18 @@ pub mod part2 {
             return;
         }
 
-        if switchs.len() <= 1 {
-            if joltage.iter().all(|&j| j==0) {
-                if steps < *min {
-                    *min = steps;
-                }
-                // println!("Found solve {} {steps:?}", steps.len());
-                return;
+        if switchs.len() <= 1 && joltage.iter().all(|&j| j==0) {
+            if steps < *min {
+                *min = steps;
             }
+            // println!("Found solve {} {steps:?}", steps.len());
+            return;
         }
 
         if joltage.iter().enumerate()
         .filter(|&(_index,&value)| value != 0)
         .any(|(index, &_value)| {
-            ! switchs.iter().any(|sw| sw.iter().any(|&l| l == index))
+            ! switchs.iter().any(|sw| sw.contains(&index))
         }) {
             // Can't be reach
             return;

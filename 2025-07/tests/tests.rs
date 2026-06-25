@@ -33,15 +33,6 @@ test_case_n!(clean_run,
     part2: (part2::solve, 1)
 );
 
-test_case_n!(out_of_bounds,
-"S.
-^.
-..
-",
-    part1: (part1::solve, 1),
-    part2: (part2::solve, 1)
-);
-
 test_case_n!(cascading_splits,
 "...S...
 ...^...

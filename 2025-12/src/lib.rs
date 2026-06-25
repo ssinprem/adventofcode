@@ -144,7 +144,7 @@ pub fn get_varints(pattern: &[Vec<bool>]) -> Vec<Vec<Vec<bool>>> {
     for rot in Transform::get_members() {
         set.insert(transform(pattern, rot));
     }
-    set.iter().map(|p| p.clone()).collect()
+    set.iter().cloned().collect()
 }
 
 pub fn valid_put_yard(
@@ -166,7 +166,7 @@ pub fn valid_put_yard(
         for y in 0..=(height - size) {
             for x in 0..=(width - size) {
                 
-                let result = put_yard(map.clone(), &pattern_trans, x, y);
+                let result = put_yard(map.clone(), pattern_trans, x, y);
                 if let Ok(new_yard) = result {
                     let new_amounts: Vec<_> = amounts.clone().iter().skip(1).copied().collect();
                     // println!("remain {} {:?} , {}", new_amounts.len(), new_amounts, display(&new_yard));

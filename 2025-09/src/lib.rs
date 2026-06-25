@@ -176,7 +176,9 @@ pub mod part2 {
                 let y_end_idx = *y_map.get(&max(p1.y, p2.y)).unwrap();
 
                 let mut is_valid_rect = true;
+                #[allow(clippy::needless_range_loop)]
                 'rect_check: for y_idx in y_start_idx..=y_end_idx {
+                    #[allow(clippy::needless_range_loop)]
                     for x_idx in x_start_idx..=x_end_idx {
                         if !grid[y_idx][x_idx] {
                             is_valid_rect = false;

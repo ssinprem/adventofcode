@@ -78,6 +78,8 @@ pub mod part1 {
 
 
 pub mod part2 {
+    #[allow(clippy::manual_unwrap_or)]
+    #[allow(clippy::manual_unwrap_or_default)]
     pub fn solution1 (file: String) -> u32 {
         file.lines().fold(
             (50, 0), 
