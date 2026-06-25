@@ -147,7 +147,12 @@ pub fn get_varints(pattern: &[Vec<bool>]) -> Vec<Vec<Vec<bool>>> {
     set.iter().map(|p| p.clone()).collect()
 }
 
-pub fn valid_put_yard(map: Vec<Vec<bool>>, patterns_variants: &HashMap<usize, Vec<Vec<Vec<bool>>>>, amounts: Vec<usize>) -> bool {
+pub fn valid_put_yard(
+    map: Vec<Vec<bool>>,
+    patterns_variants: &HashMap<usize,
+    Vec<Vec<Vec<bool>>>>,
+    amounts: Vec<usize>
+) -> bool {
     if amounts.is_empty() {
         println!("{}", display(&map));
         return true;
@@ -157,10 +162,12 @@ pub fn valid_put_yard(map: Vec<Vec<bool>>, patterns_variants: &HashMap<usize, Ve
     let size = pattern_variants.first().expect("cannot get pattern size").len();
     let width = map.first().expect("cannot get first line").len();
     let height = map.len();
-    for y in 0..=(height - size) {
-        for x in 0..=(width - size) {
-            for pattern_trans in pattern_variants {
-                if let Ok(new_yard) = put_yard(map.clone(), &pattern_trans, x, y) {
+    for pattern_trans in pattern_variants {
+        for y in 0..=(height - size) {
+            for x in 0..=(width - size) {
+                
+                let result = put_yard(map.clone(), &pattern_trans, x, y);
+                if let Ok(new_yard) = result {
                     let new_amounts: Vec<_> = amounts.clone().iter().skip(1).copied().collect();
                     // println!("remain {} {:?} , {}", new_amounts.len(), new_amounts, display(&new_yard));
                     if valid_put_yard(new_yard, patterns_variants, new_amounts) {
@@ -186,15 +193,15 @@ pub mod part1 {
                 (*idx, get_varints(pat))
             }).collect();
         
-        for (idx, variants) in &patterns_variant {
-            print!("{idx}: [{}]", variants.len());
-            for v in variants {
-                print!("{}", display(&v));
-            }
-        }
+        // for (idx, variants) in &patterns_variant {
+        //     print!("{idx}: [{}]", variants.len());
+        //     for v in variants {
+        //         print!("{}", display(&v));
+        //     }
+        // }
 
-        for ((width, height), quota) in yards {
-            let map = generate_yard(width, height);
+        for (idx, ((width, height), quota)) in yards.iter().enumerate() {
+            let map = generate_yard(*width, *height);
             let pattern_set = quota.iter()
             .flat_map(|(&id, &amount)| {
                 (0..amount).map(|_| {
@@ -210,7 +217,7 @@ pub mod part1 {
                     }).sum::<usize>()
             }).sum::<usize>();
 
-            println!("{width}x{height} :");
+            println!("{idx}. {width}x{height} :");
             if part_area > width*height {
                 println!("   oversize {part_area} > {}", width*height);
             } else if valid_put_yard(map, &patterns_variant, pattern_set) {
