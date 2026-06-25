@@ -75,7 +75,7 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    fn press(mut joltage: Vec<i32>, switch:Vec<usize>) -> Vec<i32> {
+    fn _press(mut joltage: Vec<i32>, switch:Vec<usize>) -> Vec<i32> {
         // print!("press {switch:?}    -> {joltage:?}");
         for l in switch {
             joltage[l] -= 1;
@@ -84,7 +84,7 @@ pub mod part2 {
         joltage
     }
 
-    fn undo(mut joltage: Vec<i32>, switch:Vec<usize>) -> Vec<i32> {
+    fn _undo(mut joltage: Vec<i32>, switch:Vec<usize>) -> Vec<i32> {
         // print!("press {switch:?}    -> {joltage:?}");
         for l in switch {
             joltage[l] += 1;
@@ -94,7 +94,7 @@ pub mod part2 {
     }
 
 
-    fn find_min(joltage: Vec<i32>, switchs: Vec<Vec<usize>>, min: &mut usize, steps: usize ) {
+    fn _find_min(joltage: Vec<i32>, switchs: Vec<Vec<usize>>, min: &mut usize, steps: usize ) {
         if steps >= *min {
             // println!("Overmin {min:?} {}",steps.len());
             return;
@@ -117,7 +117,7 @@ pub mod part2 {
 
         if joltage.iter().enumerate()
         .filter(|&(_index,&value)| value != 0)
-        .any(|(index, &value)| {
+        .any(|(index, &_value)| {
             ! switchs.iter().any(|sw| sw.iter().any(|&l| l == index))
         }) {
             // Can't be reach
@@ -130,8 +130,8 @@ pub mod part2 {
             if ! target_switch.is_empty() {
                 let switch = target_switch.first().unwrap().clone();
                 
-                find_min(
-                    press(joltage.clone(), switch), 
+                _find_min(
+                    _press(joltage.clone(), switch), 
                     target_switch, min, steps+1);
             }
         }
