@@ -33,5 +33,5 @@ test_case_n!(example,
 97,13,75,29,47
 ",
     part1: (part1::solve, 61 + 53 + 29),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 47 + 29 + 47)
 );
