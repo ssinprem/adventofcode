@@ -15,5 +15,5 @@ MAMMMXMMMM
 MXMXAXMASX
 ",
     part1: (part1::solve, 18),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 9)
 );
