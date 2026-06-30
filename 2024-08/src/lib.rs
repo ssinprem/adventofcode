@@ -10,6 +10,7 @@ pub fn parse(file: String) -> (Grid<char>, HashSet<char>) {
         grid.push_row(line.chars().collect());
         line.chars().for_each(|char| {set.insert(char);});
     });
+    set.remove(&'.');
     (grid, set)
 }
 
@@ -17,16 +18,9 @@ pub mod part1 {
     use super::*;
     pub fn solve(file: String) -> u64 {
         let (mut grid,set) = parse(file);
+        let mut antinode: HashSet<(isize, isize)> = HashSet::new();
         let mut count =0;
-        // let mut mut_grid = grid.clone().iter().map(|char| {
-        //     if ".A0".contains(*char) {
-        //         char
-        //     } else {
-        //         &'.'
-        //     }
-        // }) .collect::<Grid<char>>();
-        println!("{} {set:?}",set.len());
-        for &target in set.iter().filter(|&c| c!=&'.') {
+        for target in set {
             let target_list: Vec<_> =grid.iter().enumerate()
                 .filter(|&(_i,&char)| char == target)
                 .map(|a| {
@@ -48,27 +42,21 @@ pub mod part1 {
                         (jtem.0 - divy, jtem.1 - divx)
                     ];
                     for pos in resonance {
-                        if let Some(char) = grid.get_mut(pos.0, pos.1) {
-                            if char == &'.' || char == &'#' {
-                            // if char == &'.' {
-                                *char = '#';
-                                count+=1;
-                                println!("✅ {count:3}  {item:?} {jtem:?} {pos:?}");
+                        if let Some(_char) = grid.get_mut(pos.0, pos.1) {
+                            if antinode.insert((pos.0, pos.1)) {
+                                count += 1;
+                                println!("✅ {count:3}  {pos:3?}");
+                            } else {
+                                println!("❕      {pos:3?} ready in antinode list");
                             }
+                        } else {
+                            println!("❕      {pos:3?} is outside map");
                         }
                     }
                 }
             }
         }
-
-        for j in 0..grid.rows() {
-            for i in 0..grid.cols() {
-                print!("{}", grid.get(j,i).unwrap());
-            }
-            println!();
-        }
-        // grid.iter().filter(|&char| char == &'#').count() as u64
-        count
+        count // antinode.len() as u64
     }
 }
 
