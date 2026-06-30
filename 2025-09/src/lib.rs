@@ -5,7 +5,7 @@ pub struct Seat {
 }
 
 impl Seat {
-    pub fn new_xy(x: u64,y: u64) -> Self {
+    pub fn new_xy(x: u64, y: u64) -> Self {
         Self { x, y }
     }
 
@@ -21,39 +21,39 @@ impl Seat {
 
     pub fn new(c: Vec<String>) -> Self {
         Self {
-            x: c.first().unwrap_or(&"0".to_string()).parse::<u64>().unwrap(),
+            x: c.first()
+                .unwrap_or(&"0".to_string())
+                .parse::<u64>()
+                .unwrap(),
             y: c.get(1).unwrap_or(&"0".to_string()).parse::<u64>().unwrap(),
         }
     }
 
     pub fn area(&self, b: Seat) -> u64 {
-        (
-            ((self.x as i64 - b.x as i64 ).abs() +1)  * 
-            ((self.y as i64 - b.y as i64 ).abs() +1)
-        ) as u64
+        (((self.x as i64 - b.x as i64).abs() + 1) * ((self.y as i64 - b.y as i64).abs() + 1)) as u64
     }
 }
 
-
 pub mod part1 {
-    use std::collections::HashMap;
     use crate::Seat;
+    use std::collections::HashMap;
 
     pub fn solve(file: String) -> u64 {
         let mut areas = HashMap::<(Seat, Seat), u64>::new();
-        let seats = file.lines().filter(|line| !line.is_empty())
+        let seats = file
+            .lines()
+            .filter(|line| !line.is_empty())
             .map(|line| {
-                let str_arr = line.split(",")
-                    .map(|str| str.to_string())
-                    .collect();
+                let str_arr = line.split(",").map(|str| str.to_string()).collect();
                 Seat::new(str_arr)
-            }).collect::<Vec<Seat>>();
+            })
+            .collect::<Vec<Seat>>();
 
         for i in 0..seats.len() {
             let iseat = seats.get(i).unwrap();
-            for j in i+1..seats.len() {
+            for j in i + 1..seats.len() {
                 let jseat = seats.get(j).unwrap();
-                areas.insert((*iseat,*jseat), iseat.area(*jseat));
+                areas.insert((*iseat, *jseat), iseat.area(*jseat));
             }
         }
 
@@ -66,8 +66,8 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    use std::cmp::{ max, min};
     use crate::Seat;
+    use std::cmp::{max, min};
     use std::collections::{HashMap, HashSet};
     pub fn solve(file: String) -> u64 {
         let red_tiles = file
@@ -105,22 +105,21 @@ pub mod part2 {
 
         let mut boundary = HashSet::new();
         for i in 0..red_tiles.len() {
-                let p1 = red_tiles[i];
-                let p2 = red_tiles[(i + 1) % red_tiles.len()];
-    
-                boundary.insert(p1);
-    
-                if p1.x == p2.x {
-                    for y in min(p1.y, p2.y)..=max(p1.y, p2.y) {
-                        boundary.insert(Seat { x: p1.x, y });
-                    }
-                } else {
-                    // p1.y == p2.y
-                    for x in min(p1.x, p2.x)..=max(p1.x, p2.x) {
-                        boundary.insert(Seat { x, y: p1.y });
-                    }
-                }
+            let p1 = red_tiles[i];
+            let p2 = red_tiles[(i + 1) % red_tiles.len()];
 
+            boundary.insert(p1);
+
+            if p1.x == p2.x {
+                for y in min(p1.y, p2.y)..=max(p1.y, p2.y) {
+                    boundary.insert(Seat { x: p1.x, y });
+                }
+            } else {
+                // p1.y == p2.y
+                for x in min(p1.x, p2.x)..=max(p1.x, p2.x) {
+                    boundary.insert(Seat { x, y: p1.y });
+                }
+            }
         }
 
         for y_idx in 0..sorted_y.len() {
@@ -199,4 +198,3 @@ pub mod part2 {
         max_area
     }
 }
-

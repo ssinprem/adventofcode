@@ -6,11 +6,11 @@ macro_rules! test_case {
         $expect:expr,
         $input:expr
     ) => {
-#[test]
-fn $fn_name() {
-    let input = $input.to_string();
-    assert_eq!($solver(input),$expect);
-}
+        #[test]
+        fn $fn_name() {
+            let input = $input.to_string();
+            assert_eq!($solver(input), $expect);
+        }
     };
 }
 
@@ -23,19 +23,22 @@ macro_rules! test_cases {
         $solver2:path,
         $expect2:expr,
         $input:expr
-    ) => {  paste::paste! {
-#[test]
-fn [< $fn_name _part1 >]() {
-    let input = $input.to_string();
-    assert_eq!($solver1(input),$expect1);
-}
+    ) => {
+        paste::paste! {
+        #[test]
+        fn [< $fn_name _part1 >]() {
+            let input = $input.to_string();
+            assert_eq!($solver1(input),$expect1);
+        }
 
-#[test]
-fn [< $fn_name _part2 >]() {
-    let input = $input.to_string();
-    assert_eq!($solver2(input),$expect2);
+        #[test]
+        fn [< $fn_name _part2 >]() {
+            let input = $input.to_string();
+            assert_eq!($solver2(input),$expect2);
+        }
+        }
+    };
 }
-}}}
 
 #[macro_export]
 macro_rules! test_case_n {

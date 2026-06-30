@@ -1,7 +1,7 @@
 use cafetaria::*;
 use utility::test_case_n;
 
-test_case_n!(example, 
+test_case_n!(example,
 "3-5
 10-14
 16-20
@@ -17,7 +17,7 @@ test_case_n!(example,
     part2: (part2::solve, 14)
 );
 
-test_case_n!(no_overlap, 
+test_case_n!(no_overlap,
 "1-3
 10-12
 

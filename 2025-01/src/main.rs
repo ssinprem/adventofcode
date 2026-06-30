@@ -1,8 +1,8 @@
-use std::fs::read_to_string;
-use std::error::Error;
 use secret_entrance::*;
+use std::error::Error;
+use std::fs::read_to_string;
 
-fn main() -> Result<(), Box<dyn Error>>{
+fn main() -> Result<(), Box<dyn Error>> {
     let file = read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/input.txt"))?;
     println!("1_1 = {}", part1::solution1(file.clone()));
     println!("1_2 = {}", part1::solution2(file.clone()));
@@ -12,4 +12,3 @@ fn main() -> Result<(), Box<dyn Error>>{
     println!("2_1 = {}", part2::solution1(file.clone()));
     Ok(())
 }
-

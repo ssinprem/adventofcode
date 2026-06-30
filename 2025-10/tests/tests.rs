@@ -210,4 +210,3 @@ test_case_n_ignore!(input,
     part1: (part1::solve, 488),
     part2: (part2::solve, 18771)
 );
-

@@ -1,8 +1,7 @@
 use christmas_tree_farm::*;
 use utility::*;
 
-const EXAMPLE_PATTERN : &str =
-"
+const EXAMPLE_PATTERN: &str = "
 0:
 ###
 ##.
@@ -87,4 +86,3 @@ test_case_n!(first_line,
 ",
     part1: (part1::solve, 1)
 );
-

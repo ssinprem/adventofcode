@@ -1,42 +1,43 @@
 use regex::Regex;
 
 #[allow(clippy::type_complexity)]
-pub fn parse(line : &str) -> Option<(Vec<bool>, Vec<Vec<usize>>, Vec<i32>)> {
-    let re_line = Regex::new(
-        r"(?m)\[([.#]+)\] (\(.+\) )+\{([0-9,]+)\}"
-    ).unwrap();
+pub fn parse(line: &str) -> Option<(Vec<bool>, Vec<Vec<usize>>, Vec<i32>)> {
+    let re_line = Regex::new(r"(?m)\[([.#]+)\] (\(.+\) )+\{([0-9,]+)\}").unwrap();
     if let Some(caps) = re_line.captures(line) {
         // parsing
-        let (_full, [light, switch, joltage ]) = caps.extract();
-        let lights: Vec<bool> = light.chars().map(|c| {
-                match c {
-                    '.' => false,
-                    '#' => true,
-                    _ => unreachable!(),
-                }
-            }).collect();
+        let (_full, [light, switch, joltage]) = caps.extract();
+        let lights: Vec<bool> = light
+            .chars()
+            .map(|c| match c {
+                '.' => false,
+                '#' => true,
+                _ => unreachable!(),
+            })
+            .collect();
         // println!("light:   {lights:?}");
-        let mut switchs: Vec<Vec<usize>> = switch.split(" ")
-        .filter(|sw| !sw.is_empty())
-        .map(|mut sw| {
-            sw = sw.strip_prefix("(").expect("error not found '('");
-            sw = sw.strip_suffix(")").expect("error not found ')'");
-            sw.split(",").map(|l| {
-                l.parse::<usize>().expect("cannot parse")
-            }).collect::<Vec<usize>>()
-        }).collect();
+        let mut switchs: Vec<Vec<usize>> = switch
+            .split(" ")
+            .filter(|sw| !sw.is_empty())
+            .map(|mut sw| {
+                sw = sw.strip_prefix("(").expect("error not found '('");
+                sw = sw.strip_suffix(")").expect("error not found ')'");
+                sw.split(",")
+                    .map(|l| l.parse::<usize>().expect("cannot parse"))
+                    .collect::<Vec<usize>>()
+            })
+            .collect();
         switchs.sort_by_key(|sw| sw.len());
         switchs.reverse();
         // println!("switch:  {switchs:?}");
-        let joltages : Vec<i32> = joltage.split(",")
-        .map(|l| {
-            l.parse::<i32>().expect("cannot parse")
-        }).collect();
+        let joltages: Vec<i32> = joltage
+            .split(",")
+            .map(|l| l.parse::<i32>().expect("cannot parse"))
+            .collect();
         // println!("joltage: {joltages:?}");
         if lights.is_empty() || switchs.is_empty() || joltages.is_empty() {
             None
         } else {
-            Some((lights,switchs,joltages))
+            Some((lights, switchs, joltages))
         }
     } else {
         None
@@ -44,7 +45,7 @@ pub fn parse(line : &str) -> Option<(Vec<bool>, Vec<Vec<usize>>, Vec<i32>)> {
 }
 
 pub mod part1 {
-    fn press(mut light: Vec<bool>, switch:Vec<usize>) -> Vec<bool> {
+    fn press(mut light: Vec<bool>, switch: Vec<usize>) -> Vec<bool> {
         for l in switch {
             light[l] = !light[l];
         }
@@ -52,32 +53,33 @@ pub mod part1 {
     }
 
     pub fn solve(file: String) -> u64 {
-        file.lines().filter(|line| !line.is_empty())
-        .map(|line| {
-            if let Some((lights, switchs, _joltage )) = crate::parse(line) {
-                (1..2_i32.pow(switchs.len() as u32))
-                .fold(switchs.len(), |min, sws| {
-                    let mut temp_light = lights.clone();
-                    for (sw, _item) in switchs.iter().enumerate() {
-                        if (sws >> sw) % 2 == 1 {
-                            temp_light = press(temp_light, switchs[sw].clone());
+        file.lines()
+            .filter(|line| !line.is_empty())
+            .map(|line| {
+                if let Some((lights, switchs, _joltage)) = crate::parse(line) {
+                    (1..2_i32.pow(switchs.len() as u32)).fold(switchs.len(), |min, sws| {
+                        let mut temp_light = lights.clone();
+                        for (sw, _item) in switchs.iter().enumerate() {
+                            if (sws >> sw) % 2 == 1 {
+                                temp_light = press(temp_light, switchs[sw].clone());
+                            }
                         }
-                    }
-                    if temp_light.iter().all(|&l| !l) {
-                        sws.count_ones().min(min as u32) as usize
-                    } else {
-                        min
-                    }
-                })
-            } else {
-                0
-            }
-        }).sum::<usize>() as u64
+                        if temp_light.iter().all(|&l| !l) {
+                            sws.count_ones().min(min as u32) as usize
+                        } else {
+                            min
+                        }
+                    })
+                } else {
+                    0
+                }
+            })
+            .sum::<usize>() as u64
     }
 }
 
 pub mod part2 {
-    fn _press(mut joltage: Vec<i32>, switch:Vec<usize>) -> Vec<i32> {
+    fn _press(mut joltage: Vec<i32>, switch: Vec<usize>) -> Vec<i32> {
         // print!("press {switch:?}    -> {joltage:?}");
         for l in switch {
             joltage[l] -= 1;
@@ -86,7 +88,7 @@ pub mod part2 {
         joltage
     }
 
-    fn _undo(mut joltage: Vec<i32>, switch:Vec<usize>) -> Vec<i32> {
+    fn _undo(mut joltage: Vec<i32>, switch: Vec<usize>) -> Vec<i32> {
         // print!("press {switch:?}    -> {joltage:?}");
         for l in switch {
             joltage[l] += 1;
@@ -95,19 +97,18 @@ pub mod part2 {
         joltage
     }
 
-
-    fn _find_min(joltage: Vec<i32>, switchs: Vec<Vec<usize>>, min: &mut usize, steps: usize ) {
+    fn _find_min(joltage: Vec<i32>, switchs: Vec<Vec<usize>>, min: &mut usize, steps: usize) {
         if steps >= *min {
             // println!("Overmin {min:?} {}",steps.len());
             return;
         }
 
-        if joltage.iter().any(|&j| j<0 ){
+        if joltage.iter().any(|&j| j < 0) {
             // println!("Dead end {joltage:?} {} ",steps.len());
             return;
         }
 
-        if switchs.len() <= 1 && joltage.iter().all(|&j| j==0) {
+        if switchs.len() <= 1 && joltage.iter().all(|&j| j == 0) {
             if steps < *min {
                 *min = steps;
             }
@@ -115,11 +116,12 @@ pub mod part2 {
             return;
         }
 
-        if joltage.iter().enumerate()
-        .filter(|&(_index,&value)| value != 0)
-        .any(|(index, &_value)| {
-            ! switchs.iter().any(|sw| sw.contains(&index))
-        }) {
+        if joltage
+            .iter()
+            .enumerate()
+            .filter(|&(_index, &value)| value != 0)
+            .any(|(index, &_value)| !switchs.iter().any(|sw| sw.contains(&index)))
+        {
             // Can't be reach
             return;
         }
@@ -127,12 +129,15 @@ pub mod part2 {
         for i in 0..switchs.len() {
             let mut new_switch = switchs.clone();
             let target_switch = new_switch.split_off(i);
-            if ! target_switch.is_empty() {
+            if !target_switch.is_empty() {
                 let switch = target_switch.first().unwrap().clone();
-                
+
                 _find_min(
-                    _press(joltage.clone(), switch), 
-                    target_switch, min, steps+1);
+                    _press(joltage.clone(), switch),
+                    target_switch,
+                    min,
+                    steps + 1,
+                );
             }
         }
     }
@@ -226,47 +231,50 @@ pub mod part2 {
             *global_min_presses = presses_so_far.min(*global_min_presses);
         }
     }
-    
-    pub fn solve(file: String) -> u64 {
-        file.lines().enumerate().map(|(index, line)| {
-            if let Some((_light, switchs, joltages)) = crate::parse(line) {
-                let mut jolt = joltages.clone();
-                let mut min = usize::MAX;
-                let num_buttons = switchs.len();
-                let num_counters = joltages.len();
-                let mut assigned: Vec<Option<_>> = vec![None; num_buttons];
 
-                // Build a reverse lookup: mapping each counter to the buttons that affect it
-                let mut counter_to_buttons = vec![Vec::new(); num_counters];
-                for (b_idx, counters) in switchs.iter().enumerate() {
-                    for &c_idx in counters {
-                        if c_idx < num_counters {
-                            counter_to_buttons[c_idx].push(b_idx);
+    pub fn solve(file: String) -> u64 {
+        file.lines()
+            .enumerate()
+            .map(|(index, line)| {
+                if let Some((_light, switchs, joltages)) = crate::parse(line) {
+                    let mut jolt = joltages.clone();
+                    let mut min = usize::MAX;
+                    let num_buttons = switchs.len();
+                    let num_counters = joltages.len();
+                    let mut assigned: Vec<Option<_>> = vec![None; num_buttons];
+
+                    // Build a reverse lookup: mapping each counter to the buttons that affect it
+                    let mut counter_to_buttons = vec![Vec::new(); num_counters];
+                    for (b_idx, counters) in switchs.iter().enumerate() {
+                        for &c_idx in counters {
+                            if c_idx < num_counters {
+                                counter_to_buttons[c_idx].push(b_idx);
+                            }
                         }
                     }
+
+                    backtrack(
+                        &mut jolt,
+                        &mut assigned,
+                        &switchs,
+                        &counter_to_buttons,
+                        0,
+                        &mut min,
+                    );
+                    println!("{}. -> {min}", index + 1);
+                    min
+                } else {
+                    0
                 }
-                
-                backtrack(
-                    &mut jolt,
-                    &mut assigned,
-                    &switchs,
-                    &counter_to_buttons,
-                    0,
-                    &mut min
-                );
-                println!("{}. -> {min}",index+1);
-                min
-            } else {
-                0
-            }
-            // if let Some((_light, switchs, joltages)) = crate::parse(line) {
-            //     let mut min = usize::MAX;
-            //     find_min(joltages.clone(), switchs, &mut min, 0);
-            //     println!("{}. -> {min}",index+1);
-            //     min
-            // } else {
-            //     0
-            // }
-        }).sum::<usize>() as u64
+                // if let Some((_light, switchs, joltages)) = crate::parse(line) {
+                //     let mut min = usize::MAX;
+                //     find_min(joltages.clone(), switchs, &mut min, 0);
+                //     println!("{}. -> {min}",index+1);
+                //     min
+                // } else {
+                //     0
+                // }
+            })
+            .sum::<usize>() as u64
     }
 }
