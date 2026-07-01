@@ -79,7 +79,16 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use super::*;
+
+    pub fn solve(file: String) -> u64 {
+        let map = parse(file);
+        let high_list = find_highest(&map);
+        high_list
+            .iter()
+            .map(|&high| {
+                trail_down(&map, high).len()
+            })
+            .sum::<usize>() as u64
     }
 }
