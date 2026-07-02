@@ -1,5 +1,5 @@
 [package]
-name = "package_name"
+name = "disk_fragmenter"
 version = "0.1.0"
 edition = "2024"
 

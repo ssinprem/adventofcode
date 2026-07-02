@@ -3,7 +3,7 @@
 
 if [ $# -lt 2 ]; then
   echo "need new directory name and package_name"
-  echo "eg.  $0 2025-01 secret_entrance"
+  echo "eg.  $0 2025/2025-01 secret_entrance"
   exit 1;
 fi
 
@@ -18,6 +18,4 @@ fi
 pwd=$(pwd)
 cp -r _template $name
 find $name -type f -exec sed -i 's@package_name@'$package'@g' {} +
-find $name -type f -exec sed -i 's@path_name@'$pwd'@g' {} +
-find $name -type f -exec sed -i 's@directory_name@'$name'@g' {} +
 ./refresh.sh
