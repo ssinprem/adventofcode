@@ -85,16 +85,16 @@ pub mod part2 {
                 .collect::<Vec<(usize, Space)>>();
             let chunks: Vec<_> = binding.chunk_by(|a, b| a.1 == b.1).collect();
 
-            if 
-                let Some(&useds) = chunks.iter().rev().skip(skip).find(
-                    |&&vec| vec.iter().all(|s| s.1!=Space::Free)) 
-               &&
-                let Some(&frees) = chunks.iter().find(|&&vec| 
-                    vec.iter().all(|s| s.1 == Space::Free
-                    && useds.len() <= vec.len()
-                ))
-               &&
-               frees[0].0 < useds[0].0
+            if let Some(&useds) = chunks
+                .iter()
+                .rev()
+                .skip(skip)
+                .find(|&&vec| vec.iter().all(|s| s.1 != Space::Free))
+                && let Some(&frees) = chunks.iter().find(|&&vec| {
+                    vec.iter()
+                        .all(|s| s.1 == Space::Free && useds.len() <= vec.len())
+                })
+                && frees[0].0 < useds[0].0
             {
                 let free_pos = frees.iter().map(|s| s.0);
                 let used_pos = useds.iter().map(|s| s.0);
@@ -105,7 +105,7 @@ pub mod part2 {
             } else if skip > max_chunk / 2 {
                 break;
             }
-            skip+=1;
+            skip += 1;
         }
         checksum(disk)
     }

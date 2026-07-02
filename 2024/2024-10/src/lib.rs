@@ -86,9 +86,7 @@ pub mod part2 {
         let high_list = find_highest(&map);
         high_list
             .iter()
-            .map(|&high| {
-                trail_down(&map, high).len()
-            })
+            .map(|&high| trail_down(&map, high).len())
             .sum::<usize>() as u64
     }
 }
