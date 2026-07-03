@@ -78,11 +78,11 @@ pub fn print_map(robots: &[Robot], limit: (i32,i32)) -> String {
             if n>0 {
                 str += format!("{n}").as_str();
             } else if x == midx && y == midy {
-                str += "+";
+                str += "╬";
             } else if x == midx {
-                str += "|";
+                str += "║";
             } else if y == midy {
-                str += "—";
+                str += "═";
             } else {
                 str += ".";
             }
@@ -125,7 +125,50 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use super::*;
+
+    use std::io;
+    use std::io::prelude::*;
+    fn pause() {
+        let mut stdin = io::stdin();
+        let mut stdout = io::stdout();
+
+        // We want the cursor to stay at the end of the line, so we print without a newline and flush manually.
+        write!(stdout, "Press any key to continue...").unwrap();
+        stdout.flush().unwrap();
+
+        // Read a single byte and discard
+        let _ = stdin.read(&mut [0u8]).unwrap();
+    }
+
+    pub fn solve(file: String, limit: (i32,i32)) -> u64 {
+        let mut robots = parse(file, limit);
+
+        println!("{}", print_map(robots.as_slice(), limit));
+        let mut i = 0;
+        println!("{}", print_map(robots.as_slice(), limit));
+        loop {
+            robots.iter_mut().for_each(|robot| {
+                robot.moved();
+            });
+            i+=1;
+            println!("{i}");
+            if (0..limit.1).any(|y| {
+                let mut max_stack = 0;
+                let mut stack = 0;
+                (0..limit.0).for_each(| x | {
+                    if robots.iter().filter(|robot| robot.pos == (x,y)).count() > 0 {
+                        stack += 1;
+                    } else {
+                        max_stack = max_stack.max(stack);
+                        stack = 0;
+                    }
+                });
+                max_stack > 10
+            }) {
+                println!("{} {i}", print_map(robots.as_slice(), limit));
+                pause();
+            }
+        }
     }
 }
