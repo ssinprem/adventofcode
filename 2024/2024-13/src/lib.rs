@@ -27,16 +27,20 @@ pub fn parse(file: String) -> Vec<((i32,i32),(i32,i32),(i32,i32))> {
 
 // find A,B   A*ax + B*bx = rx
 //            A*ay + B*by = ry
-pub fn ab_solve(ax:i32,bx:i32,rx:i32,ay:i32,by:i32,ry:i32) -> (i32,i32) {
+pub fn ab_solve(ax:i32,bx:i32,rx:i32,ay:i32,by:i32,ry:i32) -> Option<(i32,i32)> {
     let deter
      = (ax*by) - (bx*ay);
 
+    let a = (rx*by - ry*bx) / deter;
+    let b = (ry*ax - rx*ay) / deter;
     // a  b  e  c  d  f
     // ax bx rx ay by ry
-    (
-        (rx*by - ry*bx) / deter,
-        (ry*ax - rx*ay) / deter
-    )
+
+    if a*ax+b*bx==rx && a*ay+b*by==ry {
+        Some((a ,b))
+    } else {
+        None
+    }
 }
 
 pub mod part1 {
@@ -46,7 +50,7 @@ pub mod part1 {
 
         datas.iter()
         .inspect(|d| println!("{d:?}"))
-        .map(|(
+        .filter_map(|(
             (ax,ay),
             (bx,by),
             (rx,ry))
