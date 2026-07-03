@@ -1,6 +1,6 @@
+use package_name::*;
 use std::error::Error;
 use std::fs::read_to_string;
-use package_name::*;
 
 fn main() -> Result<(), Box<dyn Error>>{
     let file = read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/input.txt"))?;
