@@ -19,5 +19,5 @@ Button B: X+27, Y+71
 Prize: X=18641, Y=10279
 ",
     part1: (part1::solve, 280 + 200),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 875318608908)
 );
