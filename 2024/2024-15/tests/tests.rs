@@ -12,8 +12,20 @@ test_case_n!(smaller_example,"
 ########
 
 <^^>>>vv<v>>v<<",
-    part1: (part1::solve, 2028),
-    part2: (part2::solve, 0)
+    part1: (part1::solve, 2028)
+);
+
+test_case_n!(three_box_example,"
+#######
+#...#.#
+#.....#
+#..OO@#
+#..O..#
+#.....#
+#######
+
+<vv<<^^<<^^",
+    part2: (part2::solve, 618)
 );
 
 test_case_n!(larger_example,"
@@ -37,7 +49,10 @@ vvv<<^>^v^^><<>>><>^<<><^vv^^<>vvv<>><^^v>^>vv<>v<<<<v<^v>^<^^>>>^<v<v
 >^>>^v>vv>^<<^v<>><<><<v<<v><>v<^vv<<<>^^v^>^^>>><<^v>>v^v><^^>>^<>vv^
 <><^^>^^^<><vvvvv^v<v<<>^v<v>v<<^><<><<><<<^^<<<^<<>><<><^^^>^^<>^>v<>
 ^^>vv<^v^v<vv>^<><v<^v>^^^>>>^^vvv^>vvv<>>>^<^>>>>>^<<^v>^vvv<>^<><<v>
-v^^>>><<^^<>>^v^<v^vv<>v^<<>^<^v^v><^<<<><<^<v><v<>vv>>v><v^<vv<>v^<<^",
+v^^>>><<^^<>>^v^<v^vv<>v^<<>^<^v^v><^<<<><<^<v><v<>vv>>v><v^<vv<>v^<<^
+",
     part1: (part1::solve, 10092),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 9021)
 );
+
+//1463160
