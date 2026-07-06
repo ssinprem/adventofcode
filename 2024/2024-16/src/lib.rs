@@ -59,62 +59,11 @@ pub fn _print_map(map: &Grid<Cell>, path: &[(isize, isize)]) {
 
 pub mod part1 {
     use super::*;
-
-    fn score(path: &Vec<(isize,isize)>) -> u64 {
-        let turn = path
-                    .windows(3)
-                    .filter(|row| row[0].0 != row[2].0 && row[0].1 != row[2].1)
-                    .count()
-                    + 1;
-        (turn * 1000 + path.len() - 1) as u64
-    }
-    fn find_path(
-        map: &Grid<Cell>,
-        path: Vec<(isize, isize)>,
-        target: (isize, isize),
-        best: &mut u64
-    ) -> Option<Vec<Vec<(isize, isize)>>> {
-        
-        let curr = path.last().expect("cannot get current cell");
-        // _print_map(map, &path);
-        if curr == &target {
-            // _print_map(map, &path);
-            *best = score(&path).min(*best);
-            println!("new best score :{best}");
-            return Some(vec![path]);
-        }
-
-        let paths: Vec<Vec<(isize, isize)>> = ([(-1, 0), (0, -1), (1, 0), (0, 1)])
-            .iter()
-            .filter_map(|direction| {
-                let next = (curr.0 + direction.0, curr.1 + direction.1);
-                // ignore the old line
-                if path.contains(&next) {
-                    return None;
-                }
-                // ignore wall
-                if let Some(item) = map.get(next.1, next.0)
-                    && item == &Cell::Wall
-                {
-                    return None;
-                }
-                let mut next_path = path.clone();
-                next_path.push(next);
-                // ignore if score worse then the best score.
-                if *best != u64::MAX && score(&next_path) >= *best {
-                    return None;
-                }
-                find_path(map, next_path, target, best)
-            })
-            .flatten()
-            .collect();
-
-        if paths.is_empty() { None } else { Some(paths) }
-    }
+    use std::collections::HashMap;
 
     pub fn solve(file: String) -> u64 {
         let map = parse(file);
-        _print_map(&map, &[]);
+        // _print_map(&map, &[]);
         let cols = map.cols() as isize;
         let start_idx = map
             .iter()
@@ -128,25 +77,70 @@ pub mod part1 {
             .clone()
             .enumerate()
             .find(|(_id, cell)| cell == &&Cell::End)
-            .expect("cannot find start")
+            .expect("cannot find end")
             .0 as isize;
         let start = (start_idx % cols, start_idx / cols);
         let end = (end_idx % cols, end_idx / cols);
-        let mut best = u64::MAX;
-        let paths = find_path(&map, vec![start], end, &mut best).expect("cannot find path");
-        let scores: Vec<_> = paths
-            .iter()
-            .map(|path| {
-                (score(path), path)
+        #[allow(clippy::type_complexity)]
+        let mut scores: HashMap<(isize, isize), (u64, Option<(isize, isize)>)> = (0..map.rows())
+            .flat_map(|x| {
+                (0..map.cols())
+                    .filter_map(|y| {
+                        if let Some(cell) = map.get(y, x)
+                            && cell != &Cell::Wall
+                        {
+                            Some(((x as isize, y as isize), (u64::MAX, None)))
+                        } else {
+                            None
+                        }
+                    })
+                    .collect::<HashMap<_, _>>()
             })
-            .collect();
+            .collect::<HashMap<_, _>>();
+        let mut stack = Vec::<((isize, isize), (isize, isize), u64)>::new();
+        // init start point with score 0
+        scores.insert(start, (0, None));
+        stack.push((start, (0, 0), 0));
 
-        scores
-            .iter()
-            .min_by_key(|s| s.0)
-            .inspect(|min| _print_map(&map, min.1))
-            .expect("cannot find min score")
-            .0 as u64
+        while let Some((pos, dir, score)) = stack.pop() {
+            if score
+                > scores
+                    .get(&pos)
+                    .expect("cannot get score at current vertex")
+                    .0
+            {
+                continue;
+            }
+            for next_dir in [(-1, 0), (0, -1), (1, 0), (0, 1)] {
+                // ignore backward directions
+                if next_dir.0 == -dir.0 && next_dir.1 == -dir.1 {
+                    continue;
+                }
+
+                let next_pos = (pos.0 + next_dir.0, pos.1 + next_dir.1);
+                // ignore wall
+                if Some(&Cell::Wall) == map.get(next_pos.1, next_pos.0) {
+                    continue;
+                }
+
+                let new_score = if dir != next_dir {
+                    1000 + 1 + score
+                } else {
+                    1 + score
+                };
+                if new_score
+                    < scores
+                        .get(&next_pos)
+                        .expect("cannot get score at next_pos")
+                        .0
+                {
+                    scores.insert(next_pos, (new_score, Some(pos)));
+                    stack.push((next_pos, next_dir, new_score));
+                }
+            }
+        }
+
+        scores.get(&end).expect("cannot get end point").0
     }
 }
 
