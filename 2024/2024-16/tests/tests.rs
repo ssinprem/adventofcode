@@ -18,7 +18,7 @@ test_case_n!(example,"
 #S..#.....#...#
 ###############",
     part1: (part1::solve, 7036),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 45)
 );
 
 test_case_n!(second_example,"
@@ -40,5 +40,5 @@ test_case_n!(second_example,"
 #S#.............#
 #################",
     part1: (part1::solve, 11048),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 64)
 );
