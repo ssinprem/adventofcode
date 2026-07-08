@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 pub fn parse(file: String) -> (Vec<String>, Vec<String>) {
     let (str_mat, str_order) = file.split_once("\n\n").unwrap();
     (
@@ -12,39 +14,64 @@ pub fn parse(file: String) -> (Vec<String>, Vec<String>) {
     )
 }
 
+pub fn makable(order: String, pattern: &Vec<String>, lib: &mut HashMap<String, u64>) -> u64 {
+    if order.is_empty() {
+        return 1;
+    }
+
+    if let Some(cache) = lib.get(&order.to_string()) {
+        *cache
+    } else {
+        let score = pattern
+            .iter()
+            .filter_map(|pat| {
+                if order.starts_with(pat) {
+                    Some(makable(
+                        order.strip_prefix(pat).unwrap().to_string(),
+                        pattern,
+                        lib,
+                    ))
+                } else {
+                    None
+                }
+            })
+            .sum();
+        lib.insert(order.to_string(), score);
+        score
+    }
+}
+
 pub mod part1 {
     use super::*;
 
-    pub fn makable(order: String, pattern: &Vec<String>) -> bool {
-        if order.is_empty() {
-            return true;
-        }
-
-        pattern.iter().any(|pat| {
-            if order.starts_with(pat) {
-                makable(order.strip_prefix(pat).unwrap().to_string(), pattern)
-            } else {
-                false
-            }
-        })
-    }
-
     pub fn solve(file: String) -> u64 {
         let (pattern, orders) = parse(file);
-
-        println!("{pattern:?}");
-        println!("{orders:?}");
-
+        let mut lib = HashMap::<String, u64>::new();
         orders
             .iter()
-            .filter(|order| makable(order.to_string(), &pattern))
+            .filter(|order| makable(order.to_string(), &pattern, &mut lib) > 0)
             .inspect(|order| println!("✅ {order}"))
             .count() as u64
     }
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use super::*;
+
+    pub fn solve(file: String) -> u64 {
+        let (pattern, orders) = parse(file);
+        let mut lib = HashMap::<String, u64>::new();
+        orders
+            .iter()
+            .map(|order| (order, makable(order.to_string(), &pattern, &mut lib)))
+            .inspect(|(order, option)| {
+                if *option > 0 {
+                    println!("✅ {order} : {option}");
+                } else {
+                    println!("❌ {order}");
+                }
+            })
+            .map(|(_, option)| option)
+            .sum::<u64>()
     }
 }
