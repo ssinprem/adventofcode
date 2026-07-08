@@ -28,5 +28,5 @@ test_case_n!(example,"
 1,6
 2,0",
     part1: (part1::solve, 22, (7,7), 12),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, "6,1", (7,7), 12)
 );

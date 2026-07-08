@@ -110,7 +110,29 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use super::*;
+
+    pub fn solve(file: String, size: (usize, usize), limit: usize) -> String {
+        // _print_map(&map, &[]);
+        let max = file.clone().lines().count();
+        let mut nlimit = limit;
+        while nlimit < max {
+            nlimit += 1;
+            let map = parse(file.clone(), size, nlimit);
+            let size = (size.0 as isize, size.1 as isize);
+            let (dist, _) = dijkstra(&map, (0, 0));
+            if let Some(score) = dist.get(&(size.0 - 1, size.1 - 1)) {
+                println!("{nlimit} {score} {}",
+                    file.clone().lines().filter(|line| !line.is_empty())
+                    .nth(nlimit).unwrap()
+                );
+            } else {
+                let blocker = file.clone().lines().filter(|line| !line.is_empty())
+                        .nth(nlimit-1).unwrap().to_string();
+                _print_map(&map, &[]);
+                return blocker;
+            }
+        }
+        "None".to_string()
     }
 }
