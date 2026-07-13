@@ -84,7 +84,7 @@ pub mod part2 {
         println!("{reg:?}  {ops:?}");
         let (new_reg,output) = run(&reg,&ops);
         println!("{new_reg:?}  {output:?}");
-        let mut old_a =0;
+        let mut old_a;
         let mut a = 0;
         loop {
             let (_, new_output) = run(&vec![a,0,0], &ops);
