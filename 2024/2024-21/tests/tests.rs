@@ -12,47 +12,12 @@ test_case_n!(example,"
 );
 
 #[test]
-fn test_get_sequence_by_botton() {
-
-    assert_eq!(
-        get_seq_by_btn('9', '2'),
-        "vv<A".to_string()
-    );
-    assert_eq!(
-        get_seq_by_btn('A', '7'),
-        "^^^<<A".to_string()
-    );
-    assert_eq!(
-        get_seq_by_btn('1', 'A'),
-        ">>vA".to_string()
-    );
-
-    assert_eq!(
-        get_seq_by_btn('<', 'A'),
-        ">>^A".to_string()
-    );
-    assert_eq!(
-        get_seq_by_btn('^', 'v'),
-        "vA".to_string()
-    );
-    assert_eq!(
-        get_seq_by_btn('^', '>'),
-        "v>A".to_string()
-    );
-}
-
-#[test]
-fn test_get_sequence_by_set() {
-    assert_eq!(
-        get_seq_by_set("09".to_string()),
-        "<A^^^>A".to_string()
-    );
-    assert_eq!(
-        get_seq_by_set("029A".to_string()),
-        "<A^A^^>AvvvA".to_string()
-    );
-    assert_eq!(
-        get_seq_by_set("<A^A>^^AvvvA".to_string()),
-        "v<<A>>^A<A>AvA^<AA>Av<AAA^>A".to_string()
-    );
+fn test_function() {
+    assert_eq!(get_best_length("029A".to_string(), 1), 12);
+    assert_eq!(get_best_length("029A".to_string(), 2), 28);
+    assert_eq!(get_best_length("029A".to_string(), 3), 68);
+    assert_eq!(get_best_length("980A".to_string(), 3), 60);
+    assert_eq!(get_best_length("179A".to_string(), 3), 68);
+    assert_eq!(get_best_length("456A".to_string(), 3), 64);
+    assert_eq!(get_best_length("379A".to_string(), 3), 64);
 }

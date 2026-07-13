@@ -1,3 +1,4 @@
+use grid::Grid;
 
 // Numpad
 //     -2  -1   0
@@ -18,113 +19,123 @@
 //   +---+---+---+
 // 1 | < | v | > |
 //   +---+---+---+
-
-pub fn get_positon(char: char) -> (isize,isize) {
-    match char {
-        'A' => (0, 0),
-        '0' => (-1,0),
-        '1' => (-2,-1),
-        '2' => (-1,-1),
-        '3' => (0,-1),
-        '4' => (-2,-2),
-        '5' => (-1,-2),
-        '6' => (0,-2),
-        '7' => (-2,-3),
-        '8' => (-1,-3),
-        '9' => (0,-3),
-        '<' => (-2,1),
-        'v' => (-1,1),
-        '>' => (0,1),
-        '^' => (-1,0),
-        _ => todo!("not implement")
+pub fn get_grids(is_numpad: bool) -> Grid<char> {
+    if is_numpad {
+        let mut numpad = Grid::new(4, 3);
+        numpad.insert_row(0, vec!['7', '8', '9']);
+        numpad.insert_row(1, vec!['4', '5', '6']);
+        numpad.insert_row(2, vec!['1', '2', '3']);
+        numpad.insert_row(3, vec![' ', '0', 'A']);
+        numpad
+    } else {
+        let mut keypad = Grid::new(2, 3);
+        keypad.insert_row(0, vec![' ', '^', 'A']);
+        keypad.insert_row(1, vec!['<', 'v', '>']);
+        keypad
     }
 }
 
-pub fn get_seq_by_btn(from: char, to: char) -> String {
-    let from_pos = get_positon(from);
-    let to_pos = get_positon(to);
-    let mut cur_pos = from_pos;
-    
+pub fn get_paths(from_char: char, end_char: char) -> Vec<String> {
+    let is_numpad = "0123456789"
+        .chars()
+        .any(|char| from_char == char || end_char == char);
+    let grid = get_grids(is_numpad);
 
-    match (from,to) {
-        ('A','^') => {return "<A".to_string()},
-        ('A','<') => {return "v<<A".to_string()},
-        ('A','v') => {return "v<A".to_string()},
-        ('A','>') => {return "vA".to_string()},
-        ('<','A') => {return ">>^A".to_string()},
-        ('^','A') => {return ">A".to_string()},
-        ('v','A') => {return ">^A".to_string()},
-        ('>','A') => {return "^A".to_string()},
-        ('<','^') => {return ">^A".to_string()},
-        _ => {}
-    }
+    let from_cell = grid
+        .clone()
+        .indexed_into_iter()
+        .find(|(_pos, char)| *char == from_char)
+        .expect("cannot get 'start'");
+    let end_cell = grid
+        .clone()
+        .indexed_into_iter()
+        .find(|(_pos, char)| *char == end_char)
+        .expect("cannot get 'end'");
 
-    let mut out = String::from("");
-    // Priority ^ > v <
-    let mut direction = 0;
-    let mut next_pos ;
-    let mut next_step= "";
-    // println!("{from} {to} -> ");
-    while cur_pos != to_pos {
-        // println!("{cur_pos:2?} {direction}");
-        next_pos = cur_pos;
-        if direction == 3 && cur_pos.1 < to_pos.1 {
-            next_pos = (cur_pos.0, cur_pos.1 + 1);
-            next_step = "v";
-        }
-        if direction == 1 && cur_pos.1 > to_pos.1 {
-            next_pos = (cur_pos.0, cur_pos.1 - 1);
-            next_step = "^";
-        }
-        if direction == 2 && cur_pos.0 > to_pos.0  {
-            next_pos = (cur_pos.0 - 1, cur_pos.1);
-            next_step = "<";
-        }
-        if direction == 0 && cur_pos.0 < to_pos.0 {
-            next_pos = (cur_pos.0 + 1, cur_pos.1);
-            next_step = ">";
-        }
-
-        // check invalid position (-2,0)
-        if next_pos != cur_pos && next_pos != (-2,0) {
-            // println!("{cur_pos:2?} {direction} {next_step} {next_pos:?}");
-            cur_pos = next_pos;
-            out += next_step;
-        } else {
-            direction = (direction + 1) % 4;
-        }
-    }
-    out+"A"
+    find_path(
+        &grid,
+        (from_cell.0.1 as isize, from_cell.0.0 as isize),
+        (end_cell.0.1 as isize, end_cell.0.0 as isize),
+    )
+    .iter()
+    .map(|string| string.to_string() + "A")
+    .collect()
 }
 
-pub fn get_seq_by_set(set: String) -> String {
-    // initial cursor at 'A' (0,0)
-    let seq = "A".to_string() + set.as_str();
+pub fn find_path(grid: &Grid<char>, curr: (isize, isize), target: (isize, isize)) -> Vec<String> {
+    let dy = target.1 - curr.1;
+    let dx = target.0 - curr.0;
 
-    seq.chars().collect::<Vec<char>>().windows(2)
-    .fold("".to_string(),|str, pair| {
-        str + get_seq_by_btn(pair[0], pair[1]).as_str()
-    })
+    let mut dcell = Vec::<(char, (isize, isize))>::new();
+    if dy < 0 {
+        dcell.push(('^', (0, -1)))
+    }
+    if dy > 0 {
+        dcell.push(('v', (0, 1)))
+    }
+    if dx < 0 {
+        dcell.push(('<', (-1, 0)))
+    }
+    if dx > 0 {
+        dcell.push(('>', (1, 0)))
+    }
+    if dcell.is_empty() {
+        return vec!["".to_string()];
+    }
+    dcell
+        .iter()
+        .filter_map(|&(char, div)| {
+            let next = (curr.0 + div.0, curr.1 + div.1);
+            if let Some(next_char) = grid.get(next.1, next.0)
+                && next_char != &' '
+            /* empty key not allown */
+            {
+                let paths = find_path(grid, next, target)
+                    .iter()
+                    .map(|path| char.clone().to_string() + path.as_str())
+                    .collect::<Vec<String>>();
+                Some(paths)
+            } else {
+                None
+            }
+        })
+        .flatten()
+        .collect::<Vec<String>>()
+}
+
+pub fn get_best_length(steps: String, deep: usize) -> usize {
+    if deep == 0 {
+        return steps.len();
+    }
+    let list_steps = "A".to_string() + steps.as_str();
+    let mut count = 0;
+    for pair in list_steps.chars().collect::<Vec<char>>().windows(2) {
+        let from_char = pair[0];
+        let end_char = pair[1];
+
+        let paths = get_paths(from_char, end_char);
+        let best_length = paths
+            .iter()
+            .map(|path| get_best_length(path.to_string(), deep - 1))
+            .min()
+            .unwrap();
+        count += best_length;
+    }
+    count
 }
 
 pub mod part1 {
-    use crate::get_seq_by_set;
+    use super::*;
 
     pub fn solve(file: String) -> u64 {
-        file.lines().filter(|line| !line.is_empty())
-        .map(|line| {
-            let num = line.strip_suffix("A").unwrap()
-            .parse::<u64>().unwrap();
-            let mut temp = get_seq_by_set(line.to_string());
-            println!("{temp}");
-            temp = get_seq_by_set(temp);
-            println!("{temp}");
-            temp = get_seq_by_set(temp);
-            println!("{temp}");
-            let result = num * temp.len() as u64;
-            println!("{result} -- [{}] {num} {temp}", temp.len());
-            result
-        }).sum()
+        file.lines()
+            .filter(|line| !line.is_empty())
+            .map(|line| {
+                let num = line.strip_suffix("A").unwrap().parse::<u64>().unwrap();
+                let temp = get_best_length(line.to_string(), 3);
+                num * temp as u64
+            })
+            .sum()
     }
 }
 
