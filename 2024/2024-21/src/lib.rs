@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use grid::Grid;
 
 // Numpad
@@ -103,7 +105,11 @@ pub fn find_path(grid: &Grid<char>, curr: (isize, isize), target: (isize, isize)
         .collect::<Vec<String>>()
 }
 
-pub fn get_best_length(steps: String, deep: usize) -> usize {
+pub fn get_best_length(steps: String, deep: usize, gbest: &mut HashMap::<(String, usize), usize>) -> usize {
+    if let Some(score) = gbest.get(&(steps.to_string(), deep)) {
+        return *score
+    }
+    
     if deep == 0 {
         return steps.len();
     }
@@ -116,11 +122,12 @@ pub fn get_best_length(steps: String, deep: usize) -> usize {
         let paths = get_paths(from_char, end_char);
         let best_length = paths
             .iter()
-            .map(|path| get_best_length(path.to_string(), deep - 1))
+            .map(|path| get_best_length(path.to_string(), deep - 1, gbest))
             .min()
             .unwrap();
         count += best_length;
     }
+    gbest.insert((steps, deep), count);
     count
 }
 
@@ -128,11 +135,12 @@ pub mod part1 {
     use super::*;
 
     pub fn solve(file: String) -> u64 {
+        let mut gbest = HashMap::new();
         file.lines()
             .filter(|line| !line.is_empty())
             .map(|line| {
                 let num = line.strip_suffix("A").unwrap().parse::<u64>().unwrap();
-                let temp = get_best_length(line.to_string(), 3);
+                let temp = get_best_length(line.to_string(), 3, &mut gbest);
                 num * temp as u64
             })
             .sum()
@@ -140,7 +148,17 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use super::*;
+
+    pub fn solve(file: String) -> u64 {
+        let mut gbest = HashMap::new();
+        file.lines()
+            .filter(|line| !line.is_empty())
+            .map(|line| {
+                let num = line.strip_suffix("A").unwrap().parse::<u64>().unwrap();
+                let temp = get_best_length(line.to_string(), 26, &mut gbest);
+                num * temp as u64
+            })
+            .sum()
     }
 }
