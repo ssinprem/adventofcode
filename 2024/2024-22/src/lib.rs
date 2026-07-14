@@ -56,14 +56,14 @@ pub mod part2 {
         prices
     }
 
-    pub fn get_changes(prices: &Vec<u64>) -> Vec<i64> {
+    pub fn get_changes(prices: &[u64]) -> Vec<i64> {
         prices.windows(2)
             .map(|pair| {
                 pair[1] as i64 - pair[0] as i64
             }).collect()
     }
 
-    pub fn get_amount(prices: &Vec<u64>, changes: &Vec<i64>, seq: &[i64]) -> u64 {
+    pub fn get_amount(prices: &[u64], changes: &[i64], seq: &[i64]) -> u64 {
          if let Some(index) = changes.windows(4).position(|window| {
             window == seq
         }) {
@@ -88,19 +88,16 @@ pub mod part2 {
 
         for &secret in &secrets {
             let prices = get_sell_price(secret);
-            let changes: Vec<i64> = prices
-                .windows(2)
-                .map(|pair| pair[1] as i64 - pair[0] as i64)
-                .collect();
+            let changes: Vec<i64> = get_changes(&prices);
 
             let mut sold_sequences_for_buyer: HashSet<[i64; 4]> = HashSet::new();
 
             for (index, window) in changes.windows(4).enumerate() {
-                if let Ok(sequence) = window.try_into() {
-                    if sold_sequences_for_buyer.insert(sequence) {
-                        let sale_price = prices[index + 4];
-                        *sequence_totals.entry(sequence).or_default() += sale_price;
-                    }
+                if let Ok(sequence) = window.try_into() 
+                    && sold_sequences_for_buyer.insert(sequence)
+                {
+                    let sale_price = prices[index + 4];
+                    *sequence_totals.entry(sequence).or_default() += sale_price;
                 }
             }
         }
