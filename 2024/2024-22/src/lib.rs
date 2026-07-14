@@ -41,6 +41,7 @@ pub mod part1 {
 
 pub mod part2 {
     use crate::process;
+    use std::collections::{HashMap, HashSet};
 
     pub fn get_sell_price(secret: u64) -> Vec<u64> {
         let mut prices = Vec::with_capacity(2001);
@@ -78,44 +79,34 @@ pub mod part2 {
     }
 
     pub fn solve(file: String) -> u64 {
-        println!("Parse secrets from file");
-        let secrets = file.lines()
+        let secrets: Vec<u64> = file.lines()
             .filter(|line| !line.is_empty())
-            .map(|line| {
-                line.parse::<u64>().expect("cannot parse digit")
-            }).collect::<Vec<u64>>();
+            .map(|line| line.parse::<u64>().expect("cannot parse digit"))
+            .collect();
 
-        let mut max = 0;
-        println!("Calculate Sell Price");
-        let price_set: Vec<Vec<u64>> = secrets.iter().map(|&secret | {
-            get_sell_price(secret)
-        }).collect();
+        let mut sequence_totals: HashMap<[i64; 4], u64> = HashMap::new();
 
-        println!("Calculate Change");
-        let changes_set: Vec<Vec<i64>> = price_set.iter().map(|prices| {
-            get_changes(prices)
-        }).collect();
+        for &secret in &secrets {
+            let prices = get_sell_price(secret);
+            let changes: Vec<i64> = prices
+                .windows(2)
+                .map(|pair| pair[1] as i64 - pair[0] as i64)
+                .collect();
 
-        println!("Find the Best Sequence");
-        for s1 in -9..=9 { 
-            for s2 in -9..=9 {
-                for s3 in -9..=9 {
-                    for s4 in -9..=9 {
-                        let amount = (0..price_set.len()).map(|id| {
-                            get_amount(
-                                &price_set[id], 
-                                &changes_set[id], 
-                                &[s1,s2,s3,s4]
-                            )
-                        }).sum();
-                        if amount > max {
-                            max = amount;
-                            println!(" {amount}  {:?} ",[s1,s2,s3,s4]);
-                        }
+            let mut sold_sequences_for_buyer: HashSet<[i64; 4]> = HashSet::new();
+
+            for (index, window) in changes.windows(4).enumerate() {
+                if let Ok(sequence) = window.try_into() {
+                    if sold_sequences_for_buyer.insert(sequence) {
+                        let sale_price = prices[index + 4];
+                        *sequence_totals.entry(sequence).or_default() += sale_price;
                     }
                 }
             }
         }
-        max
+
+        let max_seq = sequence_totals.iter().max_by_key(|(_seq,value)| *value).unwrap();
+        println!("{max_seq:?}");
+        *max_seq.1
     }
 }
