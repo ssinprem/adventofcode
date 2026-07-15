@@ -67,7 +67,32 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use super::*;
+
+    pub fn solve(file: String) -> String {
+        let (list, pairs) = parse(file);
+        let mut list: Vec<String> = list.iter().cloned().collect();
+        list.sort();
+        let mut groups = Vec::<Vec<String>>::new();
+
+        for mc in list {
+            if let Some(large_grp) = groups.iter().max_by_key(|group| group.len()) {
+                println!("{} {} {:?}", groups.len(), large_grp.len(), large_grp);
+            }
+            for group in groups.iter_mut() {
+                if group.iter().all(|mc2| {
+                    pairs
+                        .iter()
+                        .any(|set| set.contains(&mc) && set.contains(mc2))
+                }) {
+                    group.push(mc.to_string());
+                }
+            }
+            groups.push(vec![mc.to_string()]);
+        }
+
+        let large_grp = groups.iter().max_by_key(|group| group.len()).unwrap();
+        println!("{large_grp:?}");
+        large_grp.join(",")
     }
 }

@@ -35,5 +35,5 @@ wh-qp
 tb-vc
 td-yn",
     part1: (part1::solve, 7),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, "co,de,ka,ta".to_string())
 );
