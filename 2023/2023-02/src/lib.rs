@@ -46,7 +46,6 @@ pub mod part1 {
         // limit red 12, green 13, blue 14
         let limit = [12, 13, 14];
         let games = parse(file);
-        println!("{games:?}");
 
         let mut sum = 0;
         for (id, game) in games.iter() {
@@ -64,7 +63,19 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use super::*;
+
+    pub fn solve(file: String) -> u64 {
+        let games = parse(file);
+
+        games
+            .into_values()
+            .map(|game| {
+                game.iter().map(|r| r[0]).max().unwrap()
+                    * game.iter().map(|r| r[1]).max().unwrap()
+                    * game.iter().map(|r| r[2]).max().unwrap()
+            })
+            .sum::<u32>()
+            .into()
     }
 }
