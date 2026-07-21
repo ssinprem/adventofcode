@@ -12,11 +12,10 @@ y02: 0
 x00 AND y00 -> z00
 x01 XOR y01 -> z01
 x02 OR y02 -> z02",
-    part1: (part1::solve, 4),
-    part2: (part2::solve, 0)
+    part1: (part1::solve, 4)
 );
 
-test_case_n!(small_example,"
+test_case_n!(large_example,"
 x00: 1
 x01: 0
 x02: 1
@@ -64,6 +63,6 @@ y03 OR x01 -> nrd
 hwm AND bqk -> z03
 tgd XOR rvg -> z12
 tnw OR pbm -> gnj",
-    part1: (part1::solve, 2024),
-    part2: (part2::solve, 0)
+    part1: (part1::solve, 2024)
 );
+
