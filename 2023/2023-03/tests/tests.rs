@@ -13,5 +13,5 @@ test_case_n!(example,
 ...$.*....
 .664.598..",
     part1: (part1::solve, 4361),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 467835)
 );
