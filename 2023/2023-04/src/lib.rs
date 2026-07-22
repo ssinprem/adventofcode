@@ -42,7 +42,28 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+
+    use super::*;
+
+    pub fn solve(file: String) -> u64 {
+        let cards = parse(file);
+        let mut sort_cards: Vec<_> = cards.iter().collect();
+        sort_cards.sort_by_key(|(id, _)| *id);
+        let mut num_cards = vec![1; sort_cards.len()];
+
+        for (no, (_id, (win_nums, nums))) in sort_cards.iter().enumerate() {
+            let amount = num_cards[no];
+            let wins = win_nums
+                .iter()
+                .filter(|win_num| nums.contains(*win_num))
+                .count();
+            for next in (no + 1)..(no + 1 + wins) {
+                if next < num_cards.len() {
+                    num_cards[next] += amount;
+                }
+            }
+        }
+
+        num_cards.into_iter().sum::<usize>() as u64
     }
 }
