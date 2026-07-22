@@ -27,57 +27,40 @@ pub fn parse(file: String) -> (Vec<u64>,Vec<(String, Vec<Vec<u64>>)>) {
 }
 
 pub mod part1 {
-    use super::*;
+    use std::println;
+
+use super::*;
 
     pub fn solve(file: String) -> u64 {
         let (seeds,type_maps) = parse(file);
-        let mut slots: Vec<_> = Vec::<[u64; 8]>::new();
         println!("{seeds:?}");
         const MAX: u64 = u64::MAX;
-        // seeds to soil initial slots
-        for map in type_maps.first().unwrap().1.clone() {
-            let dst = map.first().unwrap();
-            let src = map.get(1).unwrap();
-            let len = map.get(2).unwrap();
-            for i in 0..*len {
-                
-                slots.push([src+i, dst+i, MAX, MAX, MAX, MAX, MAX, MAX]);
-            }
-        }
-        // fill empty slot with default
-        let min_soil = slots.iter().min_by_key(|s| s[0]).unwrap()[0];
-        for i in 0..min_soil {
-            slots.push([i,i,MAX,MAX,MAX,MAX,MAX,MAX]);
-        }
-        slots.sort_by_key(|s| s[0]);
+        let mut slots: Vec<_> = seeds.iter().map(|seed| {
+            [*seed, MAX, MAX, MAX, MAX, MAX, MAX, MAX]
+        }).collect();
 
         for (id, (_str,maps)) in type_maps.iter().enumerate(){
-            if id == 0{
-                continue;
-            }
-            for map in maps {
-                let dst = map.first().unwrap();
-                let src = map.get(1).unwrap();
-                let len = map.get(2).unwrap();
-                for i in 0..*len {
-                    let pos = slots.iter().position(|s| s[id]==src+i).unwrap();
-                    let slot = slots.get_mut(pos).unwrap();
-                    slot[id+1] = dst+i;
+            for slot in slots.iter_mut() {
+                let last = slot[id];
+                let mut found = false;
+                for map in maps {
+                    let &dst = map.first().unwrap();
+                    let &src = map.get(1).unwrap();
+                    let &len = map.get(2).unwrap();
+                    
+                    if (src..(src+len)).contains(&last) {
+                        let i = last-src;
+                        slot[id+1] = dst+i;
+                        found = true;
+                        break;
+                    }
+                }
+                if !found {
+                    slot[id+1] = last;
                 }
             }
-            // fill the non map with latest position
-            slots.iter_mut().for_each(|slot| {
-                if slot[id+1] == MAX {
-                    slot[id+1] = slot[id];
-                }
-            })
         }
-        
-        seeds.iter().map(|seed| {
-            slots.iter()
-                .find(|slot| slot[0]==*seed).unwrap()
-                [7]
-        }).min().unwrap()
+        slots.iter().map(|slot| slot[7]).min().unwrap()
     }
 }
 
