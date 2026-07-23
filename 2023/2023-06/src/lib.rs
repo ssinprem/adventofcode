@@ -21,8 +21,6 @@ pub fn parse(file: String) -> Vec<(u32, u32)> {
 }
 
 pub mod part1 {
-    use std::println;
-
     use super::*;
     pub fn solve(file: String) -> u64 {
         let races = parse(file);
@@ -40,7 +38,24 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use super::*;
+    pub fn solve(file: String) -> u64 {
+        let races = parse(file);
+        let race = races.iter().fold((0, 0), |acc, (time, distance)| {
+            (
+                (acc.0.to_string() + &time.to_string())
+                    .parse::<u64>()
+                    .unwrap(),
+                (acc.1.to_string() + &distance.to_string())
+                    .parse::<u64>()
+                    .unwrap(),
+            )
+        });
+        println!("{race:?}");
+        let time = race.0;
+        let distance = race.1;
+        (1..time)
+            .filter(|hold| hold * (time - hold) > distance)
+            .count() as u64
     }
 }
