@@ -10,17 +10,41 @@ KK677 28
 KTJJT 220
 QQQJA 483",
     part1: (part1::solve, 6440),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 5905)
 );
 
 #[test]
 fn test_compare() {
-    assert_eq!(compare_hands("KK677", "KK677"), Ordering::Equal);
-    assert_eq!(compare_hands("KK677", "KTJJT"), Ordering::Greater);
-    assert_eq!(compare_hands("KK677", "T55J5"), Ordering::Less);
-    assert_eq!(compare_hands("QQQJA", "T55J5"), Ordering::Greater);
-    assert_eq!(compare_hands("AAAKA", "AAQAA"), Ordering::Greater);
-    assert_eq!(compare_hands("44344", "45444"), Ordering::Less);
-    assert_eq!(compare_hands("QQQQA", "QQAQA"), Ordering::Greater);
-    assert_eq!(compare_hands("22222", "QQQQA"), Ordering::Greater);
+    assert_eq!(
+        Ordering::Equal,
+        compare_hands(part1::type_pts("KK677"), part1::type_pts("KK677"))
+    );
+    assert_eq!(
+        Ordering::Greater,
+        compare_hands(part1::type_pts("KK677"), part1::type_pts("KTJJT"))
+    );
+    assert_eq!(
+        Ordering::Less,
+        compare_hands(part1::type_pts("KK677"), part1::type_pts("T55J5"))
+    );
+    assert_eq!(
+        Ordering::Greater,
+        compare_hands(part1::type_pts("QQQJA"), part1::type_pts("T55J5"))
+    );
+    assert_eq!(
+        Ordering::Greater,
+        compare_hands(part1::type_pts("AAAKA"), part1::type_pts("AAQAA"))
+    );
+    assert_eq!(
+        Ordering::Less,
+        compare_hands(part1::type_pts("44344"), part1::type_pts("45444"))
+    );
+    assert_eq!(
+        Ordering::Less,
+        compare_hands(part1::type_pts("QQQAA"), part1::type_pts("KQQQK"))
+    );
+    assert_eq!(
+        Ordering::Greater,
+        compare_hands(part1::type_pts("22222"), part1::type_pts("QQQQA"))
+    );
 }
