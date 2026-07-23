@@ -1,4 +1,4 @@
-use std::{cmp::Ordering, collections::HashMap, println};
+use std::{cmp::Ordering, collections::HashMap};
 
 #[derive(PartialEq, PartialOrd, Debug)]
 pub enum CardSet {
@@ -46,22 +46,16 @@ pub fn type_pts(card: &str) -> (CardSet, Vec<u32>) {
             c2.cmp(c1)
         }
     });
-    let detail = hands.iter().map(|(c, _n)| *c).collect();
-    if hands[0].1 == 5 {
-        (CardSet::FiveKind, detail)
-    } else if hands[0].1 == 4 {
-        (CardSet::FourKind, detail)
-    } else if hands[0].1 == 3 && hands[1].1 == 2 {
-        (CardSet::FullHourse, detail)
-    } else if hands[0].1 == 3 {
-        (CardSet::ThreeKind, detail)
-    } else if hands[0].1 == 2 && hands[1].1 == 2 {
-        (CardSet::TwoPair, detail)
-    } else if hands[0].1 == 2 {
-        (CardSet::OnePair, detail)
-    } else {
-        (CardSet::HighCard, detail)
-    }
+    ( match hands.iter().map(|(_c, n)| *n).collect::<Vec<u32>>().as_slice() {
+        [5] => CardSet::FiveKind,
+        [4,1] => CardSet::FourKind,
+        [3,2] => CardSet::FullHourse,
+        [3,1,1] => CardSet::ThreeKind,
+        [2,2,1] => CardSet::TwoPair,
+        [2,1,1,1] => CardSet::OnePair,
+        [1,1,1,1,1] => CardSet::HighCard,
+        _ => unreachable!()
+    }, card.chars().map(|c| CARDS.iter().position(|x| *x==c).unwrap() as u32).collect() )
 }
 
 pub fn compare_hands(a: &str, b: &str) -> Ordering {
@@ -79,7 +73,7 @@ pub fn compare_hands(a: &str, b: &str) -> Ordering {
                 return Ordering::Less;
             }
         }
-        println!("⚠️ Equal ?? {a} {b}");
+        // println!("⚠️ Equal ?? {a} {b}");
         Ordering::Equal
     }
 }
@@ -92,7 +86,7 @@ pub mod part1 {
         hands
             .iter()
             .enumerate()
-            .inspect(|(r,(card, bet))| println!("{r} {card} {:?}",type_pts(card.as_str())))
+            .inspect(|(r,(card, _bet))| println!("{r} {card} {:?}",type_pts(card.as_str())))
             .map(|(rank, (_, bet))| *bet * (rank + 1) as u64)
             .sum::<u64>()
     }
