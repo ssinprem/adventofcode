@@ -36,5 +36,5 @@ humidity-to-location map:
 60 56 37
 56 93 4",
     part1: (part1::solve, 35),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 46)
 );

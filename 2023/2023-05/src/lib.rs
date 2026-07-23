@@ -27,9 +27,7 @@ pub fn parse(file: String) -> (Vec<u64>,Vec<(String, Vec<Vec<u64>>)>) {
 }
 
 pub mod part1 {
-    use std::println;
-
-use super::*;
+    use super::*;
 
     pub fn solve(file: String) -> u64 {
         let (seeds,type_maps) = parse(file);
@@ -65,7 +63,42 @@ use super::*;
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use super::*;
+
+    pub fn solve(file: String) -> u64 {
+        let (old_seeds,type_maps) = parse(file);
+        let seeds: Vec<u64> = (0..old_seeds.len()/2).flat_map(|i| {
+            let start = old_seeds[i*2];
+            let len = old_seeds[i*2+1];
+            start..(start+len)
+        }).collect();
+        // println!("{seeds:?}");
+        const MAX: u64 = u64::MAX;
+        let mut slots: Vec<_> = seeds.iter().map(|seed| {
+            [*seed, MAX, MAX, MAX, MAX, MAX, MAX, MAX]
+        }).collect();
+
+        for (id, (_str,maps)) in type_maps.iter().enumerate(){
+            for slot in slots.iter_mut() {
+                let last = slot[id];
+                let mut found = false;
+                for map in maps {
+                    let &dst = map.first().unwrap();
+                    let &src = map.get(1).unwrap();
+                    let &len = map.get(2).unwrap();
+                    
+                    if (src..(src+len)).contains(&last) {
+                        let i = last-src;
+                        slot[id+1] = dst+i;
+                        found = true;
+                        break;
+                    }
+                }
+                if !found {
+                    slot[id+1] = last;
+                }
+            }
+        }
+        slots.iter().map(|slot| slot[7]).min().unwrap()
     }
 }
