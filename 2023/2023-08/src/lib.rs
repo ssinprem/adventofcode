@@ -25,13 +25,10 @@ pub fn parse(file: String) -> (String, HashMap<String, (String, String)>) {
 
 pub mod part1 {
 
-    use std::println;
-
     use crate::parse;
 
     pub fn solve(file: String) -> u64 {
         let (steps, nodes) = parse(file);
-        println!("{steps}   {nodes:?}");
         let mut cur = "AAA".to_string();
 
         let mut index = 0;
@@ -39,7 +36,6 @@ pub mod part1 {
         while cur != "ZZZ" {
             let step = steps.chars().nth(index).unwrap();
             let node = nodes.get(&cur).unwrap();
-            println!("{step} {cur} {node:?}");
             match step {
                 'L' => cur = node.0.to_string(),
                 'R' => cur = node.1.to_string(),
@@ -53,7 +49,40 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use crate::parse;
+
+    pub fn solve(file: String) -> u64 {
+        let (steps, nodes) = parse(file);
+        let mut curs: Vec<_> = nodes
+            .iter()
+            .filter_map(|(node, _next)| {
+                if node.ends_with("A") {
+                    Some(node.to_string())
+                } else {
+                    None
+                }
+            })
+            .collect();
+        println!("{curs:?}");
+        let mut index = 0;
+        let mut count = 0;
+        while !curs.iter().all(|cur| cur.ends_with("Z")) {
+            let step = steps.chars().nth(index).unwrap();
+            for cur in curs.iter_mut() {
+                let node = nodes.get(cur).unwrap();
+                match step {
+                    'L' => *cur = node.0.to_string(),
+                    'R' => *cur = node.1.to_string(),
+                    _ => unreachable!(),
+                }
+            }
+            count += 1;
+            index = (index + 1) % steps.len();
+            let countz = curs.iter().filter(|cur| cur.ends_with("Z")).count();
+            if countz > 1 {
+                println!("{count} {countz} {curs:?}");
+            }
+        }
+        count
     }
 }
