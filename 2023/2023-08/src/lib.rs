@@ -49,11 +49,26 @@ pub mod part1 {
 }
 
 pub mod part2 {
+    fn gcd(mut a: u64,mut b: u64) -> u64 {
+        while b != 0 {
+            (a, b) = (b, a % b);
+        }
+        a
+    }
+
+    fn lcm(a: u64, b: u64) -> u64 {
+        (a*b) / gcd(a,b)
+    }
+
+    fn lcms(list : &[u64]) -> u64 {
+        list.iter().fold(list[0],|acc, n| lcm(acc,*n))
+    }
+
     use crate::parse;
 
     pub fn solve(file: String) -> u64 {
         let (steps, nodes) = parse(file);
-        let mut curs: Vec<_> = nodes
+        let starts: Vec<String> = nodes
             .iter()
             .filter_map(|(node, _next)| {
                 if node.ends_with("A") {
@@ -63,26 +78,29 @@ pub mod part2 {
                 }
             })
             .collect();
-        println!("{curs:?}");
-        let mut index = 0;
-        let mut count = 0;
-        while !curs.iter().all(|cur| cur.ends_with("Z")) {
-            let step = steps.chars().nth(index).unwrap();
-            for cur in curs.iter_mut() {
-                let node = nodes.get(cur).unwrap();
+        println!("{starts:?}");
+        
+        let counts : Vec<u64> = starts.iter().map(|start| {
+            let mut index = 0;
+            let mut count = 0;
+            let mut cur = start.to_string();
+            while !cur.ends_with("Z") {
+                let step = steps.chars().nth(index).unwrap();
+                let node = nodes.get(&cur).unwrap();
                 match step {
-                    'L' => *cur = node.0.to_string(),
-                    'R' => *cur = node.1.to_string(),
+                    'L' => cur = node.0.to_string(),
+                    'R' => cur = node.1.to_string(),
                     _ => unreachable!(),
                 }
+                
+                count += 1;
+                index = (index + 1) % steps.len();
             }
-            count += 1;
-            index = (index + 1) % steps.len();
-            let countz = curs.iter().filter(|cur| cur.ends_with("Z")).count();
-            if countz > 1 {
-                println!("{count} {countz} {curs:?}");
-            }
-        }
-        count
+            count
+        }).collect();
+        
+        println!("{counts:?}");
+
+        lcms(counts.as_slice())
     }
 }
