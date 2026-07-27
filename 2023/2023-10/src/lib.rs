@@ -163,7 +163,34 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
+    use std::path;
+
+use super::*;
+
+    pub fn solve(file: String) -> u64 {
+        let maps = parse(file);
+        let width = maps.cols();
+        let height = maps.rows();
+        let start = maps.iter().position(|cell| *cell == Cell::Start).unwrap();
+        let start = ((start / width) as isize, (start % width) as isize);
+        let mut curr = start;
+        _display(&maps, start);
+        let mut path = Vec::<(isize,isize)>::new();
+        let mut from = D::None;
+        while curr != start || from == D::None {
+            (curr, from) = go_next(&maps, curr, from);
+            path.push(curr);
+        }
+        let mut path_map = maps;
+        for row in 0..height as isize {
+            for col in 0..width as isize {
+                if path.iter().all(|(r,c)| (*r,*c) != (row,col)) {
+                    let remove = path_map.get_mut(row, col).unwrap();
+                    *remove = Cell::Ground
+                }
+            }
+        }
+        _display(&path_map, start);
         0
     }
 }
