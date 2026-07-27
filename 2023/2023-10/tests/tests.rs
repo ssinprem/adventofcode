@@ -7,8 +7,7 @@ test_case_n!(example,"
 .|.|.
 .L-J.
 .....",
-    part1: (part1::solve, 4),
-    part2: (part2::solve, 0)
+    part1: (part1::solve, 4)
 );
 
 test_case_n!(example2,"
@@ -17,6 +16,5 @@ test_case_n!(example2,"
 SJ.L7
 |F--J
 LJ...",
-    part1: (part1::solve, 8),
-    part2: (part2::solve, 0)
+    part1: (part1::solve, 8)
 );

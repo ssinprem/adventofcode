@@ -90,6 +90,58 @@ pub fn _display(maps: &Grid<Cell>, curr: (isize, isize)) {
     });
 }
 
+pub fn go_next(maps: &Grid<Cell>, mut curr: (isize,isize), mut from: D ) -> ((isize,isize),D) {
+    if from == D::None {
+        from = [D::N, D::E, D::W, D::S]
+            .iter()
+            .find(|d| {
+                let diff = match d {
+                    D::N => (-1, 0),
+                    D::E => (0, 1),
+                    D::W => (0, -1),
+                    D::S => (1, 0),
+                    _ => (0, 0),
+                };
+                if let Some(cell) = maps.get(curr.0 + diff.0, curr.1 + diff.1)
+                    && let Cell::Pipe(a, b) = cell
+                    && (from == D::None || *a == from || *b == from)
+                {
+                    true
+                } else {
+                    false
+                }
+            })
+            .unwrap()
+            .clone();
+    }
+    match from {
+        D::N => {
+            curr = (curr.0 - 1, curr.1);
+        }
+        D::E => {
+            curr = (curr.0, curr.1 + 1);
+        }
+        D::W => {
+            curr = (curr.0, curr.1 - 1);
+        }
+        D::S => {
+            curr = (curr.0 + 1, curr.1);
+        }
+        _ => unreachable!(),
+    };
+    let next_cell = maps.get(curr.0, curr.1).unwrap();
+    if let Cell::Pipe(a, b) = next_cell {
+        if from == ops(a.clone()) {
+            from = b.clone();
+        } else if from == ops(b.clone()) {
+            from = a.clone();
+        } else {
+            unreachable!()
+        }
+    }
+    (curr, from)
+}
+
 pub mod part1 {
     use super::*;
 
@@ -103,54 +155,7 @@ pub mod part1 {
         let mut count = 0;
         let mut from = D::None;
         while curr != start || count == 0 {
-            if from == D::None {
-                from = [D::N, D::E, D::W, D::S]
-                    .iter()
-                    .find(|d| {
-                        let diff = match d {
-                            D::N => (-1, 0),
-                            D::E => (0, 1),
-                            D::W => (0, -1),
-                            D::S => (1, 0),
-                            _ => (0, 0),
-                        };
-                        if let Some(cell) = maps.get(curr.0 + diff.0, curr.1 + diff.1)
-                            && let Cell::Pipe(a, b) = cell
-                            && (from == D::None || *a == from || *b == from)
-                        {
-                            true
-                        } else {
-                            false
-                        }
-                    })
-                    .unwrap()
-                    .clone();
-            }
-            match from {
-                D::N => {
-                    curr = (curr.0 - 1, curr.1);
-                }
-                D::E => {
-                    curr = (curr.0, curr.1 + 1);
-                }
-                D::W => {
-                    curr = (curr.0, curr.1 - 1);
-                }
-                D::S => {
-                    curr = (curr.0 + 1, curr.1);
-                }
-                _ => unreachable!(),
-            };
-            let next_cell = maps.get(curr.0, curr.1).unwrap();
-            if let Cell::Pipe(a, b) = next_cell {
-                if from == ops(a.clone()) {
-                    from = b.clone();
-                } else if from == ops(b.clone()) {
-                    from = a.clone();
-                } else {
-                    unreachable!()
-                }
-            }
+            (curr, from) = go_next(&maps, curr, from);
             count += 1;
         }
         count / 2
