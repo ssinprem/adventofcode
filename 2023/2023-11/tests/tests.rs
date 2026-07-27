@@ -13,5 +13,6 @@ test_case_n!(example,"
 .......#..
 #...#.....",
     part1: (part1::solve, 374),
-    part2: (part2::solve, 0)
+    part2_10: (part2::solve, 1030, 10),
+    part2_100: (part2::solve, 8410, 100)
 );
