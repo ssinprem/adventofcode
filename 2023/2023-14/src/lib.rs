@@ -81,7 +81,7 @@ pub fn slide_down(map: &mut Grid<Cell>) {
 
     for col in 0..cols {
         for row in 0..=rows {
-            let row = rows-row;
+            let row = rows - row;
             let item = map.get(row, col);
             if item == Some(&Cell::Round) {
                 let mut found = false;
@@ -90,7 +90,7 @@ pub fn slide_down(map: &mut Grid<Cell>) {
                     let jtem = map.get(j, col);
                     if jtem == Some(&Cell::Empty) {
                         found = true;
-                        if j == rows-1 {
+                        if j == rows - 1 {
                             break;
                         }
                         j += 1;
@@ -144,7 +144,7 @@ pub fn slide_right(map: &mut Grid<Cell>) {
 
     for row in 0..rows {
         for col in 0..=cols {
-            let col = cols-col;
+            let col = cols - col;
             let item = map.get(row, col);
             if item == Some(&Cell::Round) {
                 let mut found = false;
@@ -153,7 +153,7 @@ pub fn slide_right(map: &mut Grid<Cell>) {
                     let jtem = map.get(row, j);
                     if jtem == Some(&Cell::Empty) {
                         found = true;
-                        if j == cols-1 {
+                        if j == cols - 1 {
                             break;
                         }
                         j += 1;
@@ -179,7 +179,7 @@ pub fn score(map: &Grid<Cell>) -> u64 {
 }
 pub mod part1 {
     use super::*;
-    
+
     pub fn solve(file: String) -> u64 {
         let mut map = parse(file);
         println!("{}", _display(&map));
@@ -190,29 +190,62 @@ pub mod part1 {
             .enumerate()
             .map(|(row, items)| items.filter(|cell| cell == &&Cell::Round).count() * (rows - row))
             .sum::<usize>() as u64
-        }
     }
-    
+}
+
 pub mod part2 {
     use super::*;
     pub fn solve(file: String) -> u64 {
         let mut map = parse(file);
         let mut scores = Vec::new();
-        for i in 0..1000 {
+        // A few hundred iterations should be enough to find a cycle.
+        for _ in 0..300 {
             slide_up(&mut map);
             slide_left(&mut map);
             slide_down(&mut map);
             slide_right(&mut map);
-            println!("{}", i);
             scores.push(score(&map));
         }
-        println!("{:?}", scores);
 
-        let mut i = 0;
-        
+        let (cycle_start, cycle_len) = {
+            let mut cycle_start = 0;
+            let mut cycle_len = 0;
+            // Find a repeating pattern. To be certain, we look for a sequence that repeats 3 times.
+            'outer: for len in 2..scores.len() / 3 {
+                let window_size = len * 3;
+                if scores.len() < window_size {
+                    continue;
+                }
 
+                for i in (0..=scores.len() - window_size).rev() {
+                    let s1 = &scores[i..i + len];
+                    let s2 = &scores[i + len..i + 2 * len];
+                    let s3 = &scores[i + 2 * len..i + 3 * len];
 
-        score(&map)
+                    if s1 == s2 && s2 == s3 {
+                        // Pattern found. Now, find the actual start of the cycle.
+                        let mut start = i;
+                        while start > 0 && scores[start - 1] == scores[start - 1 + len] {
+                            start -= 1;
+                        }
+                        cycle_start = start;
+                        cycle_len = len;
+                        break 'outer;
+                    }
+                }
+            }
+            (cycle_start, cycle_len)
+        };
+
+        if cycle_len > 0 {
+            let target_cycles = 1_000_000_000;
+            // The score for the Nth cycle is at index (N-1)
+            let target_idx_0_based = target_cycles - 1;
+            let offset_in_cycle = (target_idx_0_based - cycle_start) % cycle_len;
+            return scores[cycle_start + offset_in_cycle];
+        }
+
+        // Fallback in case no cycle is found.
+        *scores.last().unwrap_or(&0)
     }
 }
-

@@ -1,5 +1,3 @@
-use std::println;
-
 use parabolic_reflector_dish::*;
 use utility::test_case_n;
 
@@ -32,21 +30,61 @@ O.#..O.#.#
 #....###..
 #OO..#....";
     let mut map = parse(string.to_string());
-    println!("{}", _display(&map));
+    // cycle 1
     slide_up(&mut map);
     slide_left(&mut map);
     slide_down(&mut map);
     slide_right(&mut map);
-    println!("{}", _display(&map));
+    assert_eq!(
+        _display(&map),
+        ".....#....
+....#...O#
+...OO##...
+.OO#......
+.....OOO#.
+.O#...O#.#
+....O#....
+......OOOO
+#...O###..
+#..OO#....
+"
+    );
+    // cycle 2
     slide_up(&mut map);
     slide_left(&mut map);
     slide_down(&mut map);
     slide_right(&mut map);
-    println!("{}", _display(&map));
+    assert_eq!(
+        _display(&map),
+        ".....#....
+....#...O#
+.....##...
+..O#......
+.....OOO#.
+.O#...O#.#
+....O#...O
+.......OOO
+#..OO###..
+#.OOO#...O
+"
+    );
+    // cycle 3
     slide_up(&mut map);
     slide_left(&mut map);
     slide_down(&mut map);
     slide_right(&mut map);
-    println!("{}", _display(&map));
+    assert_eq!(
+        _display(&map),
+        ".....#....
+....#...O#
+.....##...
+..O#......
+.....OOO#.
+.O#...O#.#
+....O#...O
+.......OOO
+#...O###.O
+#.OOO#...O
+"
+    );
 }
-
