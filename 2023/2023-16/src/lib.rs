@@ -1,4 +1,5 @@
 use grid::*;
+use rayon::prelude::*;
 
 #[derive(Default, Debug, PartialEq, Clone, Copy)]
 pub enum Cell {
@@ -268,8 +269,7 @@ pub mod part2 {
         }
 
         let rank: Vec<u64> = starts
-            .iter()
-            .inspect(|s| print!("{s:?}"))
+            .par_iter()
             .map(|start| {
                 let mut temp_map = map.clone();
                 process(
@@ -281,7 +281,6 @@ pub mod part2 {
                     .filter(|(_cell, active, _)| active != &0)
                     .count() as u64
             })
-            .inspect(|s| println!(" => {s:?}"))
             .collect();
 
         *rank.iter().max().unwrap()
