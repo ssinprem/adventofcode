@@ -16,5 +16,14 @@ test_case_n!(example,
 2546548887735
 4322674655533",
     part1: (part1::solve, 102),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 94 )
+);
+
+test_case_n!(example2,
+"111111111111
+999999999991
+999999999991
+999999999991
+999999999991",
+    part2: (part2::solve, 71)
 );

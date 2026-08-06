@@ -49,18 +49,17 @@ pub fn dijkstra(
     map: &Grid<u8>,
     start_pos: (isize, isize),
     end_pos: (isize, isize),
-    _min_step: usize,
+    min_step: usize,
     max_step: usize
 ) -> (u64, Vec<(isize,isize)>) {
 
-    
     let mut pq: BinaryHeap<(Reverse<u64>, (isize, isize), (isize,isize), usize, Vec<(isize,isize)>)>  = BinaryHeap::new();
     let mut visited = HashSet::new();
-    
+
     pq.push((Reverse(0), start_pos, (0,0), 0, vec![start_pos]));
     while let Some((Reverse(heat_loss), pos, dir, steps, path)) = pq.pop() {
 
-        if pos == end_pos{
+        if pos == end_pos && steps >= min_step {
             return (heat_loss, path);
         }
 
@@ -69,15 +68,16 @@ pub fn dijkstra(
         }
         for jump in [(0,1), (1,0), (-1,0), (0, -1)] {
             let next_pos = (pos.0 + jump.0, pos.1 + jump.1);
-            // print!("{next_pos:2?} ");
 
-            if dir == jump && steps+1 >= max_step {
-                // println!("ignore over straight");
+            if dir == jump && steps+1 > max_step {
+                continue;
+            }
+
+            if dir != (0,0) && dir != jump && steps < min_step {
                 continue;
             }
 
             if dir == (-jump.0, -jump.1) {
-                // println!("ignore backward");
                 continue;
             }
 
@@ -90,29 +90,16 @@ pub fn dijkstra(
             if let Some(heat) = map.get(next_pos.0, next_pos.1) {
 
                 if path.contains(&next_pos) {
-                    // println!("ignore visited path");
                     continue;
                 }
 
                 let mut new_path = path.clone();
                 new_path.push(next_pos);
                 let new_loss = heat_loss + *heat as u64;
-                // println!("added {new_loss}");
                 if ! visited.contains(&(next_pos, jump, new_steps)) {
-                    // for row in 0..map.rows() {
-                    //     for col in 0..map.cols() {
-                    //         if let Some(order) = new_path.iter().position(|&(arow,acol)| arow==row as isize && acol==col as isize) {
-                    //             print!("{:3} ", order);
-                    //         } else {
-                    //             print!("___ ");
-                    //         }
-                    //     }
-                    //     println!();
-                    // }
                     pq.push((Reverse(new_loss), next_pos, jump, new_steps, new_path));
                 }
             } else {
-                // println!("outsite map");
                 continue;
             }
         }
@@ -121,8 +108,7 @@ pub fn dijkstra(
 }
 
 pub mod part1 {
-
-use super::*;
+    use super::*;
     pub fn solve(file: String) -> u64 {
         let map = parse(file);
         
@@ -157,7 +143,36 @@ use super::*;
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use super::*;
+    pub fn solve(file: String) -> u64 {
+        let map = parse(file);
+        
+        println!("{}", _display(&map));
+        let (heat, path) = dijkstra(&map, (0,0), 
+        (map.rows() as isize -1, map.cols() as isize -1),
+         4, 10
+        );
+
+        let mut sum: u64 = 0;
+        let heat_path : Vec<_>= (0..path.len()).map(|n| {
+            let pos = path[n];
+            let h = map.get(pos.0, pos.1).unwrap();
+            if n > 0 {
+                sum += *h as u64;
+            }
+            (pos, sum)
+        }).collect();
+        for row in 0..map.rows() {
+            for col in 0..map.cols() {
+                if let Some(order) = heat_path.iter().position(|&((arow,acol),_)| arow==row as isize && acol==col as isize)
+                {
+                    print!("{:3} ", heat_path[order].1);
+                } else {
+                    print!("___ ");
+                }
+            }
+            println!();
+        }
+        heat
     }
 }
