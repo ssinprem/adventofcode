@@ -1,5 +1,5 @@
 use std::{
-    cmp::Reverse, collections::{BinaryHeap, HashMap}, println
+    cmp::Reverse, collections::{BinaryHeap, HashMap, HashSet}, println
 };
 
 use grid::*;
@@ -47,80 +47,77 @@ fn _pause() {
 
 pub fn dijkstra(
     map: &Grid<u8>,
-    start_pos: (isize, isize)
-) -> HashMap<(isize, isize), (u64, Vec<(isize,isize)>)> {
-    let mut dists = HashMap::new();
-    let mut pq: BinaryHeap<(Reverse<u64>, (isize, isize), Vec<(isize,isize)>)>  = BinaryHeap::new();
-    dists.insert(start_pos, (0, vec![]));
-    pq.push((Reverse(0), start_pos, vec![]));
-    while let Some((Reverse(score), pos, pre_jumps)) = pq.pop() {
-        // println!("{pos:?} {score}");
-        let mut path = [].to_vec();
-        if dists.get(&pos).is_none() {
+    start_pos: (isize, isize),
+    end_pos: (isize, isize),
+    _min_step: usize,
+    max_step: usize
+) -> (u64, Vec<(isize,isize)>) {
 
-        } else {
-            let (old_score, npath) = dists.get(&pos).unwrap();
-            path = npath.clone();
-            if score > *old_score {
-                continue;
-            }
+    
+    let mut pq: BinaryHeap<(Reverse<u64>, (isize, isize), (isize,isize), usize, Vec<(isize,isize)>)>  = BinaryHeap::new();
+    let mut visited = HashSet::new();
+    
+    pq.push((Reverse(0), start_pos, (0,0), 0, vec![start_pos]));
+    while let Some((Reverse(heat_loss), pos, dir, steps, path)) = pq.pop() {
+
+        if pos == end_pos{
+            return (heat_loss, path);
+        }
+
+        if !visited.insert((pos,dir,steps)) {
+            continue;
         }
         for jump in [(0,1), (1,0), (-1,0), (0, -1)] {
             let next_pos = (pos.0 + jump.0, pos.1 + jump.1);
-            print!("{next_pos:2?} ");
-            let mut nodes = pre_jumps.clone();
-            let last = pre_jumps.len();
-            if last >=1 && pre_jumps[last-1] == (-jump.0, -jump.1) {
-                println!("ignore backward");
+            // print!("{next_pos:2?} ");
+
+            if dir == jump && steps+1 >= max_step {
+                // println!("ignore over straight");
                 continue;
             }
-            if last >= 4
-                && pre_jumps[last-1] == jump
-                && pre_jumps[last-2] == jump
-                && pre_jumps[last-3] == jump
-                && pre_jumps[last-4] == jump
-            {
-                println!("ignore over 3 straight");
+
+            if dir == (-jump.0, -jump.1) {
+                // println!("ignore backward");
                 continue;
             }
-            
-            if let Some(cell_score) = map.get(next_pos.0, next_pos.1) {
-                let new_score = score + *cell_score as u64;
-                if let Some((current_best, _current_path)) = dists.get(&next_pos) {
-                    if new_score < *current_best {
-                        let mut new_path = path.clone();
-                        new_path.push(next_pos);
-                        nodes.push(jump);
-                        println!("new score {new_score} {new_path:?}");
-                        dists.insert(next_pos, (new_score, new_path));
-                        pq.push((Reverse(new_score), next_pos, nodes));
-                    } else {
-                        println!("ignore bad score {new_score} > current_best");
-                    }
-                } else {
-                    let mut new_path = path.clone();
-                    new_path.push(next_pos);
-                    nodes.push(jump);
-                    println!("first meet {new_score} {new_path:?}");
-                    dists.insert(next_pos, (new_score, new_path));
-                    pq.push((Reverse(new_score), next_pos, nodes));
+
+            let new_steps = if dir == jump {
+                steps + 1
+            } else {
+                1
+            };
+
+            if let Some(heat) = map.get(next_pos.0, next_pos.1) {
+
+                if path.contains(&next_pos) {
+                    // println!("ignore visited path");
+                    continue;
+                }
+
+                let mut new_path = path.clone();
+                new_path.push(next_pos);
+                let new_loss = heat_loss + *heat as u64;
+                // println!("added {new_loss}");
+                if ! visited.contains(&(next_pos, jump, new_steps)) {
+                    // for row in 0..map.rows() {
+                    //     for col in 0..map.cols() {
+                    //         if let Some(order) = new_path.iter().position(|&(arow,acol)| arow==row as isize && acol==col as isize) {
+                    //             print!("{:3} ", order);
+                    //         } else {
+                    //             print!("___ ");
+                    //         }
+                    //     }
+                    //     println!();
+                    // }
+                    pq.push((Reverse(new_loss), next_pos, jump, new_steps, new_path));
                 }
             } else {
-                println!("ignore unknown position");
+                // println!("outsite map");
+                continue;
             }
-        }
-        for row in 0..map.rows() {
-            for col in 0..map.cols() {
-                if let Some((s,_)) = dists.get(&(row as isize, col as isize)) {
-                    print!("{:3} ", s);
-                } else {
-                    print!("___ ");
-                }
-            }
-            println!();
         }
     }
-    dists
+    (0, vec![])
 }
 
 pub mod part1 {
@@ -128,25 +125,34 @@ pub mod part1 {
 use super::*;
     pub fn solve(file: String) -> u64 {
         let map = parse(file);
-
-        let dists = dijkstra(&map, (0,0));
-        let end = (map.rows() as isize -1, map.cols() as isize -1);
-
-        println!("{}", _display(&map));
         
-        let last_dist = dists.get(&end).unwrap();
+        println!("{}", _display(&map));
+        let (heat, path) = dijkstra(&map, (0,0), 
+        (map.rows() as isize -1, map.cols() as isize -1),
+         1, 4
+        );
+
+        let mut sum: u64 = 0;
+        let heat_path : Vec<_>= (0..path.len()).map(|n| {
+            let pos = path[n];
+            let h = map.get(pos.0, pos.1).unwrap();
+            if n > 0 {
+                sum += *h as u64;
+            }
+            (pos, sum)
+        }).collect();
         for row in 0..map.rows() {
             for col in 0..map.cols() {
-                if last_dist.1.contains(&(row as isize,col as isize)) {
-                    print!("{:3} ", dists.get(&(row as isize, col as isize)).unwrap().0);
+                if let Some(order) = heat_path.iter().position(|&((arow,acol),_)| arow==row as isize && acol==col as isize)
+                {
+                    print!("{:3} ", heat_path[order].1);
                 } else {
-                    print!("    ");
+                    print!("___ ");
                 }
             }
             println!();
         }
-
-        last_dist.0
+        heat
     }
 }
 
