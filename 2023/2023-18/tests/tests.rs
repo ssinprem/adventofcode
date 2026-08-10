@@ -17,5 +17,5 @@ U 3 (#a77fa3)
 L 2 (#015232)
 U 2 (#7a21e3)",
     part1: (part1::solve, 62),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 952408144115)
 );
