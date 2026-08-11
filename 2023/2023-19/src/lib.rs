@@ -1,5 +1,5 @@
-use regex::*;
 use rayon::prelude::*;
+use regex::*;
 use std::collections::HashMap;
 
 #[derive(Debug)]
@@ -118,7 +118,7 @@ pub fn result(cond: &HashMap<String, Vec<Flow>>, num: &HashMap<char, u64>) -> bo
                     if !result {
                         continue;
                     }
-                    return *decide
+                    return *decide;
                 }
                 Flow::CondNode(char, greater, val, node) => {
                     let cval = num.get(char).unwrap();
@@ -154,7 +154,102 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use std::{collections::HashMap, println};
+
+    use crate::{Flow, parse};
+
+    type Ranges = HashMap<char, (u64, u64)>;
+
+    fn count_accepted_combinations(
+        workflow_name: &str,
+        mut ranges: Ranges,
+        workflows: &HashMap<String, Vec<Flow>>,
+    ) -> u64 {
+        if workflow_name == "A" {
+            return ranges.values().map(|(min, max)| max - min + 1).product();
+        }
+        if workflow_name == "R" {
+            return 0;
+        }
+
+        let workflow = workflows.get(workflow_name).unwrap();
+        let mut total = 0;
+        println!("{ranges:?}");
+        for flow in workflow {
+            println!(" {workflow_name} {flow:?}");
+            match flow {
+                Flow::CondNode(c, gt, val, next_node) => {
+                    let (min, max) = ranges.get(c).unwrap();
+                    let (true_range, false_range) = if *gt {
+                        ((val + 1, *max), (*min, *val))
+                    } else {
+                        ((*min, val - 1), (*val, *max))
+                    };
+
+                    if true_range.0 <= true_range.1 {
+                        let mut next_ranges = ranges.clone();
+                        next_ranges.insert(*c, true_range);
+                        total += count_accepted_combinations(next_node, next_ranges, workflows);
+                    }
+                    if false_range.0 <= false_range.1 {
+                        ranges.insert(*c, false_range);
+                    } else {
+                        // No more ranges to check for this path
+                        return total;
+                    }
+                }
+                Flow::CondBool(c, gt, val, next_bool) => {
+                    let (min, max) = ranges.get(c).unwrap();
+                    let (true_range, false_range) = if *gt {
+                        ((val + 1, *max), (*min, *val))
+                    } else {
+                        ((*min, val - 1), (*val, *max))
+                    };
+
+                    if true_range.0 <= true_range.1 {
+                        let mut next_ranges = ranges.clone();
+                        next_ranges.insert(*c, true_range);
+                        total += count_accepted_combinations(
+                            if *next_bool { "A" } else { "R" },
+                            next_ranges,
+                            workflows,
+                        );
+                    }
+                    if false_range.0 <= false_range.1 {
+                        ranges.insert(*c, false_range);
+                    } else {
+                        // No more ranges to check for this path
+                        return total;
+                    }
+                }
+                Flow::Node(next_node) => {
+                    total += count_accepted_combinations(next_node, ranges.clone(), workflows);
+                    // This is a terminal rule for this path, so we can stop processing this workflow.
+                    return total;
+                }
+                Flow::Decide(decide) => {
+                    total += count_accepted_combinations(
+                        if *decide { "A" } else { "R" },
+                        ranges.clone(),
+                        workflows,
+                    );
+                    // This is a terminal rule for this path, so we can stop processing this workflow.
+                    return total;
+                }
+                Flow::Error => unreachable!(),
+            }
+        }
+        total
+    }
+
+    pub fn solve(file: String) -> u64 {
+        let (workflows, _) = parse(file);
+        let mut ranges: Ranges = HashMap::new();
+        ranges.insert('x', (1, 4000));
+        ranges.insert('m', (1, 4000));
+        ranges.insert('a', (1, 4000));
+        ranges.insert('s', (1, 4000));
+
+        count_accepted_combinations("in", ranges, &workflows)
     }
 }
