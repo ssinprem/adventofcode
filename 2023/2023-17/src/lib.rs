@@ -1,5 +1,5 @@
 use std::{
-    cmp::Reverse, collections::{BinaryHeap, HashMap, HashSet}, println
+    cmp::Reverse, collections::{BinaryHeap, HashSet}, println
 };
 
 use grid::*;
