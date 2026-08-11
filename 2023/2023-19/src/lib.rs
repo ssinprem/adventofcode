@@ -97,55 +97,56 @@ pub fn parse(file: String) -> (HashMap<String, Vec<Flow>>, Vec<HashMap<char, u64
     (hm, nums)
 }
 
+pub fn result(cond: &HashMap<String, Vec<Flow>>, num: &HashMap<char, u64>) -> bool {
+    let mut curr_node = "in".to_string();
+    loop {
+        let node_cond = cond.get(&curr_node).unwrap();
+        for cond in node_cond {
+            match cond {
+                Flow::Error => {
+                    unreachable!()
+                }
+                Flow::Decide(decide) => return *decide,
+                Flow::Node(node) => {
+                    curr_node = node.to_string();
+                    break;
+                }
+                Flow::CondBool(char, greater, val, decide) => {
+                    let cval = num.get(char).unwrap();
+                    let result = if *greater { cval > val } else { cval < val };
+
+                    if !result {
+                        continue;
+                    }
+                    return *decide
+                }
+                Flow::CondNode(char, greater, val, node) => {
+                    let cval = num.get(char).unwrap();
+                    let result = if *greater { cval > val } else { cval < val };
+
+                    if !result {
+                        continue;
+                    }
+                    curr_node = node.to_string();
+                    break;
+                }
+            }
+        }
+    }
+}
+
 pub mod part1 {
 
     use super::*;
 
     pub fn solve(file: String) -> u64 {
         let (cond, nums) = parse(file);
-
         nums.par_iter()
             .map(|num| {
-                let mut curr_node = "in".to_string();
-                let sum = num.values().sum();
-                loop {
-                    let node_cond = cond.get(&curr_node).unwrap();
-                    for cond in node_cond {
-                        match cond {
-                            Flow::Error => {
-                                unreachable!()
-                            }
-                            Flow::Decide(true) => return sum,
-                            Flow::Decide(false) => return 0,
-                            Flow::Node(node) => {
-                                curr_node = node.to_string();
-                                break;
-                            }
-                            Flow::CondBool(char, greater, val, decide) => {
-                                let cval = num.get(char).unwrap();
-                                let result = if *greater { cval > val } else { cval < val };
-
-                                if !result {
-                                    continue;
-                                }
-                                if *decide {
-                                    return sum;
-                                } else {
-                                    return 0;
-                                }
-                            }
-                            Flow::CondNode(char, greater, val, node) => {
-                                let cval = num.get(char).unwrap();
-                                let result = if *greater { cval > val } else { cval < val };
-
-                                if !result {
-                                    continue;
-                                }
-                                curr_node = node.to_string();
-                                break;
-                            }
-                        }
-                    }
+                if result(&cond, num) {
+                    num.values().sum()
+                } else {
+                    0
                 }
             })
             .sum::<u64>()
