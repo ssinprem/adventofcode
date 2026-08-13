@@ -15,7 +15,6 @@ pub fn parse(file: String) -> HashMap<String, (Type, Vec<String>, Vec<String>)> 
         .filter(|line| !line.is_empty())
         .filter_map(|line| {
             if let Some(matchs) = regex.captures(line) {
-                println!("{matchs:?}");
                 let typ = if let Some(t) = matchs.get(1)
                     && !t.is_empty()
                 {
@@ -73,7 +72,7 @@ pub fn parse(file: String) -> HashMap<String, (Type, Vec<String>, Vec<String>)> 
 pub mod part1 {
     use super::*;
 
-    pub fn _print_state(states :&HashMap<&String, bool>) -> String {
+    pub fn _print_state(states: &HashMap<&String, bool>) -> String {
         let mut strings = "".to_string();
         states.iter().for_each(|(node, state)| {
             strings += format!("{node}:{state:6} ").as_str();
@@ -86,40 +85,40 @@ pub mod part1 {
         let mut high_cnt = 0;
         let hm = parse(file);
 
-        println!("{hm:?}");
-        let mut states: HashMap<_, _> = hm
+        let mut ff_states: HashMap<String, bool> = hm
             .iter()
             .filter_map(|(name, (typ, _next, _src))| {
-                match typ {
-                    Type::Flipflop => Some((name, false)),
-                    Type::Conjuction => Some((name, true)),
-                    _ => None
+                if *typ == Type::Flipflop {
+                    Some((name.clone(), false))
+                } else {
+                    None
                 }
-                
-                // Type::Broadcaster => {
-                //     None
-                // },
-                //     Type::Error => false,
-                // (
-                //     name,
-                
-                // )
             })
             .collect();
 
-        let mut first_states = states.clone();
+        let mut conj_states: HashMap<String, HashMap<String, bool>> = hm
+            .iter()
+            .filter_map(|(name, (typ, _, src))| {
+                if *typ == Type::Conjuction {
+                    Some((
+                        name.clone(),
+                        src.iter().map(|s| (s.clone(), false)).collect(),
+                    ))
+                } else {
+                    None
+                }
+            })
+            .collect();
+
         let mut sender = Vec::new();
         let mut round = 0;
-        loop {
-            println!("{round} {high_cnt} {low_cnt}");
-            round += 1;
+        while round < 1000 {
             low_cnt += 1;
-            println!(" button           false   broadcaster");
-            sender.push(("broadcaster".to_string(), false));
+            sender.push(("broadcaster".to_string(), "button".to_string(), false));
             while !sender.is_empty()
-                && let (des, sig) = sender.remove(0)
+                && let (des, src, sig) = sender.remove(0)
             {
-                if let Some((typ, nodes, srcs)) = hm.get(&des.to_string()) {
+                if let Some((typ, nodes, _srcs)) = hm.get(&des) {
                     if *typ == Type::Broadcaster {
                         for node in nodes {
                             if sig {
@@ -127,13 +126,12 @@ pub mod part1 {
                             } else {
                                 low_cnt += 1;
                             }
-                            println!(" {des:15}  {sig:6}  {node:15} {}",_print_state(&states));
-                            sender.push((node.to_string(), sig));
+                            sender.push((node.to_string(), des.to_string(), sig));
                         }
                     } else if *typ == Type::Flipflop {
                         if !sig {
                             let next_state = {
-                                let state = states.get_mut(&des).unwrap();
+                                let state = ff_states.get_mut(&des).unwrap();
                                 *state = !*state;
                                 *state
                             };
@@ -143,53 +141,31 @@ pub mod part1 {
                                 } else {
                                     low_cnt += 1;
                                 }
-                                sender.push((node.to_string(), next_state));
-
-                                println!(" {des:15}  {next_state:6}  {node:15} {}", _print_state(&states));
+                                sender.push((node.to_string(), des.to_string(), next_state));
                             }
                         }
                     } else if *typ == Type::Conjuction {
-                        let og_states = states.clone();
-                        let old_state = states.get_mut(&des).unwrap();
-    
-                        let src_state = !og_states
-                            .iter()
-                            .filter(|(name, _state)| srcs.contains(name))
-                            .all(|(_n, state)| *state);
-    
-                        
-                        *old_state = src_state;
-                        if src_state {
-                            high_cnt += 1;
-                        } else {
-                            low_cnt += 1;
-                        }
+                        let mem = conj_states.get_mut(&des).unwrap();
+                        mem.insert(src, sig);
+                        let next_sig = !mem.values().all(|v| *v);
                         for node in nodes {
-                            println!(" {des:15}  {src_state:6}  {node:15} {}",_print_state(&states));
-                            sender.push((node.to_string(), src_state))
+                            if next_sig {
+                                high_cnt += 1;
+                            } else {
+                                low_cnt += 1;
+                            }
+                            sender.push((node.to_string(), des.to_string(), next_sig));
                         }
-                        
                     }
                 }
             }
-            println!("round {round} {}", _print_state(&states));
-            if round >= 1000 {
-                break;
-            } 
-            else if hm.iter().filter_map(|(name,(typ, _,_))| {
-                    if *typ == Type::Flipflop {
-                        Some(name)
-                    } else {
-                        None
-                    }
-                }).all(|name| !*states.get(name).unwrap())
-            {
+            round += 1;
+            if 1000 % round == 0 && ff_states.iter().all(|(_name, state)| !*state) {
                 break;
             }
         }
-        println!("{round} {high_cnt} {low_cnt}");
-        let mul = 1000/round;
-        high_cnt * low_cnt *mul*mul
+        let mul = 1000 / round;
+        high_cnt * low_cnt * mul * mul
     }
 }
 
