@@ -7,8 +7,7 @@ test_case_n!(example,
 %b -> c
 %c -> inv
 &inv -> a",
-    part1: (part1::solve, 32000000),
-    part2: (part2::solve, 0)
+    part1: (part1::solve, 32000000)
 );
 
 test_case_n!(example2,
@@ -17,6 +16,5 @@ test_case_n!(example2,
 &inv -> b
 %b -> con
 &con -> output",
-    part1: (part1::solve, 11687500),
-    part2: (part2::solve, 0)
+    part1: (part1::solve, 11687500)
 );
