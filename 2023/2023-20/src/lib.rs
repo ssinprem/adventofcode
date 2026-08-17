@@ -178,6 +178,7 @@ pub mod part1 {
 
 pub mod part2 {
     use super::*;
+    use std::collections::VecDeque;
 
     fn gcd(mut a: u64,mut b: u64) -> u64 {
         while b != 0 {
@@ -199,97 +200,68 @@ pub mod part2 {
 
         let (mut ff_states, mut conj_states) = init_state(&hm);
 
-        let mut sender = Vec::new();
-        let mut round = 0;
+        let mut sender = VecDeque::new();
 
-        let mut src_rx : Vec<_> = hm.iter().filter_map(|(name,(typ,des,_src))| {
-            if des.contains(&"rx".to_string()) {
-                Some((name.to_string(), typ.clone(), false))
-            } else {
-                None
-            }
-        }).collect();
-        println!("{src_rx:?}");
-        
-        while src_rx.iter().any(|(_name,type_, state)| type_ == &Type::Conjuction && state == &false) {
-            if let Some(pos) = src_rx.iter().position(|(_name,type_, state)| {
-                type_ == &Type::Conjuction && state == &false
-            }) {
-                let (dst_name, _, bool) = src_rx.remove(pos);
-                let (_t, _dst, src)= hm.get(&dst_name).unwrap();
-                for s in src {
-                    let t = (*hm.get(s).unwrap()).0.clone();
-                    src_rx.push((s.to_string(), t, !bool));
-                }
-            }
-        }
-        println!("{src_rx:?}");
-        let mut src_rx : HashMap<_,_> = src_rx.iter().map(| (name, _type, bool )| {
-            (name.to_string(), (*bool, 0))
-        }).collect();
-        loop {
-            // println!("{round}");
-            sender.push(("broadcaster".to_string(), "button".to_string(), false));
-            while !sender.is_empty()
-                && let (des, src, sig) = sender.remove(0)
-            {
-                // println!("{src:10} {sig:10} {des:10}");
-                if des == "rx" && !sig {
-                    return round;
-                }
-                
-                if let Some((typ, nodes, _srcs)) = hm.get(&des) {
-                    if *typ == Type::Broadcaster {
-                        for node in nodes {
-                            sender.push((node.to_string(), des.to_string(), sig));
+        let pre_rx = hm
+            .iter()
+            .find(|(_, (_, destinations, _))| destinations.contains(&"rx".to_string()))
+            .map(|(name, _)| name.clone())
+            .unwrap();
+        println!("pre_rx {pre_rx:?}");
+        let mut feeders: HashMap<String, u64> = hm
+            .iter()
+            .filter(|(_, (_, destinations, _))| destinations.contains(&pre_rx))
+            .map(|(name, _)| (name.clone(), 0))
+            .collect();
+        println!("feeders {feeders:?}");
+        for round in 1.. {
+            sender.push_back(("broadcaster".to_string(), "button".to_string(), false));
+
+            while let Some((des, src, sig)) = sender.pop_front() {
+                if des == pre_rx && sig {
+                    if let Some(cycle_len) = feeders.get_mut(&src) {
+                        if *cycle_len == 0 {
+                            *cycle_len = round;
                         }
-                    } else if *typ == Type::Flipflop {
-                        if !sig {
-                            let next_state = {
-                                let state = ff_states.get_mut(&des).unwrap();
-                                *state = !*state;
-                                *state
-                            };
+                    }
+                }
+
+                if let Some((typ, nodes, _)) = hm.get(&des) {
+                    match typ {
+                        Type::Broadcaster => {
                             for node in nodes {
-                                sender.push((node.to_string(), des.to_string(), next_state));
+                                sender.push_back((node.clone(), des.clone(), sig));
                             }
                         }
-                    } else if *typ == Type::Conjuction {
-                        let mem = conj_states.get_mut(&des).unwrap();
-                        mem.insert(src, sig);
-                        let next_sig = !mem.values().all(|v| *v);
-                        for node in nodes {
-                            sender.push((node.to_string(), des.to_string(), next_sig));
+                        Type::Flipflop => {
+                            if !sig {
+                                let state = ff_states.get_mut(&des).unwrap();
+                                *state = !*state;
+                                let next_sig = *state;
+                                for node in nodes {
+                                    sender.push_back((node.clone(), des.clone(), next_sig));
+                                }
+                            }
                         }
+                        Type::Conjuction => {
+                            let mem = conj_states.get_mut(&des).unwrap();
+                            mem.insert(src.clone(), sig);
+                            let next_sig = !mem.values().all(|&v| v);
+                            for node in nodes {
+                                sender.push_back((node.clone(), des.clone(), next_sig));
+                            }
+                        }
+                        Type::Error => {}
                     }
                 }
             }
-            round += 1;
 
-
-            if src_rx.clone().iter().all(|(_name, (_, n))| *n != 0) {
-                break;
-            }
-            // println!("{conj_states:?} {ff_states:?}");
-            println!("{src_rx:?}");
-            for (pre_rx, (expect, num)) in src_rx.iter_mut() {
-                if *num == 0 {
-                    let val = 
-                    if let Some(mem) = conj_states.get(pre_rx) {
-                        !mem.values().all(|v| *v)
-                    } else if let Some(state) = ff_states.get(pre_rx) {
-                            *state
-                        } else {
-                            unreachable!()
-                        };
-                    println!("{pre_rx} {expect} {val}");
-                    if *expect == val {
-                        *num = round;
-                    }
-                }
+            if feeders.values().all(|&v| v > 0) {
+                println!("feeders {feeders:?}");
+                let values: Vec<u64> = feeders.values().cloned().collect();
+                return lcms(&values);
             }
         }
-        println!("{src_rx:?}");
-        lcms(src_rx.iter().map(|(_name,(_,n))| *n).collect::<Vec<u64>>().as_slice())
+        0
     }
 }
