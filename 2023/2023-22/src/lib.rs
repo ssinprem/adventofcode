@@ -1,5 +1,4 @@
 use regex::Regex;
-use rayon::prelude::*;
 use std::collections::HashMap;
 
 use building_blocks_core::{Point3i, PointN};
@@ -41,150 +40,181 @@ pub fn parse(file: String) -> HashMap<u32, Vec<Point3i>> {
 
 pub mod part1 {
     use super::*;
-
-    pub fn have_upper(top_brick: &Vec<Point3i>, other: &Vec<(u32, Vec<Point3i>)>) -> Vec<u32> {
-        other
-            .par_iter()
-            .filter_map(|(t, ab)| {
-                if top_brick.iter().any(|b| {
-                    if ab
-                        .iter()
-                        .any(|a| b.x() == a.x() && b.y() == a.y() && b.z() + 1 == a.z())
-                    {
-                        true
-                    } else {
-                        false
-                    }
-                }) {
-                    Some(*t)
-                } else {
-                    None
-                }
-            })
-            .collect::<Vec<u32>>()
-    }
-
-    pub fn have_under(bottom_brick: &Vec<Point3i>, other: &Vec<(u32, Vec<Point3i>)>) -> Vec<u32> {
-        other
-            .par_iter()
-            .filter_map(|(t, ab)| {
-                if bottom_brick.iter().any(|b| {
-                    if ab
-                        .iter()
-                        .any(|a| b.x() == a.x() && b.y() == a.y() && b.z() == a.z() + 1)
-                    {
-                        true
-                    } else {
-                        false
-                    }
-                }) {
-                    Some(*t)
-                } else {
-                    None
-                }
-            })
-            .collect::<Vec<u32>>()
-    }
+    use itertools::Itertools;
+    use std::collections::HashSet;
 
     pub fn solve(file: String) -> u64 {
-        let mut bricks = parse(file);
+        let mut bricks: Vec<_> = parse(file).into_iter().collect();
+        bricks.sort_by_key(|(_, b)| b.iter().map(|p| p.z()).min().unwrap());
 
-        //let failling
-        loop {
-            let bc = bricks.clone();
-            let mut all_done = true;
-            bricks.iter_mut().for_each(|(n, b)| {
-                let mut grouped: HashMap<(i32, i32), Vec<i32>> = HashMap::new();
-                b.iter().for_each(|p| {
-                    grouped
-                        .entry((p.x(), p.y()))
-                        .or_default()
-                        .push(p.z() as i32);
-                });
+        let mut space: HashMap<(i32, i32), (i32, u32)> = HashMap::new();
+        let mut supports: HashMap<u32, HashSet<u32>> = HashMap::new();
+        let mut supported_by: HashMap<u32, HashSet<u32>> = HashMap::new();
 
-                let other = bc
-                    .iter()
-                    .filter(|(m, _brick)| n != *m)
-                    .map(|(m, b)| (*m, b.clone()))
-                    .collect::<Vec<(u32, Vec<Point3i>)>>();
-                let bottom_brick = grouped
-                    .iter()
-                    .map(|(xy, z)| PointN([xy.0, xy.1, *z.iter().min().unwrap()]))
-                    .collect::<Vec<_>>();
+        for (id, brick) in &mut bricks {
+            let mut max_z = 0;
+            let mut support_candidates = HashSet::new();
 
-                let have_under = have_under(&bottom_brick, &other);
-                let touch_ground = bottom_brick.iter().any(|c| c.z() == 1);
+            let bottom_points: Vec<_> = brick
+                .iter()
+                .map(|p| (p.x(), p.y()))
+                .unique()
+                .collect();
 
-                if !(have_under.len() > 0 || touch_ground) {
-                    all_done = false;
-                    b.iter_mut().for_each(|c| {
-                        let z = c.z_mut();
-                        *z -= 1;
-                    });
+            for (x, y) in bottom_points {
+                if let Some((z, support_id)) = space.get(&(x, y)) {
+                    if *z > max_z {
+                        max_z = *z;
+                        support_candidates.clear();
+                        support_candidates.insert(*support_id);
+                    } else if *z == max_z && max_z != 0 {
+                        support_candidates.insert(*support_id);
+                    }
                 }
-            });
+            }
 
-            if all_done {
-                break;
+            // Record support relationships
+            if let Some(s) = supported_by.get_mut(id) {
+                for v in support_candidates.iter() {
+                    s.insert(*v);
+                }
+            } else {
+                supported_by.insert(*id, support_candidates.clone());
+            }
+
+            for supporter_id in support_candidates {
+                supports.entry(supporter_id).or_default().insert(*id);
+            }
+
+            // Move brick down
+            let min_z_in_brick = brick.iter().map(|p| p.z()).min().unwrap();
+            let fall_dist = min_z_in_brick - max_z - 1;
+            if fall_dist > 0 {
+                for p in brick.iter_mut() {
+                    *p.z_mut() -= fall_dist;
+                }
+            }
+
+            // Update space
+            for p in brick.iter() {
+                space.insert((p.x(), p.y()), (p.z(), *id));
             }
         }
 
-        //check each brick
-        let bc = bricks.clone();
-        let set = bricks
-            .par_iter()
-            .map(|(n, brick)| {
-                let other = bc
-                    .iter()
-                    .filter(|(m, _brick)| n != *m)
-                    .map(|(m, b)| (*m, b.clone()))
-                    .collect::<Vec<(u32, Vec<Point3i>)>>();
-
-                let mut grouped: HashMap<(i32, i32), Vec<i32>> = HashMap::new();
-                brick.iter().for_each(|p| {
-                    grouped
-                        .entry((p.x(), p.y()))
-                        .or_default()
-                        .push(p.z() as i32);
-                });
-
-                let top_brick = grouped
-                    .iter()
-                    .map(|(xy, z)| PointN([xy.0, xy.1, *z.iter().max().unwrap()]))
-                    .collect::<Vec<_>>();
-
-                let bottom_brick = grouped
-                    .iter()
-                    .map(|(xy, z)| PointN([xy.0, xy.1, *z.iter().min().unwrap()]))
-                    .collect::<Vec<_>>();
-
-                let have_upper = have_upper(&top_brick, &other);
-                let have_under = have_under(&bottom_brick, &other);
-
-                // println!("{n} {have_on:?} {have_under:?}");
-                (*n, (have_upper, have_under))
-            })
-            .collect::<HashMap<u32, (Vec<u32>, Vec<u32>)>>();
-
-        let keys = set.keys().into_iter().copied().collect::<Vec<u32>>();
-        keys.par_iter()
-            .filter(|&key| {
-                let s = set.get(key).unwrap();
-                let uppers = s.0.clone();
-
-                uppers.is_empty()
-                    || uppers.iter().all(|upper| {
-                        let u = set.get(upper).unwrap();
-                        let unders = u.1.clone();
-                        unders.len() > 1
+        // Now solve part 1
+        let count = bricks
+            .iter()
+            .filter(|(id, _)| {
+                if let Some(supported_bricks) = supports.get(id) {
+                    supported_bricks.iter().all(|supported_id| {
+                        supported_by
+                            .get(supported_id)
+                            .map_or(false, |s| s.len() > 1)
                     })
+                } else {
+                    // No bricks supported by this one, so it can be disintegrated.
+                    true
+                }
             })
-            .count() as u64
+            .count();
+
+        count as u64
     }
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use super::*;
+    use itertools::Itertools;
+    use std::collections::HashSet;
+
+    pub fn solve(file: String) -> u64 {
+        let mut bricks: Vec<_> = parse(file).into_iter().collect();
+        bricks.sort_by_key(|(_, b)| b.iter().map(|p| p.z()).min().unwrap());
+
+        let mut space: HashMap<(i32, i32), (i32, u32)> = HashMap::new();
+        let mut supports: HashMap<u32, HashSet<u32>> = HashMap::new();
+        let mut supported_by: HashMap<u32, HashSet<u32>> = HashMap::new();
+
+        for (id, brick) in &mut bricks {
+            let mut max_z = 0;
+            let mut support_candidates = HashSet::new();
+
+            let bottom_points: Vec<_> = brick
+                .iter()
+                .map(|p| (p.x(), p.y()))
+                .unique()
+                .collect();
+
+            for (x, y) in bottom_points {
+                if let Some((z, support_id)) = space.get(&(x, y)) {
+                    if *z > max_z {
+                        max_z = *z;
+                        support_candidates.clear();
+                        support_candidates.insert(*support_id);
+                    } else if *z == max_z && max_z != 0 {
+                        support_candidates.insert(*support_id);
+                    }
+                }
+            }
+
+            // Record support relationships
+            if let Some(s) = supported_by.get_mut(id) {
+                for v in support_candidates.iter() {
+                    s.insert(*v);
+                }
+            } else {
+                supported_by.insert(*id, support_candidates.clone());
+            }
+
+            for supporter_id in support_candidates {
+                supports.entry(supporter_id).or_default().insert(*id);
+            }
+
+            // Move brick down
+            let min_z_in_brick = brick.iter().map(|p| p.z()).min().unwrap();
+            let fall_dist = min_z_in_brick - max_z - 1;
+            if fall_dist > 0 {
+                for p in brick.iter_mut() {
+                    *p.z_mut() -= fall_dist;
+                }
+            }
+
+            // Update space
+            for p in brick.iter() {
+                space.insert((p.x(), p.y()), (p.z(), *id));
+            }
+        }
+
+        // Now solve part 2
+        bricks
+            .iter()
+            .filter_map(|(id, _)| {
+                if let Some(supported_bricks) = supports.get(id) && 
+                    ! supported_bricks.iter().all(|supported_id| {
+                        supported_by
+                            .get(supported_id)
+                            .map_or(false, |s| s.len() > 1)
+                    })
+                {
+                    let mut effect_bricks = HashSet::new();
+                    let mut list = Vec::new();
+                    list.push(*id);
+
+                    while let Some(eff) = list.pop() {
+                        if let Some(support) = supports.get(&eff) {
+                            support.iter().for_each(|s| {
+                                list.push(*s);
+                                effect_bricks.insert(s);
+                            });
+                        }
+                    }
+                    // println!("{id} {effect_bricks:?}");
+                    Some(effect_bricks.len() as  u64)
+                } else {
+                    // No bricks supported by this one, so it can be disintegrated.
+                    None
+                }
+            })
+            .sum()
     }
 }
