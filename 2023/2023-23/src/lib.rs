@@ -94,7 +94,74 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use std::collections::HashSet;
+
+    use super::*;
+
+    pub fn pathing(
+        maps: &Grid<char>,
+        path: Vec<(usize, usize)>,
+        end: (usize, usize),
+    ) -> Vec<Vec<(usize, usize)>> {
+        let rows = maps.rows();
+        let cols = maps.cols();
+        let mut path = path.clone();
+        while let Some(cur) = path.last()
+            && cur != &end
+        {
+            let candidate = [(-1, 0), (0, -1), (1, 0), (0, 1)]
+                .iter()
+                .filter_map(|(dy, dx)| {
+                    let new_y = cur.0 as isize + dy;
+                    let new_x = cur.1 as isize + dx;
+
+                    if new_y < 0
+                        || new_y >= rows as isize
+                        || new_x < 0
+                        || new_x >= cols as isize
+                        || path.contains(&(new_y as usize, new_x as usize))
+                    {
+                        None
+                    } else if let Some(block) = maps.get(new_y, new_x) {
+                        if block != &'#' {
+                            Some((new_y as usize, new_x as usize))
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
+                    }
+                })
+                .collect::<Vec<_>>();
+
+            if candidate.len() == 1 {
+                path.push(*candidate.last().unwrap());
+            } else if candidate.len() > 1 {
+                return candidate
+                    .par_iter()
+                    .flat_map(|can| {
+                        let mut path = path.clone();
+                        path.push(*can);
+                        pathing(maps, path, end)
+                    })
+                    .collect();
+            } else {
+                return vec![];
+            }
+        }
+        println!("{}", path.len());
+        vec![path]
+    }
+
+    pub fn solve(file: String) -> u64 {
+        let (maps, start, end) = parse(file);
+        let paths = pathing(&maps, vec![start], end);
+        paths
+            .iter()
+            // .inspect(|p| println!("{}", p.len()))
+            .max_by_key(|p| p.len())
+            .unwrap()
+            .len() as u64
+            - 1
     }
 }
