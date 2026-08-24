@@ -186,35 +186,23 @@ pub mod part2 {
         }
 
         // Now solve part 2
-        bricks
-            .iter()
-            .filter_map(|(id, _)| {
-                if let Some(supported_bricks) = supports.get(id) && 
-                    ! supported_bricks.iter().all(|supported_id| {
-                        supported_by
-                            .get(supported_id)
-                            .map_or(false, |s| s.len() > 1)
-                    })
-                {
-                    let mut effect_bricks = HashSet::new();
-                    let mut list = Vec::new();
-                    list.push(*id);
+        let mut total_falling = 0;
+        for (id, _) in &bricks {
+            let mut falling = HashSet::new();
+            falling.insert(*id);
+            let mut queue: Vec<u32> = supports.get(id).cloned().unwrap_or_default().into_iter().collect();
 
-                    while let Some(eff) = list.pop() {
-                        if let Some(support) = supports.get(&eff) {
-                            support.iter().for_each(|s| {
-                                list.push(*s);
-                                effect_bricks.insert(s);
-                            });
+            while let Some(brick_to_check) = queue.pop() {
+                if supported_by.get(&brick_to_check).map_or(false, |s| s.is_subset(&falling)) {
+                    if falling.insert(brick_to_check) {
+                        if let Some(supported_by_brick) = supports.get(&brick_to_check) {
+                            queue.extend(supported_by_brick);
                         }
                     }
-                    // println!("{id} {effect_bricks:?}");
-                    Some(effect_bricks.len() as  u64)
-                } else {
-                    // No bricks supported by this one, so it can be disintegrated.
-                    None
                 }
-            })
-            .sum()
+            }
+            total_falling += falling.len() - 1;
+        }
+        total_falling as u64
     }
 }
