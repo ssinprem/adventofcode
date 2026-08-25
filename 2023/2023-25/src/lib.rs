@@ -34,32 +34,67 @@ pub fn parse(file: String) -> UnGraph<String, ()> {
 }
 
 pub mod part1 {
-    use crate::parse;
-    use petgraph::algo::kosaraju_scc;
+    use std::collections::HashSet;
+
+use crate::parse;
+    use petgraph::{algo::kosaraju_scc, visit::EdgeRef};
     use petgraph::graph::*;
+    use rayon::iter::{IntoParallelIterator, ParallelIterator};
 
     pub fn remove_3_edge(graph: &UnGraph<String, ()>) -> Option<UnGraph<String, ()>> {
         let edges: Vec<EdgeIndex> = graph.edge_indices().collect();
         let n = edges.len();
+        let start_node = NodeIndex::new(0);
+        let total_node = graph.node_count();
+        (0..n ).into_par_iter().find_map_any(|i| {
+            for j in i+1..n {
+                for k in j+1..n {
+                    if count_reachable_nodes(graph, start_node, vec![edges[k],edges[j],edges[i]]) < total_node {
+                        let mut test = graph.clone();
 
-        for i in 0..n {
-            for j in i + 1..n {
-                for k in j + 1..n {
-                    let mut test = graph.clone();
+                        test.remove_edge(edges[k]);
+                        test.remove_edge(edges[j]);
+                        test.remove_edge(edges[i]);
 
-                    test.remove_edge(edges[i]);
-                    test.remove_edge(edges[j]);
-                    test.remove_edge(edges[k]);
-
-                    let groups = kosaraju_scc(&test);
-                    println!("{i} {j} {k}  {}",groups.len());
-                    if groups.len() == 2 {
-                        return Some(test.clone());
+                        return Some(test);
                     }
                 }
             }
+            None
+        })
+    }
+
+    pub fn count_reachable_nodes(
+        graph: &UnGraph<String, ()>,
+        start: NodeIndex,
+        skip_edge: Vec<EdgeIndex>,
+    ) -> usize {
+        let mut visited = vec![false; graph.node_count()];
+        let mut queue = Vec::new();
+        
+        visited[start.index()] = true;
+        queue.push(start);
+        let mut count = 1;
+
+        while let Some(node) = queue.pop() {
+            for edge_ref in graph.edges(node) {
+                let edge_id = edge_ref.id();
+
+                if skip_edge.contains(&edge_id) {
+                    continue;
+                }
+
+                let neighbor = edge_ref.target();
+                let nid = neighbor.index();
+                if !visited[nid] {
+                    visited[nid] = true;
+                    queue.push(neighbor);
+                    count += 1;
+                }
+            }
         }
-        None
+
+        count
     }
 
     pub fn solve(file: String) -> u64 {
