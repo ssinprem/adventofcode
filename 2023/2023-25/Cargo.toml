@@ -6,5 +6,5 @@ edition = "2024"
 [dependencies]
 paste = "1.0.15"
 petgraph = "0.8.3"
-rayon = "1.12.0"
+rand = "0.10.2"
 utility = { path = "../../utility" }

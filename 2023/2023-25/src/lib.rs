@@ -34,67 +34,92 @@ pub fn parse(file: String) -> UnGraph<String, ()> {
 }
 
 pub mod part1 {
-    use std::collections::HashSet;
-
-use crate::parse;
+    use std::cmp::Reverse;
+    use std::collections::{HashMap, VecDeque};
+    use crate::parse;
     use petgraph::{algo::kosaraju_scc, visit::EdgeRef};
     use petgraph::graph::*;
-    use rayon::iter::{IntoParallelIterator, ParallelIterator};
+    use rand::seq::IndexedRandom;
 
     pub fn remove_3_edge(graph: &UnGraph<String, ()>) -> Option<UnGraph<String, ()>> {
-        let edges: Vec<EdgeIndex> = graph.edge_indices().collect();
-        let n = edges.len();
-        let start_node = NodeIndex::new(0);
-        let total_node = graph.node_count();
-        (0..n ).into_par_iter().find_map_any(|i| {
-            for j in i+1..n {
-                for k in j+1..n {
-                    if count_reachable_nodes(graph, start_node, vec![edges[k],edges[j],edges[i]]) < total_node {
-                        let mut test = graph.clone();
+        let nodes : Vec<NodeIndex> = graph.node_indices().collect();
+        let mut edge_count = HashMap::new();
+        let mut rng = rand::rng();
 
-                        test.remove_edge(edges[k]);
-                        test.remove_edge(edges[j]);
-                        test.remove_edge(edges[i]);
+        for _ in 0..300 {
+            if let (Some(start), Some(end)) = (nodes.choose(&mut rng), nodes.choose(&mut rng)) {
+                if start == end { continue; }
 
-                        return Some(test);
+                if let Some(path_edges) = find_path(graph, *start, *end) {
+                    for edge in path_edges {
+                        *edge_count.entry(edge).or_insert(0) += 1;
                     }
                 }
             }
-            None
-        })
+        }
+
+        let mut edge_list: Vec<_> = edge_count.iter().collect();
+        edge_list.sort_by_key(|(_e,v)| Reverse(*v));
+
+        let mut targets = [
+            *edge_list[0].0,
+            *edge_list[1].0,
+            *edge_list[2].0,
+        ];
+        targets.sort();
+
+        let mut new_graph = graph.clone();
+        new_graph.remove_edge(targets[0]);
+        new_graph.remove_edge(targets[1]);
+        new_graph.remove_edge(targets[2]);
+
+        Some(new_graph)
     }
 
-    pub fn count_reachable_nodes(
+    pub fn find_path(
         graph: &UnGraph<String, ()>,
         start: NodeIndex,
-        skip_edge: Vec<EdgeIndex>,
-    ) -> usize {
+        end: NodeIndex,
+    ) -> Option<Vec<EdgeIndex>> {
         let mut visited = vec![false; graph.node_count()];
-        let mut queue = Vec::new();
+        let mut parent = HashMap::new();
+        let mut queue = VecDeque::new();
         
         visited[start.index()] = true;
-        queue.push(start);
-        let mut count = 1;
-
-        while let Some(node) = queue.pop() {
+        queue.push_back(start);
+        
+        let mut found = false;
+        while let Some(node) = queue.pop_front() {
+            if node == end {
+                found = true;
+                break;
+            }
             for edge_ref in graph.edges(node) {
                 let edge_id = edge_ref.id();
-
-                if skip_edge.contains(&edge_id) {
-                    continue;
-                }
 
                 let neighbor = edge_ref.target();
                 let nid = neighbor.index();
                 if !visited[nid] {
                     visited[nid] = true;
-                    queue.push(neighbor);
-                    count += 1;
+                    queue.push_back(neighbor);
+                    parent.insert(neighbor, (edge_id, node));
                 }
             }
         }
 
-        count
+        if !found { return None; }
+
+        let mut path_edges = Vec::new();
+        let mut curr = end;
+        while curr != start {
+            if let Some((edge_id, prev_node)) = parent.get(&curr) {
+                path_edges.push(*edge_id);
+                curr = *prev_node
+            } else {
+                break;
+            }
+        }
+        Some(path_edges)
     }
 
     pub fn solve(file: String) -> u64 {
@@ -104,7 +129,7 @@ use crate::parse;
 
             group
                 .iter()
-                .inspect(|g| println!("[{}] {:?}", g.len(), g))
+                .inspect(|g| println!("[{}] ", g.len()))
                 .map(|hs| hs.len())
                 .product::<usize>() as u64
         } else {
