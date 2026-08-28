@@ -1,6 +1,5 @@
 pub mod part1 {
     use std::collections::HashSet;
-
     pub fn solve(file: String) -> u64 {
         let mut history = HashSet::new();
         let mut curr = (0,0);
@@ -20,7 +19,33 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use std::collections::HashSet;
+    pub fn solve(file: String) -> u64 {
+        let mut history = HashSet::new();
+        let mut santa = (0,0);
+        let mut robot = (0,0);
+        history.insert(santa);
+        file.chars().enumerate().for_each(|(n,step)| {
+            if n %2 == 0 {
+                match step {
+                    '^' => santa = (santa.0, santa.1 - 1),
+                    'v' => santa = (santa.0, santa.1 + 1),
+                    '<' => santa = (santa.0 - 1, santa.1),
+                    '>' => santa = (santa.0 + 1, santa.1),
+                    _ => {}
+                }
+                history.insert(santa);
+            } else {
+                match step {
+                    '^' => robot = (robot.0, robot.1 - 1),
+                    'v' => robot = (robot.0, robot.1 + 1),
+                    '<' => robot = (robot.0 - 1, robot.1),
+                    '>' => robot = (robot.0 + 1, robot.1),
+                    _ => {}
+                }
+                history.insert(robot);
+            }
+        });
+        history.len() as u64
     }
 }
