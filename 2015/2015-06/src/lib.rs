@@ -41,7 +41,43 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use regex::Regex;
+    use std::cmp::max;
+
+    pub fn solve(file: String) -> u64 {
+        let mut grid = vec![vec![0_i64; 1000 ];1000];
+        let regex = Regex::new(r"(.*)\s+(\d+),(\d+)\s+through\s+(\d+),(\d+)").unwrap();
+
+        file.lines().for_each(|line| {
+            if let Some(cap) = regex.captures(line)
+            && let Some(x1) = cap.get(2)
+            && let Ok(x1) = x1.as_str().parse::<usize>()
+            && let Some(y1) = cap.get(3)
+            && let Ok(y1) = y1.as_str().parse::<usize>()
+            && let Some(x2) = cap.get(4)
+            && let Ok(x2) = x2.as_str().parse::<usize>()
+            && let Some(y2) = cap.get(5)
+            && let Ok(y2) = y2.as_str().parse::<usize>()
+            && let Some(inst) = cap.get(1)
+            && let inst = inst.as_str()
+            && ["toggle","turn off","turn on"].contains(&inst)
+            {
+                (x1..=x2).for_each(|x| {
+                    (y1..=y2).for_each(|y| {
+                        match inst {
+                            "toggle" => grid[x][y] += 2,
+                            "turn off" => grid[x][y] = max(grid[x][y] - 1,0) ,
+                            "turn on" => grid[x][y] += 1,
+                            _ => {}
+                        }
+                        
+                    })
+                })
+            } 
+        });
+
+        grid.iter().map(|row|
+            row.into_iter().copied().sum::<i64>() as u64
+        ).sum::<u64>()
     }
 }
