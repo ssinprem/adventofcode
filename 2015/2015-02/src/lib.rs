@@ -16,7 +16,17 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    pub fn solve(file: String) -> u64 {
+        file.lines().filter(|line| !line.is_empty())
+        .map(|line| {
+            let mut n: Vec<u64> = line.split("x")
+                .map(|n| n.parse::<u64>().unwrap()).collect();
+            n.sort();
+            let l = n[0];
+            let w = n[1];
+            let h = n[2];
+
+            l*w*h + 2*l + 2*w
+        }).sum()
     }
 }
