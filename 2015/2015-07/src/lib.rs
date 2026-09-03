@@ -22,7 +22,7 @@ pub mod part1 {
                 {
                     let res = right.as_str().to_string();
                     hs.insert(res.to_string());
-
+                    // println!("{line}");
                     if hm.get(&res).is_some() {
                         // none action
                     }
@@ -106,7 +106,16 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use crate::part1;
+    use std::collections::HashMap;
+
+    pub fn solve(file: String) -> HashMap<String, u16> {
+        let hm = part1::solve(file.to_string());
+        let b_val = hm.get("a").unwrap();
+        println!("new b {b_val}");
+        let b_line = file.lines().find(|line| line.ends_with("-> b")).unwrap();
+        let file = file.replace(b_line, format!("{b_val} -> b").as_str());
+        let hm = part1::solve(file.to_string());
+        hm
     }
 }

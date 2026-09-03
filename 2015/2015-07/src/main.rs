@@ -6,6 +6,7 @@ fn main() -> Result<(), Box<dyn Error>>{
     let file = read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/input.txt"))?;
     let hm = part1::solve(file.clone());
     println!("part1 a = {:?}", hm.get("a"));
-    println!("part2 = {}", part2::solve(file.clone()));
+    let hm = part2::solve(file.clone());
+    println!("part2 a = {:?}", hm.get("a"));
     Ok(())
 }
