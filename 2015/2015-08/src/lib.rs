@@ -27,7 +27,24 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    pub fn solve(file: String) -> u64 {
+        file.lines().filter(|line| !line.is_empty())
+        .map(|str_line| {
+            let size = str_line.len();
+            let line = str_line.chars().collect::<Vec<char>>();
+            let mut len = 0;
+            let mut i = 0;
+            while i < size {
+                if ['"','\\'].contains(&line[i]) {
+                    len+=2;
+                    i+=1;
+                } else {
+                    len+=1;
+                    i+=1;
+                }
+            }
+
+            len + 2 - size
+        }).sum::<usize>() as u64
     }
 }
