@@ -1,7 +1,6 @@
 
-use std::collections::HashMap;
-
-use petgraph::graph::DiGraph;
+use std::collections::{HashMap, VecDeque};
+use petgraph::{Graph, graph::{DiGraph, NodeIndex}};
 use regex::Regex;
 
 pub fn parse(file: String) -> DiGraph<String, i64> {
@@ -18,14 +17,14 @@ pub fn parse(file: String) -> DiGraph<String, i64> {
         && let Ok(n) = value.as_str().parse::<i64>()
         && let Some(w2) = cap.get(4)
         {
-            let id1 = if let Some(id) = ids.get(&w1.as_str().to_string()) {
+            let id1 = if let Some(id) = ids.get(w1.as_str()) {
                 *id
             } else {
                 let id = graph.add_node(w1.as_str().to_string());
                 ids.insert(w1.as_str().to_string(), id);
                 id
             };
-            let id2 = if let Some(id) = ids.get(&w2.as_str().to_string()) {
+            let id2 = if let Some(id) = ids.get(w2.as_str()) {
                 *id
             } else {
                 let id = graph.add_node(w2.as_str().to_string());
@@ -43,46 +42,54 @@ pub fn parse(file: String) -> DiGraph<String, i64> {
     graph
 }
 
-pub mod part1 {
-    use std::collections::VecDeque;
+pub fn calculate_happiness(graph: &Graph<String, i64>, list: &[NodeIndex]) -> i64 {
+    let mut pairs = list.windows(2)
+    .map(|array| (array[0], array[1]))
+    .collect::<Vec<(NodeIndex, NodeIndex)>>();
+    pairs.push((*list.last().unwrap(),*list.first().unwrap()));
 
-use petgraph::graph::NodeIndex;
-    use crate::parse;
+    pairs.iter().map(|pair|
+        {
+        let e1 = graph.find_edge(pair.0, pair.1).unwrap();
+        let e2 = graph.find_edge(pair.1, pair.0).unwrap();
+        let w1 = graph.edge_weight(e1).unwrap();
+        let w2 = graph.edge_weight(e2).unwrap();
+        *w1 + *w2
+    }).sum::<i64>()
+}
 
-    pub fn solve(file: String) -> i64 {
-        let graph = parse(file);
-        let mut positions: Vec<(i64, Vec<NodeIndex>)> = Vec::new();
-        let ids = graph.node_indices().collect::<Vec<NodeIndex>>();
-        let node_cnt= ids.len();
-        let first = ids.first().unwrap();
-        let mut temp: VecDeque<Vec<NodeIndex>> = VecDeque::new();
-        temp.push_back(vec![*first]);
-        while let Some(t) = temp.pop_back() {
-            if t.len() == node_cnt {
-                let mut pairs = t.windows(2)
-                .map(|array| (array[0], array[1]))
-                .collect::<Vec<(NodeIndex, NodeIndex)>>();
-                pairs.push((*t.last().unwrap(),*t.first().unwrap()));
-
-                let score = pairs.iter().map(|pair|
-                 {
-                    let e1 = graph.find_edge(pair.0, pair.1).unwrap();
-                    let e2 = graph.find_edge(pair.1, pair.0).unwrap();
-                    let w1 = graph.edge_weight(e1).unwrap();
-                    let w2 = graph.edge_weight(e2).unwrap();
-                    *w1 + *w2
-                }).sum::<i64>();
-                positions.push((score, t));
-            } else {
-                for id in ids.iter().clone() {
-                    if ! t.contains(id) {
-                        let mut new_t = t.clone();
-                        new_t.push(*id);
-                        temp.push_back(new_t);
-                    }
+pub fn populate(graph: &Graph<String, i64>) -> Vec<Vec<NodeIndex>> {
+    let ids = graph.node_indices().collect::<Vec<NodeIndex>>();
+    let node_cnt= ids.len();
+    let first = ids.first().unwrap();
+    let mut list = Vec::new();
+    let mut temp: VecDeque<Vec<NodeIndex>> = VecDeque::new();
+    temp.push_back(vec![*first]);
+    while let Some(t) = temp.pop_back() {
+        if t.len() == node_cnt {
+            list.push(t);
+        } else {
+            for id in ids.iter().clone() {
+                if ! t.contains(id) {
+                    let mut new_t = t.clone();
+                    new_t.push(*id);
+                    temp.push_back(new_t);
                 }
             }
         }
+    }
+    list
+}
+pub mod part1 {
+    use petgraph::graph::NodeIndex;
+    use crate::{calculate_happiness, parse, populate};
+    pub fn solve(file: String) -> i64 {
+        let graph = parse(file);
+        let lists = populate(&graph);
+        let positions: Vec<(i64, Vec<NodeIndex>)> = lists.iter().map(|list| {
+            let score = calculate_happiness(&graph, list);
+            (score, list.clone())
+        }).collect();
 
         positions.iter().map(|(score, _list)| *score)
         .max().unwrap()
@@ -90,7 +97,25 @@ use petgraph::graph::NodeIndex;
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use petgraph::graph::NodeIndex;
+    use crate::{calculate_happiness, parse, populate};
+    pub fn solve(file: String) -> i64 {
+        let mut graph = parse(file);
+        let ids = graph.node_indices().collect::<Vec<NodeIndex>>();
+
+        let my_node = graph.add_node("my".to_string());
+        for id in ids.clone() {
+            graph.add_edge(my_node, id, 0);
+            graph.add_edge(id, my_node, 0);
+        }
+
+        let lists = populate(&graph);
+        let positions: Vec<(i64, Vec<NodeIndex>)> = lists.iter().map(|list| {
+            let score = calculate_happiness(&graph, list);
+            (score, list.clone())
+        }).collect();
+
+        positions.iter().map(|(score, _list)| *score)
+        .max().unwrap()
     }
 }
