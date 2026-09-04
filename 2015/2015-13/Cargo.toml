@@ -1,0 +1,10 @@
+[package]
+name = "knights_of_the_dinner_table"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+paste = "1.0.15"
+petgraph = "0.8.3"
+regex = "1.13.1"
+utility = { path = "../../utility" }
