@@ -4,25 +4,25 @@ use utility::test_case_n;
 test_case_n!(example1,
 "hijklmmn",
     part1: (part1::solve, "hjaaabcc"),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, "hjaabbcd")
 );
 test_case_n!(example2,
 "abbceffg",
     part1: (part1::solve, "abbcefgg"),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, "abbcffgh")
 );
 test_case_n!(example3,
 "abbcegjk",
     part1: (part1::solve, "abbcffgh"),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, "abbcfghh")
 );
 test_case_n!(example4,
 "abcdefgh",
     part1: (part1::solve, "abcdffaa"),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, "abcdffbb")
 );
 test_case_n!(example5,
 "ghijklmn",
     part1: (part1::solve, "ghjaabcc"),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, "ghjbbcdd")
 );

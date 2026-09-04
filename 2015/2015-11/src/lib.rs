@@ -66,7 +66,12 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use crate::part1;
+
+    pub fn solve(file: String) -> String {
+        let mut pwd = file;
+        pwd = part1::solve(pwd);
+        pwd = part1::next(pwd);
+        part1::solve(pwd)
     }
 }
