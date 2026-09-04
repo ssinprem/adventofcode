@@ -6,5 +6,5 @@ test_case_n!(example,
 London to Belfast = 518
 Dublin to Belfast = 141",
     part1: (part1::solve, 605),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 982)
 );
