@@ -32,7 +32,6 @@ pub fn parse(file: String) -> HashMap<u32, HashMap<String, u32>> {
 
 pub mod part1 {
     use std::collections::HashMap;
-
     use crate::parse;
 
     pub fn solve(file: String) -> u64 {
@@ -62,7 +61,42 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use std::collections::HashMap;
+    use crate::parse;
+
+    pub fn solve(file: String) -> u64 {
+        let mut invident = HashMap::new();
+        invident.insert("children", "=3");
+        invident.insert("samoyeds", "=2");
+        invident.insert("akitas", "=0");
+        invident.insert("vizslas", "=0");
+        invident.insert("cars", "=2");
+        invident.insert("perfumes", "=1");
+
+        invident.insert("pomeranians", "<3");
+        invident.insert("goldfish", "<5");
+
+        invident.insert("cats", ">7");
+        invident.insert("trees", ">3");
+        let aunts = parse(file);
+
+        let aunt = aunts
+            .into_iter()
+            .find(|(_no, hm)| {
+                hm.iter()
+                    .all(|(k, v)| {
+                        let range = invident.get(k.as_str()).unwrap();
+                        let (sign,num) = range.split_at(1);
+                        let num = num.parse::<u32>().unwrap();
+                        match sign {
+                            "=" => *v == num,
+                            "<" => *v < num,
+                            ">" => *v > num,
+                            _ => unreachable!()
+                        }
+                    })
+            })
+            .expect("cannot find");
+        aunt.0 as u64
     }
 }
