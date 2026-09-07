@@ -1,0 +1,8 @@
+[package]
+name = "no_such_thing_as_too_much"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+paste = "1.0.15"
+utility = { path = "../../utility" }
