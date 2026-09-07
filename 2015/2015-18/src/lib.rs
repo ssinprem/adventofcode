@@ -10,6 +10,26 @@ pub fn parse(file: String) -> Grid<bool> {
     map
 }
 
+pub fn _display(map: &Grid<bool>) -> String {
+    let mut output = "".to_string();
+
+    let rows = map.rows();
+    let cols = map.cols();
+
+    for y in 0..rows {
+        for x in 0..cols {
+            let val = map.get(y, x).unwrap();
+            if *val {
+                output += "#";
+            } else {
+                output += ".";
+            }
+        }
+        output += "\n";
+    }
+    output
+}
+
 pub fn process(map: &Grid<bool>) -> Grid<bool> {
     let mut new_map = map.clone();
 
@@ -61,7 +81,28 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use crate::{parse, process};
+
+    pub fn solve(file: String, steps: u64) -> u64 {
+        let mut map = parse(file);
+        let (cols, rows) = (map.cols(), map.rows());
+        [(0, 0), (0, cols - 1), (rows - 1, 0), (rows - 1, cols - 1)]
+            .iter()
+            .for_each(|(y, x)| {
+                let cornor = map.get_mut(*y, *x).unwrap();
+                *cornor = true
+            });
+
+        for _i in 0..steps {
+            map = process(&map);
+
+            [(0, 0), (0, cols - 1), (rows - 1, 0), (rows - 1, cols - 1)]
+                .iter()
+                .for_each(|(y, x)| {
+                    let cornor = map.get_mut(*y, *x).unwrap();
+                    *cornor = true
+                });
+        }
+        map.iter().filter(|light| **light).count() as u64
     }
 }
