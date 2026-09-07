@@ -6,7 +6,7 @@ pub struct Menu {
     durability: i64,
     flavor: i64,
     texture: i64,
-    _calories: i64
+    calories: i64
 }
 
 pub fn parse(file: String) -> Vec<Menu> {
@@ -23,7 +23,7 @@ pub fn parse(file: String) -> Vec<Menu> {
         && let Some(txt) = caps.get(4)
         && let Ok(texture) = txt.as_str().parse::<i64>()
         && let Some(cal) = caps.get(5)
-        && let Ok(_calories) = cal.as_str().parse::<i64>()
+        && let Ok(calories) = cal.as_str().parse::<i64>()
         {
             Some(
                 Menu {
@@ -31,7 +31,7 @@ pub fn parse(file: String) -> Vec<Menu> {
                     durability,
                     flavor,
                     texture,
-                    _calories
+                    calories
                 }
             )
         } else {
@@ -105,8 +105,25 @@ pub mod part1 {
     }
 }
 
+fn cal(menus: &[Menu], amount: Vec<u32>) -> u64 {
+    let size = amount.len();
+
+    (0..size).map(|i| {
+        let menu = menus[i].clone();
+        menu.calories as u64 * amount[i] as u64
+    }).sum()
+}
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use super::*;
+
+    pub fn solve(file: String) -> u64 {
+        let menus = parse(file);
+        let spoons = generate_spoons(menus.len(), 100);
+
+        spoons.iter()
+        .filter(|spoon| cal(&menus, spoon.to_vec()) == 500)
+        .filter_map(|spoon| {
+            scores(&menus, spoon.clone())
+        }).max().unwrap()
     }
 }
