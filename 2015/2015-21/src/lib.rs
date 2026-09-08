@@ -59,7 +59,7 @@ pub fn generate_fighters(hitpoint: i64) -> Vec<(u64, Fighter)> {
         (10, 5, 0),
         (25, 6, 0),
         (40, 7, 0),
-        (74, 8, 0)
+        (74, 8, 0),
     ];
     // Armor:      Cost  Damage  Armor
     // Leather      13     0       1
@@ -96,14 +96,16 @@ pub fn generate_fighters(hitpoint: i64) -> Vec<(u64, Fighter)> {
         for armor in &armors {
             for ring1 in &rings {
                 for ring2 in &rings {
-                    fighter.push((
-                        weapon.0 + armor.0 + ring1.0 + ring2.0,
-                        Fighter {
-                            hitpoint,
-                            damage: weapon.1 + ring1.1 + ring2.1,
-                            armor: armor.2 + ring1.2 + ring2.2,
-                        },
-                    ));
+                    if ring1 != ring2 {
+                        fighter.push((
+                            weapon.0 + armor.0 + ring1.0 + ring2.0,
+                            Fighter {
+                                hitpoint,
+                                damage: weapon.1 + ring1.1 + ring2.1,
+                                armor: armor.2 + ring1.2 + ring2.2,
+                            },
+                        ));
+                    }
                 }
             }
         }
@@ -125,13 +127,23 @@ pub mod part1 {
             .min_by_key(|(cost, _fighter)| *cost)
             .unwrap();
 
-        println!("{best:?}");
         best.0
     }
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use super::*;
+
+    pub fn solve(file: String, hitpoint: i64) -> u64 {
+        let boss = parse(file);
+        let fighters = generate_fighters(hitpoint);
+
+        let worst = fighters
+            .iter()
+            .filter(|(_cost, fighter)| !is_fight_win(fighter, &boss))
+            .max_by_key(|(cost, _fighter)| *cost)
+            .unwrap();
+
+        worst.0
     }
 }
