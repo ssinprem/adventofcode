@@ -2,22 +2,16 @@ pub mod part1 {
     pub fn solve(file: String) -> u64 {
         let target = file.parse::<u64>().expect("cannot parse target");
         
-        let mut house = 0;
-        let mut presents = vec![0];
-        loop {
-            house += 1;
-            let mut pres = 0;
-            for elf in 1..=house {
-                if house % elf == 0 {
-                    pres += elf;
-                }
-            }
-            presents.push(pres);
-            // println!("{house} {pres}");
-            if pres >= target/10 {
-                return house;
+        let limit = target as usize / 10;
+        let mut houses = vec![0; limit];
+        
+        for elf in 1..limit {
+            for h in (elf..limit).step_by(elf) {
+                houses[h] += elf *10;
             }
         }
+
+        houses.iter().position(|p| *p >= target as usize).unwrap() as u64
     }
 }
 
