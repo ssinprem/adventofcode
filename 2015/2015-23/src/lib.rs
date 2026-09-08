@@ -1,11 +1,11 @@
 pub mod part1 {
     use std::collections::HashMap;
 
-    pub fn solve(file: String) -> (u64, u64) {
+    pub fn solve(file: String, a: u64, b: u64) -> (u64, u64) {
         let mut pc: isize = 0;
         let mut register = HashMap::new();
-        register.insert("a".to_string(), 0_u64);
-        register.insert("b".to_string(), 0_u64);
+        register.insert("a".to_string(), a);
+        register.insert("b".to_string(), b);
         let lines: Vec<String> = file
             .lines()
             .filter(|line| !line.is_empty())
@@ -76,11 +76,5 @@ pub mod part1 {
         }
 
         (*register.get("a").unwrap(), *register.get("b").unwrap())
-    }
-}
-
-pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
     }
 }

@@ -6,6 +6,6 @@ test_case_n!(example,
 jio a, +2
 tpl a
 inc a",
-    part1: (part1::solve, (2,0)),
-    part2: (part2::solve, 0)
+    part1: (part1::solve, (2,0), 0, 0),
+    part2: (part1::solve, (7,0), 1, 0)
 );
