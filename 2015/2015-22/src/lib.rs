@@ -121,64 +121,58 @@ pub fn at_start(wizard : &mut Wizard, boss: &mut Boss) {
         .collect::<Vec<(Skill, i64)>>();
 }
 
-
-
-pub fn best_skill_set(wizard : Wizard, boss: Boss) -> (Option<i64>, Vec<Skill>) {
-    use crate::action_skill;
-    use crate::at_start;
+pub mod part1 {
+    use crate::*;
     use crate::Skill::*;
-
-    let mut current_set: Vec<(Wizard, Boss, Vec<Skill>)> = vec![(wizard, boss, vec![])];
-    let mut best_skill: Vec<Skill> = Vec::new();
-    let mut best_mana = None;
-    while let Some((mut wizard,mut boss,skills)) = current_set.pop() {
-        if best_mana.is_some() && Some(wizard.mana_used) > best_mana {
-            continue;
-        }
-        // Wizard start turn
-        at_start(&mut wizard, &mut boss);
-        if boss.hitpoint <= 0 { // boss die
-            if best_mana.is_none() || Some(wizard.mana_used) < best_mana {
-                best_mana = Some(wizard.mana_used);
-                best_skill = skills.clone();
-                println!("{best_mana:?} {best_skill:?}");
-            }
-            continue;
-        }
-        for skill in [ MagicMissile, Drain, Shield, Poison, Recharge] {
-            let mut new_skills = skills.clone();
-            let mut new_wizard = wizard.clone();
-            let mut new_boss = boss.clone();
-            if ! action_skill(&skill, &mut new_wizard, &mut new_boss) {
+    pub fn best_skill_set(wizard : Wizard, boss: Boss) -> (Option<i64>, Vec<Skill>) {
+        let mut current_set: Vec<(Wizard, Boss, Vec<Skill>)> = vec![(wizard, boss, vec![])];
+        let mut best_skill: Vec<Skill> = Vec::new();
+        let mut best_mana = None;
+        while let Some((mut wizard,mut boss,skills)) = current_set.pop() {
+            if best_mana.is_some() && Some(wizard.mana_used) > best_mana {
                 continue;
             }
-            new_skills.push(skill.clone());
-            // Boss Start
-            at_start(&mut new_wizard, &mut new_boss);
-            if new_boss.hitpoint <= 0 { // boss die
-                if best_mana.is_none() || Some(new_wizard.mana_used) < best_mana {
-                    best_mana = Some(new_wizard.mana_used);
-                    best_skill = new_skills.clone();
+            // Wizard start turn
+            at_start(&mut wizard, &mut boss);
+            if boss.hitpoint <= 0 { // boss die
+                if best_mana.is_none() || Some(wizard.mana_used) < best_mana {
+                    best_mana = Some(wizard.mana_used);
+                    best_skill = skills.clone();
                     println!("{best_mana:?} {best_skill:?}");
                 }
                 continue;
             }
+            for skill in [ MagicMissile, Drain, Shield, Poison, Recharge] {
+                let mut new_skills = skills.clone();
+                let mut new_wizard = wizard.clone();
+                let mut new_boss = boss.clone();
+                if ! action_skill(&skill, &mut new_wizard, &mut new_boss) {
+                    continue;
+                }
+                new_skills.push(skill.clone());
+                // Boss Start
+                at_start(&mut new_wizard, &mut new_boss);
+                if new_boss.hitpoint <= 0 { // boss die
+                    if best_mana.is_none() || Some(new_wizard.mana_used) < best_mana {
+                        best_mana = Some(new_wizard.mana_used);
+                        best_skill = new_skills.clone();
+                        println!("{best_mana:?} {best_skill:?}");
+                    }
+                    continue;
+                }
 
-            new_wizard.hitpoint -= 1.max(new_boss.damage - new_wizard.armor);
-            if new_wizard.hitpoint <= 0 { // wizard die
-                continue;
+                new_wizard.hitpoint -= 1.max(new_boss.damage - new_wizard.armor);
+                if new_wizard.hitpoint <= 0 { // wizard die
+                    continue;
+                }
+                current_set.push((new_wizard,new_boss,new_skills));
             }
-            current_set.push((new_wizard,new_boss,new_skills));
         }
+
+        (best_mana, best_skill)
     }
 
-    (best_mana, best_skill)
-}
-
-pub mod part1 {
-    use crate::*;
-
-    pub fn solve(file: String, hitpoint: i64, mana: i64) -> i64 {
+    pub fn solve(file: String, hitpoint: i64, mana: i64) -> Option<i64> {
         let boss = parse(file);
         let boss = Boss {
             hitpoint: boss.0 as i64,
@@ -194,16 +188,81 @@ pub mod part1 {
         };
 
         let best = best_skill_set(wizard, boss);
-        if let Some(best) = best.0 {
-            best
-        } else {
-            0
-        }
+        best.0
     }
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> i64 {
-        0
+    use crate::*;
+    use crate::Skill::*;
+    pub fn best_skill_set(wizard : Wizard, boss: Boss) -> (Option<i64>, Vec<Skill>) {
+        let mut current_set: Vec<(Wizard, Boss, Vec<Skill>)> = vec![(wizard, boss, vec![])];
+        let mut best_skill: Vec<Skill> = Vec::new();
+        let mut best_mana = None;
+        while let Some((mut wizard,mut boss,skills)) = current_set.pop() {
+            if best_mana.is_some() && Some(wizard.mana_used) > best_mana {
+                continue;
+            }
+            // Wizard start turn
+            at_start(&mut wizard, &mut boss);
+            wizard.hitpoint -= 1;
+            if wizard.hitpoint <= 0 {
+                continue;
+            }
+            if boss.hitpoint <= 0 { // boss die
+                if best_mana.is_none() || Some(wizard.mana_used) < best_mana {
+                    best_mana = Some(wizard.mana_used);
+                    best_skill = skills.clone();
+                    println!("{best_mana:?} {best_skill:?}");
+                }
+                continue;
+            }
+            for skill in [ MagicMissile, Drain, Shield, Poison, Recharge] {
+                let mut new_skills = skills.clone();
+                let mut new_wizard = wizard.clone();
+                let mut new_boss = boss.clone();
+                if ! action_skill(&skill, &mut new_wizard, &mut new_boss) {
+                    continue;
+                }
+                new_skills.push(skill.clone());
+                // Boss Start
+                at_start(&mut new_wizard, &mut new_boss);
+                if new_boss.hitpoint <= 0 { // boss die
+                    if best_mana.is_none() || Some(new_wizard.mana_used) < best_mana {
+                        best_mana = Some(new_wizard.mana_used);
+                        best_skill = new_skills.clone();
+                        println!("{best_mana:?} {best_skill:?}");
+                    }
+                    continue;
+                }
+
+                new_wizard.hitpoint -= 1.max(new_boss.damage - new_wizard.armor);
+                if new_wizard.hitpoint <= 0 { // wizard die
+                    continue;
+                }
+                current_set.push((new_wizard,new_boss,new_skills));
+            }
+        }
+
+        (best_mana, best_skill)
+    }
+
+    pub fn solve(file: String, hitpoint: i64, mana: i64) -> Option<i64> {
+        let boss = parse(file);
+        let boss = Boss {
+            hitpoint: boss.0 as i64,
+            damage: boss.1,
+            debuff: vec![]
+        };
+        let wizard = Wizard {
+            hitpoint,
+            mana,
+            armor: 0,
+            mana_used: 0,
+            buff: vec![]
+        };
+
+        let best = best_skill_set(wizard, boss);
+        best.0
     }
 }
