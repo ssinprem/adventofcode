@@ -42,50 +42,39 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    use std::collections::HashSet;
-
+    use rand::seq::SliceRandom;
+    
     use crate::parse;
 
     pub fn solve(file: String) -> u64 {
+        let mut rng = rand::rng();
         let (map, target) = parse(file);
-        let map = map
+        let mut map = map
             .iter()
             .map(|(k, v)| (v.to_string(), k.to_string()))
             .collect::<Vec<(String, String)>>();
 
-        let mut list = vec![target];
         let mut count = 0;
-        loop {
-            let mut new_list = HashSet::new();
-            while let Some(string) = list.pop() {
-                for (key, replace) in map.clone().into_iter() {
-                    let template = string.replace(key.as_str(), "#");
-                    let cnt = template.chars().filter(|c| *c == '#').count();
-                    for i in 0..cnt {
-                        let mut new_string = template.to_string();
-                        for j in 0..cnt {
-                            if i == j {
-                                new_string = new_string.replacen("#", &replace, 1);
-                            } else {
-                                new_string = new_string.replacen("#", &key, 1);
-                            }
-                        }
-                        if new_string == "e" {
-                           return count+1;
-                        }
-                        if new_string.chars().filter(|c| c==&'e').count() > 0 {
-                           continue;
-                        }
-                        new_list.insert(new_string);
-                    }
+        let mut current = target.to_string();
+
+        while current != "e" {
+            let mut changed = false;
+
+            for (key, replace) in map.clone().into_iter() {
+                if current.contains(&key) {
+                    current = current.replacen(&key, &replace, 1);
+                    count+=1;
+                    changed = true;
+                    break;
                 }
             }
-            list = new_list.into_iter().collect::<Vec<String>>();
-            println!("{count} {}", list.len());
-            count += 1;
-            if list.contains(&"e".to_string()) {
-                return count;
+            
+            if ! changed {
+                current = target.to_string();
+                count = 0;
+                map.shuffle(&mut rng);
             }
         }
+        count
     }
 }

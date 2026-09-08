@@ -5,4 +5,5 @@ edition = "2024"
 
 [dependencies]
 paste = "1.0.15"
+rand = "0.10.2"
 utility = { path = "../../utility" }
