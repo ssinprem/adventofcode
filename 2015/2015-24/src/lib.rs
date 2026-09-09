@@ -10,7 +10,7 @@ pub fn parse(file: String) -> Vec<u64> {
 }
 
 pub mod part1 {
-use super::*;
+    use super::*;
 
     pub fn solve(file: String) -> u64 {
         let n_list = parse(file);
@@ -28,7 +28,6 @@ use super::*;
                 }
             }
             possible = new_possible;
-            println!("{n} {}", possible.len());
         }
 
         possible = possible.into_iter().filter(|pos| pos.into_iter().copied().sum::<u64>() == weight).collect();
@@ -40,7 +39,34 @@ use super::*;
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use super::*;
+
+    pub fn solve(file: String) -> u64 {
+        let n_list = parse(file);
+        let weight = n_list.clone().into_iter().sum::<u64>() / 4;
+
+        let mut possible = vec![vec![]];
+        for n in n_list.clone() {
+            let mut new_possible = vec![];
+
+            while let Some(mut pos) = possible.pop() {
+                new_possible.push(pos.clone());
+                pos.push(n);
+                if pos.clone().into_iter().sum::<u64>() <= weight {
+                    new_possible.push(pos);
+                }
+            }
+            possible = new_possible;
+        }
+
+        possible = possible.into_iter().filter(|pos| pos.into_iter().copied().sum::<u64>() == weight).collect();
+        // let target = possible.iter().min_by_key(|v| v.into_iter().copied().product::<u64>()).unwrap();
+        let target = possible.iter()
+            .min_by_key(|v|
+                (v.len()*1000) as u64 +
+                v.into_iter().copied().product::<u64>()
+            ).unwrap();
+        println!("{target:?}");
+        target.into_iter().copied().product()
     }
 }
