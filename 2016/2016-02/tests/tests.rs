@@ -7,5 +7,5 @@ RRDDD
 LURDL
 UUUUD",
     part1: (part1::solve, "1985".to_string()),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, "5DB3".to_string())
 );
