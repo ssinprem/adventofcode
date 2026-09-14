@@ -19,5 +19,5 @@ vrdear
 dvrsen
 enarar",
     part1: (part1::solve, "easter".to_string()),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, "advent".to_string())
 );
