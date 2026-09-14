@@ -1,0 +1,9 @@
+[package]
+name = "how_about_a_nice_game_of_chess"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+md5 = "0.8.1"
+paste = "1.0.15"
+utility = { path = "../../utility" }
