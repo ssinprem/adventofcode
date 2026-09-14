@@ -1,7 +1,7 @@
 use regex::Regex;
 
-fn parse(file: String) -> Vec<(String, u64, String)> {
-    let regex = Regex::new(r"([a-z-]+)(\d+)\[([a-z]+)\]").unwrap();
+pub fn parse(file: String) -> Vec<(String, u64, String)> {
+    let regex = Regex::new(r"([a-z-]+)-(\d+)\[([a-z]+)\]").unwrap();
     
     file.lines()
     .filter_map(|line| {
@@ -56,7 +56,39 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
+    use super::*;
+
+    pub fn encypt(room: &(String, u64, String)) -> String {
+        let shift = room.1 % 26;
+
+        room.0.chars().map(|char| {
+            if char == '-' {
+                ' '
+            } else if (char as u8) >= b'a'
+                && (char as u8) <= b'z'
+            {
+                let mut num = (char as u8) - b'a';
+                num += shift as u8;
+                num %= 26;
+                num += b'a';
+                num as char
+            } else {
+                unreachable!()
+            }
+        }).collect()
+    }
+
+    pub fn solve(file: String) -> u64 {
+        let rooms = parse(file);
+
+        for room in rooms {
+            let result = encypt(&room);
+            if result.contains("northpole object") {
+                println!("{result} {room:?}");
+                return room.1;
+            }
+        }
+
         0
     }
 }
