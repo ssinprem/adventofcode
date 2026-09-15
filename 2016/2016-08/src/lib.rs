@@ -110,9 +110,3 @@ pub mod part1 {
         maps.iter().filter(|cell| **cell).count() as u64
     }
 }
-
-pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
-    }
-}
