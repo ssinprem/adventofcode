@@ -6,6 +6,13 @@ test_case_n!(example,
 abcd[bddb]xyyx
 aaaa[qwer]tyui
 ioxxoj[asdfgh]zxcvbn",
-    part1: (part1::solve, 2),
-    part2: (part2::solve, 0)
+    part1: (part1::solve, 2)
+);
+
+test_case_n!(example,
+"aba[bab]xyz
+xyx[xyx]xyx
+aaa[kek]eke
+zazbz[bzb]cdb",
+    part2: (part2::solve, 3)
 );
