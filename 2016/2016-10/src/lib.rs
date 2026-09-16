@@ -88,16 +88,16 @@ pub mod part1 {
         while let Some(step) = steps.pop_front() {
             match step.clone() {
                 Give(Robot(id), value) => {
-                    println!("Robot({id:3}) take  {value}");
+                    // println!("Robot({id:3}) take  {value}");
                     robots[id].push(value);
                 }
                 Compare(Robot(id), low_dest, high_dest) => {
                     if robots[id].len() == 2 {
                         robots[id].sort();
-                        println!(
-                            "Robot({id:3})  {:3?}  to {low_dest:3?}  {high_dest:3?}",
-                            robots[id]
-                        );
+                        // println!(
+                        //     "Robot({id:3})  {:3?}  to {low_dest:3?}  {high_dest:3?}",
+                        //     robots[id]
+                        // );
                         let high = robots[id].pop().unwrap();
                         let low = robots[id].pop().unwrap();
 
@@ -126,7 +126,75 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use crate::{
+        Inst::{Compare, Give},
+        Node::{Robot, Output},
+        parse,
+    };
+    use std::collections::{HashMap, VecDeque};
+
+    pub fn solve(file: String) -> u32 {
+        let mut outputs = HashMap::<usize, Vec<u32>>::new();
+        let mut steps = VecDeque::from(parse(file));
+        let max_bot = steps
+            .iter()
+            .map(|step| match step {
+                Give(Robot(id), _) => *id,
+                Compare(Robot(id), _, _) => *id,
+                _ => 0,
+            })
+            .max()
+            .unwrap();
+
+        let mut robots: Vec<Vec<u32>> = vec![vec![]; max_bot + 1];
+        while let Some(step) = steps.pop_front() {
+            match step.clone() {
+                Give(Robot(id), value) => {
+                    // println!("Robot({id:3}) take  {value}");
+                    robots[id].push(value);
+                }
+                Compare(Robot(id), low_dest, high_dest) => {
+                    if robots[id].len() == 2 {
+                        robots[id].sort();
+                        // println!(
+                        //     "Robot({id:3})  {:3?}  to {low_dest:3?}  {high_dest:3?}",
+                        //     robots[id]
+                        // );
+                        let high = robots[id].pop().unwrap();
+                        let low = robots[id].pop().unwrap();
+
+                        if let Robot(dest_id) = low_dest {
+                            robots[dest_id].push(low)
+                        } else if let Output(dest_id) = low_dest {
+                            outputs.entry(dest_id)
+                                .and_modify(|output| 
+                                {
+                                    output.push(low);
+                                })
+                                .or_insert(vec![low]);
+                        }
+                        if let Robot(dest_id) = high_dest {
+                            robots[dest_id].push(high)
+                        } else if let Output(dest_id) = high_dest {
+                            outputs.entry(dest_id)
+                                .and_modify(|output| 
+                                {
+                                    output.push(high);
+                                })
+                                .or_insert(vec![high]);
+                        }
+                    } else {
+                        steps.push_back(step);
+                    }
+                }
+                _ => {
+                    unreachable!()
+                }
+            }
+        }
+
+        outputs.get(&0).unwrap().iter().product::<u32>() *
+        outputs.get(&1).unwrap().iter().product::<u32>() *
+        outputs.get(&2).unwrap().iter().product::<u32>()
     }
 }

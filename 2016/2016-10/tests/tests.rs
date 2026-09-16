@@ -9,5 +9,5 @@ bot 1 gives low to output 1 and high to bot 0
 bot 0 gives low to output 2 and high to output 0
 value 2 goes to bot 2",
     part1: (part1::solve, Some(1), &[2,3]),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 5*2*3)
 );
