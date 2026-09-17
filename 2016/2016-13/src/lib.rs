@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 
-
 pub fn solve(file: String, vals: &mut HashMap<String, i32>) {
     let lines = file.lines()
         .map(|str| str.to_string()).collect::<Vec<String>>();
