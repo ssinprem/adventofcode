@@ -1,10 +1,8 @@
 [package]
-name = "radioisotope_thermoelectric_generators"
+name = "leonardo_monorail"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-itertools = "0.15.0"
 paste = "1.0.15"
-regex = "1.13.1"
 utility = { path = "../../utility" }
