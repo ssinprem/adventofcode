@@ -1,4 +1,4 @@
-use package_name::*;
+use a_maze_of_twisty_little_cubicles::*;
 use std::error::Error;
 use std::fs::read_to_string;
 
