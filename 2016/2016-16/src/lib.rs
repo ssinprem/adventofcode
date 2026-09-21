@@ -40,9 +40,3 @@ pub mod part1 {
         step2(val.to_string())
     }
 }
-
-pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
-    }
-}
