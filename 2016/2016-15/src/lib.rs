@@ -12,25 +12,34 @@ pub fn parse(file: String) -> Vec<(usize,usize)>{
     
 }
 
+pub fn find_first_btn(discs: &[(usize, usize)]) -> u64 {
+    let mut time=0;
+    loop {
+        if discs.iter().enumerate().all(|(t,&(max,start))| {
+            (time + start + t + 1 ) % max == 0
+        }) {
+            return time as u64;
+        }
+        time += 1;
+    }
+}
+
 pub mod part1 {
-    use crate::parse;
+    use crate::*;
 
     pub fn solve(file: String) -> u64 {
         let discs = parse(file);
-        let mut time=0;
-        loop {
-            if discs.iter().enumerate().all(|(t,&(max,start))| {
-                (time + start + t + 1 ) % max == 0
-            }) {
-                return time as u64;
-            }
-            time += 1;
-        }
+        find_first_btn(&discs)
     }
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use crate::*;
+
+    pub fn solve(file: String) -> u64 {
+        let mut discs = parse(file);
+        discs.push((11, 0));
+        find_first_btn(&discs)
     }
 }
+
