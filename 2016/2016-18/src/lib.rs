@@ -43,7 +43,7 @@ pub mod part1 {
             new_row.push(!matches!((last[size-2], last[size-1]), (false, false) | (false, true)));
             rows.push(new_row);
         }
-        println!("{}",_display(&rows));
+        // println!("{}",_display(&rows));
         rows.iter().map(
             |row| row.iter().filter(|cell| **cell).count()
         ).sum::<usize>() as u64
