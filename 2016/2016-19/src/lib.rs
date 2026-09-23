@@ -29,7 +29,24 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use std::collections::VecDeque;
+
+    pub fn solve(file: String) -> usize {
+        let mut size = file.parse::<usize>().expect("cannot parse size");
+        let mut elfs = VecDeque::new();
+        for i in 0..size {
+            elfs.push_back(i+1);
+        }
+
+        while size > 1 {
+            let oposite = size / 2;
+            let target = elfs.remove(oposite).expect("invalid target");
+            if size.is_multiple_of(1000) {
+                println!("remain {}, {:?} take from {}", size, elfs.front(), target);
+            }
+            elfs.rotate_left(1);
+            size -= 1;
+        }
+        *elfs.front().unwrap()
     }
 }
