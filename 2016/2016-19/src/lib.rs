@@ -31,7 +31,7 @@ pub mod part1 {
 pub mod part2 {
     use std::collections::VecDeque;
 
-    pub fn solve(file: String) -> usize {
+    pub fn _solve(file: String) -> usize {
         let mut size = file.parse::<usize>().expect("cannot parse size");
         let mut elfs = VecDeque::new();
         for i in 0..size {
@@ -48,5 +48,21 @@ pub mod part2 {
             size -= 1;
         }
         *elfs.front().unwrap()
+    }
+
+    pub fn solve(file: String) -> usize {
+        let n = file.parse::<usize>().expect("cannot parse size");
+        let mut p = 1;
+        while p * 3 <= n {
+            p *= 3;
+        }
+
+        if n == p {
+            n
+        } else if n <= 2 * p {
+            n - p
+        } else {
+            2 * n - 3 * p
+        }
     }
 }
