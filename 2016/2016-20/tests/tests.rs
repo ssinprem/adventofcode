@@ -6,5 +6,5 @@ test_case_n!(example,
 0-2
 4-7",
     part1: (part1::solve, Some(3), 9),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 2, 9)
 );

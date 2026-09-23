@@ -19,7 +19,6 @@ pub mod part1 {
         for rule in rules.windows(2) {
             let rule1 = rule[0];
             let rule2 = rule[1];
-            println!("{rule1:10?}    {rule2:10?}");
             if last > max {
                 return None;
             }
@@ -33,7 +32,27 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use crate::parse;
+
+    pub fn solve(file: String, max: u32) -> u32 {
+        let mut count = 0;
+        let mut rules = parse(file);
+        rules.sort_by_key(|range| range.start);
+        let mut last = rules[0].last;
+        for rule in rules.windows(2) {
+            let rule1 = rule[0];
+            let rule2 = rule[1];
+            if last >= max {
+                break;
+            }
+            if last+1 < rule2.start {
+                count += rule2.start - last - 1;
+            }
+            last = last.max(rule1.last.max(rule2.last));
+        }
+        if last < max {
+            count += max-last;
+        }
+        count
     }
 }
