@@ -11,7 +11,7 @@ move position 3 to position 0
 rotate based on position of letter b
 rotate based on position of letter d",
     part1: (part1::solve, "decab".to_string(), "abcde".to_string()),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, "abcde".to_string(), "decab".to_string())
 );
 
 #[test]
@@ -30,6 +30,29 @@ fn test_part1() {
 
     for (step,result) in steps {
         string = part1::solve(step.to_string(), string);
+        println!("{step:40} ->   {}  {string} <--> {result} ",
+            if string == result { "✅" } else { "❌" }
+        );
+        assert_eq!(string, result);
+    }
+}
+
+#[test]
+fn test_part2() {
+    let mut string = "decab".to_string();
+    let steps = vec![
+        ("rotate based on position of letter d","ecabd"),
+        ("rotate based on position of letter b","abdec"),
+        ("move position 3 to position 0","bdeac"),
+        ("move position 1 to position 4","bcdea"),
+        ("rotate left 1 step","abcde"),
+        ("reverse positions 0 through 4","edcba"),
+        ("swap letter d with letter b","ebcda"),
+        ("swap position 4 with position 0","abcde"),
+    ];
+
+    for (step,result) in steps.into_iter() {
+        string = part2::solve(step.to_string(), string);
         println!("{step:40} ->   {}  {string} <--> {result} ",
             if string == result { "✅" } else { "❌" }
         );
