@@ -33,12 +33,15 @@ pub mod part1 {
             && let Some(n) = cap.get(2)
             && let Ok(n) = n.as_str().parse::<usize>()
             {
-                if dir == "right" {
-                    chars.rotate_right(n);
-                } else if dir == "left" {
-                    chars.rotate_left(n);
-                } else {
-                    unreachable!();
+                let len = chars.len();
+                if len > 0 {
+                    if dir == "right" {
+                        chars.rotate_right(n % len);
+                    } else if dir == "left" {
+                        chars.rotate_left(n % len);
+                    } else {
+                        unreachable!();
+                    }
                 }
             }
             else if let Some(cap) =
@@ -48,9 +51,10 @@ pub mod part1 {
             && let Some(a) = a.as_str().chars().next()
             && let Some(a) = chars.iter().position(|&c| c==a)
             {
-                chars.rotate_right(a+1);
-                if a >= chars.len()-1 {
-                    chars.rotate_right(1);
+                let rot = 1 + a + if a >= 4 { 1 } else { 0 };
+                let len = chars.len();
+                if len > 0 {
+                    chars.rotate_right(rot % len);
                 }
             }
             else if let Some(cap) =
@@ -61,9 +65,7 @@ pub mod part1 {
             && let Some(b) = cap.get(2)
             && let Ok(b) = b.as_str().parse::<usize>()
             {
-                let mut mid = chars[a..=b].to_vec();
-                mid.reverse();
-                chars = [chars[0..a].to_vec(), mid , chars[b+1..].to_vec()].concat()
+                chars[a..=b].reverse();
             }
             else if let Some(cap) =
                 Regex::new(r"move position (\d+) to position (\d+)")
