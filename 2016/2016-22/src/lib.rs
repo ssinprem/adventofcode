@@ -37,17 +37,15 @@ pub fn get_pairs_available(grid: &HashMap<(usize, usize),(usize,usize,usize)>, a
             let ((x,y),(_, used, _)) = pair.first().unwrap();
             let ((cx,cy),(_, _, avail)) = pair.get(1).unwrap();
             if adjustment {
-                if *cx < *x-1 || *cx > *x+1 {
-                    continue;
-                }
-                if *cy < *y-1 || *cy > *y+1 {
+                let dist = (*cx as isize - *x as isize).abs() + (*cy as isize - *y as isize).abs();
+                if dist != 1 {
                     continue;
                 }
             }
             if x == cx && y == cy {
                 continue;
             }
-            if used != &0 &&  avail > used {
+            if used != &0 && avail > used {
                 list.push(((*x,*y),(*cx,*cy)));
                 // println!("  A = {x:2},{y:2} B = {cx:2},{cy:2} {used} {avail}");
             }
@@ -65,32 +63,84 @@ pub mod part1 {
 
 pub mod part2 {
     use super::*;
+    use std::collections::VecDeque;
 
     pub fn solve(file: String) -> usize {
         let grid = parse(file);
-        let mut stack = vec![(grid, 0)];
-        let mut best = usize::MAX;
-        
-        while let Some((map, count)) = stack.pop() {
+        let max_x = grid.keys().map(|(x, _)| *x).max().unwrap_or(0);
+        let max_y = grid.keys().map(|(_, y)| *y).max().unwrap_or(0);
+        let width = max_x + 1;
+        let height = max_y + 1;
+        let num_nodes = width * height;
 
-            for (src, dst ) in get_pairs_available(&map, true) {
-                let mut new_map = map.clone();
-                let src_used = new_map.get(&(src.0,src.1)).unwrap().1;
-                let src_size = new_map.get(&(src.0,src.1)).unwrap().0;
-                {
-                    let dst_cell = new_map.get_mut(&(dst.0,dst.1)).unwrap();
-                    dst_cell.2 -= src_used;
-                    dst_cell.1 += src_used;
+        let (empty_pos, empty_size) = grid
+            .iter()
+            .find(|(_, (_, used, _))| *used == 0)
+            .map(|(&pos, &(size, _, _))| (pos, size))
+            .expect("empty node not found");
+
+        let goal_pos = (max_x, 0);
+
+        let is_wall = |pos: (usize, usize)| -> bool {
+            if let Some(&(_, used, _)) = grid.get(&pos) {
+                used > empty_size
+            } else {
+                true
+            }
+        };
+
+        let to_idx = |pos: (usize, usize)| pos.1 * width + pos.0;
+        let start_empty_idx = to_idx(empty_pos);
+        let start_goal_idx = to_idx(goal_pos);
+        let target_goal_idx = to_idx((0, 0));
+
+        if start_goal_idx == target_goal_idx {
+            return 0;
+        }
+
+        let mut visited = vec![false; num_nodes * num_nodes];
+        let mut queue = VecDeque::new();
+
+        visited[start_empty_idx * num_nodes + start_goal_idx] = true;
+        queue.push_back((0, empty_pos, goal_pos));
+
+        while let Some((dist, (ex, ey), (gx, gy))) = queue.pop_front() {
+            let moves = [
+                (ex.wrapping_sub(1), ey, ex > 0),
+                (ex + 1, ey, ex + 1 <= max_x),
+                (ex, ey.wrapping_sub(1), ey > 0),
+                (ex, ey + 1, ey + 1 <= max_y),
+            ];
+
+            for (nex, ney, valid) in moves {
+                if !valid {
+                    continue;
                 }
-                {
-                    let src_cell = new_map.get_mut(&(src.0,src.1)).unwrap();
-                    src_cell.2 = src_size;
-                    src_cell.1 = 0;
+                let next_empty = (nex, ney);
+                if is_wall(next_empty) {
+                    continue;
                 }
-                stack.push((new_map, count+1));
+                let next_goal = if next_empty == (gx, gy) {
+                    (ex, ey)
+                } else {
+                    (gx, gy)
+                };
+
+                let next_empty_idx = to_idx(next_empty);
+                let next_goal_idx = to_idx(next_goal);
+
+                if next_goal_idx == target_goal_idx {
+                    return dist + 1;
+                }
+
+                let state_idx = next_empty_idx * num_nodes + next_goal_idx;
+                if !visited[state_idx] {
+                    visited[state_idx] = true;
+                    queue.push_back((dist + 1, next_empty, next_goal));
+                }
             }
         }
 
-        best
+        0
     }
 }
