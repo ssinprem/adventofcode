@@ -116,12 +116,11 @@ pub fn _display(grid: &Grid<Cell>) -> String {
     output
 }
 pub mod part1 {
-    use crate::{_display, find_node_tarveller, parse};
+    use crate::{find_node_tarveller, parse};
     use itertools::Itertools;
 
     pub fn solve(file: String) -> usize {
         let grid = parse(file);
-        // println!("{}", _display(&grid));
         let node_graph = find_node_tarveller(&grid);
 
         let nodes = node_graph.node_indices().collect::<Vec<_>>();
@@ -147,7 +146,37 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use crate::{find_node_tarveller, parse};
+    use itertools::Itertools;
+
+    pub fn solve(file: String) -> usize {
+        let grid = parse(file);
+        let node_graph = find_node_tarveller(&grid);
+
+        let nodes = node_graph.node_indices().collect::<Vec<_>>();
+        let len = nodes.len();
+        nodes
+            .into_iter()
+            .permutations(len)
+            // first spot is number 0
+            .filter(|path| node_graph.node_weight(path[0]) == Some(&0))
+            .map(|path| {
+                // end with return to first spot
+                let mut path = path;
+                let first = path.first().unwrap();
+                path.push(*first);
+
+                path.windows(2)
+                    .map(|pairs| {
+                        let p1 = pairs[0];
+                        let p2 = pairs[1];
+
+                        let edge = node_graph.find_edge(p1, p2).expect("cannot find edge");
+                        node_graph.edge_weight(edge).unwrap()
+                    })
+                    .sum::<usize>()
+            })
+            .min()
+            .unwrap()
     }
 }

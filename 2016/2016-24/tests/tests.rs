@@ -8,5 +8,5 @@ test_case_n!(example,
 #4.......3#
 ###########",
     part1: (part1::solve, 14),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 20)
 );
