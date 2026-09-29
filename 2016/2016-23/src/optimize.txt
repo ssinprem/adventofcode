@@ -1,0 +1,26 @@
+cpy a b    12
+dec b           11
+cpy a d                     12                              /
+cpy 0 a     0                                               |
+cpy b c         11    11                                    |
+inc a       1                     / a += c    / a += c*d    |
+dec c                 10         |            | c = 0       |
+jnz c -2                          \           | d = 0       |
+dec d                       11                |             |
+jnz d -5                                      \             |
+dec b           10     0     0                              |
+cpy b c               10                                    |
+cpy c d                     10                              |
+dec d                        9   / c += d                   |
+inc c                 11         | d = 0                    |
+jnz d -2                         \                          |
+tgl c                                                       |
+cpy -16 c                                                   \
+jnz 1 c
+cpy 97 c
+jnz 79 d
+inc a
+inc d
+jnz d -2
+inc c
+jnz c -5

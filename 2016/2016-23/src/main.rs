@@ -8,6 +8,9 @@ fn main() -> Result<(), Box<dyn Error>> {
         "part1 = {}",
         part1::solve(file.clone(), "cpy 7 a\n".to_string())
     );
-    println!("part2 = {}", part2::solve(file.clone()));
+    println!(
+        "part2 = {}",
+        part2::solve(file.clone(), "cpy 12 a\n".to_string())
+    );
     Ok(())
 }

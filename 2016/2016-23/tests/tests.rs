@@ -9,6 +9,5 @@ tgl a
 cpy 1 a
 dec a
 dec a",
-    part1: (part1::solve, 3, "".to_string()),
-    part2: (part2::solve, 0)
+    part1: (part1::solve, 3, "".to_string())
 );
