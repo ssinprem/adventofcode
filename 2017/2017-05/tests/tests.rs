@@ -8,5 +8,5 @@ test_case_n!(example,
 1
 -3",
     part1: (part1::solve, 5),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 10)
 );

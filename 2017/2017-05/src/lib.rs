@@ -18,7 +18,24 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    pub fn solve(file: String) -> u64 {
+        let mut list = file
+            .lines()
+            .map(|line| line.parse::<i32>().unwrap())
+            .collect::<Vec<i32>>();
+
+        let mut step = 0;
+        let mut index = 0;
+
+        while let Some(item) = list.get_mut(index as usize) {
+            index = ((index as i32) + *item) as isize;
+            if *item >= 3 {
+                *item -= 1;
+            } else {
+                *item += 1;
+            }
+            step += 1;
+        }
+        step
     }
 }
