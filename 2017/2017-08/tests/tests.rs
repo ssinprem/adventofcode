@@ -7,5 +7,5 @@ a inc 1 if b < 5
 c dec -10 if a >= 1
 c inc -20 if c == 10",
     part1: (part1::solve, 1),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 10)
 );
