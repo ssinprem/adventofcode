@@ -1,5 +1,4 @@
 use stream_processing::*;
-use utility::test_case_n;
 
 #[test]
 fn example() {
@@ -16,5 +15,22 @@ fn example() {
 
     for (score, string) in list {
         assert_eq!(score, part1::solve(string));
+    }
+}
+
+#[test]
+fn example2() {
+    let list = vec![
+        (0, "<>".to_string()),
+        (17, "<random characters>".to_string()),
+        (3, "<<<<>".to_string()),
+        (2, "<{!>}>".to_string()),
+        (0, "<!!>".to_string()),
+        (0, "<!!!>>".to_string()),
+        (10, r#"<{o"i!a,<{i<a>"#.to_string()),
+    ];
+
+    for (score, string) in list {
+        assert_eq!(score, part2::solve(string));
     }
 }
