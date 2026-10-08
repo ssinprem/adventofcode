@@ -1,6 +1,6 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
-use petgraph::graph::{NodeIndex, UnGraph};
+use petgraph::{graph::{NodeIndex, UnGraph}, visit::Dfs};
 use regex::*;
 
 pub fn get_node_id(
@@ -44,32 +44,57 @@ pub fn parse(file: String) -> UnGraph<u32, ()> {
     graph
 }
 
+pub fn grouping(graph: UnGraph<u32, ()>) -> HashMap<usize, HashSet<u32>> {
+    let mut nodes: HashMap<usize, HashSet<u32>> = HashMap::new();
+    let mut group: usize = 0;
+    while let Some(first_node) = graph
+        .node_indices()
+        .find(|node| 
+            !nodes.iter().any(|(_grp_id, grp)| 
+                grp.iter().any(|n| {
+                    graph.node_weight(*node) == Some(n)
+                })
+            )
+        )
+    {
+        let mut dfs = Dfs::new(&graph, first_node);
+        while let Some(n) = dfs.next(&graph) {
+            let value = *graph.node_weight(n).expect("cannot get value");
+            nodes.entry(group)
+            .and_modify(|node_group| {
+                node_group.insert(value);
+            })
+            .or_insert(HashSet::from([value]));
+        }
+        group += 1;
+    }
+    nodes
+}
 pub mod part1 {
-    use std::collections::HashSet;
-
-    use crate::parse;
-    use petgraph::visit::Dfs;
+    use crate::{grouping, parse};
 
     pub fn solve(file: String) -> usize {
         let graph = parse(file);
-        let mut nodes = HashSet::new();
-        if let Some(first_node) = graph
-            .node_indices()
-            .find(|n| graph.node_weight(*n) == Some(&0))
+        let nodes = grouping(graph);
+
+        if let Some((_grp_id, first_group)) = nodes.iter()
+            .find(|(_grp_id, grp_items)| grp_items.contains(&0))
         {
-            let mut dfs = Dfs::new(&graph, first_node);
-
-            while let Some(n) = dfs.next(&graph) {
-                nodes.insert(n);
-            }
+            println!("{first_group:?}");
+            first_group.len()
+        } else {
+            0
         }
-
-        nodes.len()
     }
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use crate::{grouping, parse};
+
+    pub fn solve(file: String) -> usize {
+        let graph = parse(file);
+        let nodes = grouping(graph);
+        println!("{nodes:?}");
+        nodes.len()
     }
 }
