@@ -57,7 +57,7 @@ pub mod part2 {
         let mut list = (0..256).collect::<Vec<usize>>();
 
         process(&mut list, &seqs.repeat(64));
-        println!("{}", _display(&list));
+        // println!("{}", _display(&list));
 
         list.chunks(16)
             .map(|chunk: &[usize]| {
