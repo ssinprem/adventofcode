@@ -4,7 +4,13 @@ use utility::test_case_n;
 test_case_n!(example,
 "s1,x3/4,pe/b",
     part1: (part1::solve, "baedc", 5),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, "abcde", 5)
+);
+
+test_case_n!(example2,
+"x13/12,pb/n,s10,x5/3,pl/g,x15/1,s2,x10/3,x9/12",
+    part1: (part1::solve, "ehloigkjbafpmncd", 16),
+    part2: (part2::solve, "jncdafgbehklmiop", 16)
 );
 
 #[test]
