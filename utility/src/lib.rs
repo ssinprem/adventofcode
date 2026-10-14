@@ -1,3 +1,15 @@
+pub fn _pause() {
+    use std::io;
+    use std::io::prelude::*;
+    let mut stdin = io::stdin();
+    let mut stdout = io::stdout();
+
+    write!(stdout, "Press any key to continue...").unwrap();
+    stdout.flush().unwrap();
+
+    let _ = stdin.read(&mut [0u8]).unwrap();
+}
+
 #[macro_export]
 macro_rules! test_case {
     (
