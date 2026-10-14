@@ -15,7 +15,21 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    pub fn solve(file: String) -> usize {
+        let steps = file.parse::<usize>().expect("cannot parse number");
+        let mut size = 1;
+        let mut current = 0;
+
+        let mut target = 0;
+
+        for i in 1..=50_000_000 {
+            current = (current + steps) % size + 1;
+            size += 1;
+            if current == 1 {
+                target = i;
+            }
+        }
+
+        target
     }
 }
