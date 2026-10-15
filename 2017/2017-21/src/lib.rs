@@ -15,7 +15,7 @@ pub fn get_array(string: &str) -> Vec<Vec<char>> {
     array
 }
 
-pub fn array_to_string(array: &Vec<Vec<char>>) -> String {
+pub fn array_to_string(array: &[Vec<char>]) -> String {
     array.iter().map(|line| {
         line.iter().collect::<String>()
     }).collect::<String>()
@@ -192,7 +192,6 @@ pub mod part1 {
             }).collect::<Vec<_>>();
 
             list = string_join(group);
-            println!("{list:?}");
         }
 
         list.chars().filter(|c| c==&'#').count()
