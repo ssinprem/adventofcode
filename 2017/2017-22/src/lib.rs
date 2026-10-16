@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-pub fn parse(file: String) -> HashMap<(isize, isize), u8> {
+pub fn parse(file: String) -> HashMap<(isize, isize), State> {
     let mut virus = HashMap::new();
 
     let rows = file.lines().count();
@@ -9,10 +9,13 @@ pub fn parse(file: String) -> HashMap<(isize, isize), u8> {
     file.lines().enumerate().for_each(|(y, line)| {
         line.chars().enumerate().for_each(|(x, char)| {
             if char == '#' {
-                virus.insert((
-                    (x as isize) - (cols / 2) as isize,
-                    (y as isize) - (rows / 2) as isize,
-                ), 1);
+                virus.insert(
+                    (
+                        (x as isize) - (cols / 2) as isize,
+                        (y as isize) - (rows / 2) as isize,
+                    ),
+                    State::Infected,
+                );
             }
         });
     });
@@ -23,7 +26,7 @@ pub fn parse(file: String) -> HashMap<(isize, isize), u8> {
 pub enum Turn {
     Right,
     Left,
-    Reverse
+    Reverse,
 }
 pub fn turn(dir: (isize, isize), turn: Turn) -> (isize, isize) {
     match (turn, dir) {
@@ -43,7 +46,13 @@ pub fn turn(dir: (isize, isize), turn: Turn) -> (isize, isize) {
     }
 }
 
-pub fn _display(virus: &HashMap<(isize, isize), u8>, pos: (isize, isize), dir: (isize, isize)) {
+#[derive(PartialEq)]
+pub enum State {
+    Weakened,
+    Flagged,
+    Infected
+}
+pub fn _display(virus: &HashMap<(isize, isize), State>, pos: (isize, isize), dir: (isize, isize)) {
     // let min_x = virus.iter().map(|(x,_)|*x).min().unwrap();
     // let max_x = virus.iter().map(|(x,_)|*x).max().unwrap();
     // let min_y = virus.iter().map(|(_,y)|*y).min().unwrap();
@@ -74,10 +83,9 @@ pub fn _display(virus: &HashMap<(isize, isize), u8>, pos: (isize, isize), dir: (
             }
             if let Some(v) = virus.get(&(x, y)) {
                 match v {
-                    1 => print!("W"),
-                    2 => print!("I"),
-                    3 => print!("F"),
-                    _ => print!("?")
+                    State::Weakened => print!("W"),
+                    State::Infected => print!("#"),
+                    State::Flagged => print!("F"),
                 }
             } else {
                 print!(".")
@@ -94,7 +102,7 @@ pub fn _display(virus: &HashMap<(isize, isize), u8>, pos: (isize, isize), dir: (
 
 pub mod part1 {
 
-    use crate::{parse, turn, Turn};
+    use crate::{Turn, State, parse, turn};
 
     pub fn solve(file: String) -> usize {
         let mut virus = parse(file);
@@ -112,7 +120,7 @@ pub mod part1 {
             } else {
                 // clean -> turn left, infected
                 dir = turn(dir, Turn::Left);
-                virus.insert(pos, 1);
+                virus.insert(pos, State::Infected);
                 count += 1;
             }
             // walk
@@ -124,7 +132,40 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use crate::{Turn, State, parse, turn};
+
+    pub fn solve(file: String) -> usize {
+        let mut virus = parse(file);
+        let mut pos = (0, 0); // center
+        let mut dir = (0, -1); // north first
+
+        let mut count = 0;
+
+        for _ in 0..10_000_000 {
+            // check current pos
+            if let Some(status) = virus.get_mut(&pos) {
+                if *status == State::Flagged {
+                    // flagged -> turn reverse, clean
+                    dir = turn(dir, Turn::Reverse);
+                    virus.remove(&pos);
+                } else if *status == State::Infected {
+                    // infected -> turn right, flagged
+                    dir = turn(dir, Turn::Right);
+                    virus.insert(pos, State::Flagged);
+                } else if *status == State::Weakened {
+                    // weakened -> not turn, infected
+                    virus.insert(pos, State::Infected);
+                    count += 1;
+                }
+            } else {
+                // clean -> turn left, weakened
+                dir = turn(dir, Turn::Left);
+                virus.insert(pos, State::Weakened);
+            }
+            // walk
+            pos = (pos.0 + dir.0, pos.1 + dir.1);
+        }
+
+        count
     }
 }
