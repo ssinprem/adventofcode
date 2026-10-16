@@ -1,7 +1,7 @@
-use std::collections::HashSet;
+use std::collections::HashMap;
 
-pub fn parse(file: String) -> HashSet<(isize, isize)> {
-    let mut virus = HashSet::new();
+pub fn parse(file: String) -> HashMap<(isize, isize), u8> {
+    let mut virus = HashMap::new();
 
     let rows = file.lines().count();
     let cols = file.lines().next().unwrap().chars().count();
@@ -12,7 +12,7 @@ pub fn parse(file: String) -> HashSet<(isize, isize)> {
                 virus.insert((
                     (x as isize) - (cols / 2) as isize,
                     (y as isize) - (rows / 2) as isize,
-                ));
+                ), 1);
             }
         });
     });
@@ -34,7 +34,7 @@ pub fn turn(dir: (isize, isize), right: bool) -> (isize, isize) {
     }
 }
 
-pub fn _display(virus: &HashSet<(isize, isize)>, pos: (isize, isize), dir: (isize, isize)) {
+pub fn _display(virus: &HashMap<(isize, isize), u8>, pos: (isize, isize), dir: (isize, isize)) {
     // let min_x = virus.iter().map(|(x,_)|*x).min().unwrap();
     // let max_x = virus.iter().map(|(x,_)|*x).max().unwrap();
     // let min_y = virus.iter().map(|(_,y)|*y).min().unwrap();
@@ -63,8 +63,13 @@ pub fn _display(virus: &HashSet<(isize, isize)>, pos: (isize, isize), dir: (isiz
             } else {
                 print!(" ")
             }
-            if virus.contains(&(x, y)) {
-                print!("#")
+            if let Some(v) = virus.get(&(x, y)) {
+                match v {
+                    1 => print!("W"),
+                    2 => print!("I"),
+                    3 => print!("F"),
+                    _ => print!("?")
+                }
             } else {
                 print!(".")
             }
@@ -79,7 +84,6 @@ pub fn _display(virus: &HashSet<(isize, isize)>, pos: (isize, isize), dir: (isiz
 }
 
 pub mod part1 {
-    use std::collections::HashSet;
 
     use crate::{parse, turn};
 
@@ -89,19 +93,17 @@ pub mod part1 {
         let mut dir = (0, -1); // north first
 
         let mut count = 0;
-        println!("{virus:?}");
 
         for _ in 0..10000 {
             // check current pos
-            let status = virus.contains(&pos);
-            if status {
+            if let Some(_status) = virus.get(&pos) {
                 // infected -> turn right, clean
                 dir = turn(dir, true);
                 virus.remove(&pos);
             } else {
                 // clean -> turn left, infected
                 dir = turn(dir, false);
-                virus.insert(pos);
+                virus.insert(pos, 1);
                 count += 1;
             }
             // walk
