@@ -11,5 +11,5 @@ test_case_n!(example,
 10/1
 9/10",
     part1: (part1::solve, 31),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 19)
 );

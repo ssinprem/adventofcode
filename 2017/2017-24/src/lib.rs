@@ -49,7 +49,39 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use crate::parse;
+
+    pub fn solve(file: String) -> u32 {
+        let lists = parse(file);
+        let mut stacks = Vec::new();
+        let mut done: Vec<Vec<(u32, u32)>> = Vec::new();
+
+        stacks.push((vec![], lists.clone(), 0));
+        while let Some((proc, list, need)) = stacks.pop() {
+            done.push(proc.clone());
+            for next in list.clone() {
+                let mut new_proc = proc.clone();
+                let mut new_list = list.clone();
+                if next.0 == need {
+                    new_list.remove(&next);
+                    new_proc.push(next);
+                    stacks.push((new_proc, new_list, next.1))
+                } else if next.1 == need {
+                    new_list.remove(&next);
+                    new_proc.push(next);
+                    stacks.push((new_proc, new_list, next.0))
+                }
+            }
+        }
+
+        let max_lenght = done.iter().map(|list| list.len()).max().unwrap();
+
+        done.iter()
+            .filter(|list| list.len() == max_lenght)
+            .map(|list| {
+                list.iter().map(|(a, b)| *a + *b).sum()
+            })
+            .max()
+            .unwrap()
     }
 }
