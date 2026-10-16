@@ -20,16 +20,25 @@ pub fn parse(file: String) -> HashMap<(isize, isize), u8> {
     virus
 }
 
-pub fn turn(dir: (isize, isize), right: bool) -> (isize, isize) {
-    match (right, dir) {
-        (true, (0, -1)) => (1, 0),
-        (true, (1, 0)) => (0, 1),
-        (true, (0, 1)) => (-1, 0),
-        (true, (-1, 0)) => (0, -1),
-        (false, (0, -1)) => (-1, 0),
-        (false, (-1, 0)) => (0, 1),
-        (false, (0, 1)) => (1, 0),
-        (false, (1, 0)) => (0, -1),
+pub enum Turn {
+    Right,
+    Left,
+    Reverse
+}
+pub fn turn(dir: (isize, isize), turn: Turn) -> (isize, isize) {
+    match (turn, dir) {
+        (Turn::Right, (0, -1)) => (1, 0),
+        (Turn::Right, (1, 0)) => (0, 1),
+        (Turn::Right, (0, 1)) => (-1, 0),
+        (Turn::Right, (-1, 0)) => (0, -1),
+        (Turn::Left, (0, -1)) => (-1, 0),
+        (Turn::Left, (-1, 0)) => (0, 1),
+        (Turn::Left, (0, 1)) => (1, 0),
+        (Turn::Left, (1, 0)) => (0, -1),
+        (Turn::Reverse, (0, -1)) => (0, 1),
+        (Turn::Reverse, (-1, 0)) => (1, 0),
+        (Turn::Reverse, (0, 1)) => (0, -1),
+        (Turn::Reverse, (1, 0)) => (-1, 0),
         _ => unreachable!(),
     }
 }
@@ -85,7 +94,7 @@ pub fn _display(virus: &HashMap<(isize, isize), u8>, pos: (isize, isize), dir: (
 
 pub mod part1 {
 
-    use crate::{parse, turn};
+    use crate::{parse, turn, Turn};
 
     pub fn solve(file: String) -> usize {
         let mut virus = parse(file);
@@ -98,11 +107,11 @@ pub mod part1 {
             // check current pos
             if let Some(_status) = virus.get(&pos) {
                 // infected -> turn right, clean
-                dir = turn(dir, true);
+                dir = turn(dir, Turn::Right);
                 virus.remove(&pos);
             } else {
                 // clean -> turn left, infected
-                dir = turn(dir, false);
+                dir = turn(dir, Turn::Left);
                 virus.insert(pos, 1);
                 count += 1;
             }
