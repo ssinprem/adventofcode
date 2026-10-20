@@ -9,6 +9,16 @@ abcccd
 aabcdd
 abcdee
 ababab",
-    part1: (part1::solve, 4*3),
-    part2: (part2::solve, 0)
+    part1: (part1::solve, 4*3)
+);
+
+test_case_n!(example,
+"abcde
+fghij
+klmno
+pqrst
+fguij
+axcye
+wvxyz",
+    part2: (part2::solve, "fgij".to_string())
 );

@@ -33,7 +33,28 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use super::*;
+    use itertools::Itertools;
+
+    pub fn solve(file: String) -> String {
+        let list = parse(file);
+
+        let rate = list
+            .iter()
+            .combinations(2)
+            .map(|pairs| {
+                let a = pairs[0].to_string();
+                let b = pairs[1].to_string();
+
+                a.chars()
+                    .zip(b.chars())
+                    .filter(|(a, b)| *a == *b)
+                    .map(|(a, _)| a)
+                    .collect::<String>()
+            })
+            .collect::<Vec<String>>();
+
+        let best = rate.iter().max_by_key(|str| str.len()).unwrap();
+        best.to_string()
     }
 }
