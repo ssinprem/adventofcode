@@ -84,7 +84,30 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    fn is_composite(n: i64) -> bool {
+        let mut d = 2;
+        while d * d <= n {
+            if n % d == 0 {
+                return true; // เป็นจำนวนประกอบ (มีตัวหารลงตัว)
+            }
+            d += 1;
+        }
+        false
+    }
+
+    pub fn solve(file: String) -> i64 {
+        let x = 79; 
+        let b_start = x * 100 + 100_000;
+        let c_end = b_start + 17_000;
+        
+        let mut h = 0;
+        
+        // วนลูป b ตั้งแต่ b_start ถึง c_end โดยเพิ่มทีละ 17
+        for b in (b_start..=c_end).step_by(17) {
+            if is_composite(b) {
+                h += 1;
+            }
+        }
+        h
     }
 }
