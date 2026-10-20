@@ -20,7 +20,21 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use crate::parse;
+
+    pub fn solve(file: String) -> i64 {
+        let mut value = 0;
+        let fs = parse(file);
+        let mut history = Vec::new();
+        history.push(0);
+        loop {
+            for v in fs.iter() {
+                value += *v;
+                if history.contains(&value) {
+                    return value;
+                }
+                history.push(value);
+            }
+        }
     }
 }
