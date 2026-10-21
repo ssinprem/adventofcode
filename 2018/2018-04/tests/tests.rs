@@ -20,5 +20,5 @@ test_case_n!(example,
 [1518-11-05 00:45] falls asleep
 [1518-11-05 00:55] wakes up",
     part1: (part1::solve, 10*24),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 99*45)
 );

@@ -37,10 +37,10 @@ pub fn parse(file: String) -> Vec<(NaiveDateTime, Event)> {
 }
 
 pub mod part1 {
-    use std::collections::HashMap;
-    use chrono::Timelike;
     use crate::Event;
     use crate::parse;
+    use chrono::Timelike;
+    use std::collections::HashMap;
 
     pub fn solve(file: String) -> u32 {
         let mut events = parse(file);
@@ -95,7 +95,50 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use crate::Event;
+    use crate::parse;
+    use chrono::Timelike;
+    use std::collections::HashMap;
+
+    pub fn solve(file: String) -> u32 {
+        let mut events = parse(file);
+        events.sort_by_key(|(date, _evt)| *date);
+
+        let mut falls = vec![];
+        let mut id = 0;
+        let mut start_min = 0;
+        for (date, evt) in events {
+            match evt {
+                Event::Start(gid) => id = gid,
+                Event::Fall => start_min = date.minute(),
+                Event::Wake => {
+                    let duration = date.minute() - start_min;
+                    falls.push((id, start_min, duration));
+                }
+            }
+        }
+
+        let mut minutes = HashMap::new();
+        falls.iter().for_each(|(id, start, duration)| {
+            for i in 0..*duration {
+                minutes
+                    .entry(start + i)
+                    .and_modify(|minute: &mut HashMap<usize, u32>| {
+                        minute
+                            .entry(*id)
+                            .and_modify(|count| *count += 1)
+                            .or_insert(1);
+                    })
+                    .or_insert(vec![(*id, 1)].into_iter().collect::<HashMap<usize, u32>>());
+            }
+        });
+
+        let min = minutes
+            .iter()
+            .max_by_key(|(_id, g)| g.iter().max_by_key(|(_id, count)| **count).unwrap().1)
+            .unwrap();
+
+        let target = min.1.iter().max_by_key(|(_id, count)| **count).unwrap();
+        *target.0 as u32 * min.0
     }
 }
