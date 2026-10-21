@@ -17,9 +17,8 @@ pub fn parse(file: String) -> Vec<(usize, usize, usize, usize, usize)> {
 }
 
 pub mod part1 {
-    use std::collections::HashMap;
-
     use crate::parse;
+    use std::collections::HashMap;
 
     pub fn solve(file: String) -> usize {
         let boxes = parse(file);
@@ -42,7 +41,35 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
+    use crate::parse;
+    use std::collections::HashMap;
+
+    pub fn solve(file: String) -> usize {
+        let boxes = parse(file);
+        let mut map: HashMap<(usize, usize), Vec<usize>> = HashMap::new();
+
+        for (id, x, y, w, h) in boxes.iter() {
+            for dy in 0..*h {
+                for dx in 0..*w {
+                    map.entry((x + dx, y + dy))
+                        .and_modify(|mem| {
+                            mem.push(*id);
+                        })
+                        .or_insert(vec![*id]);
+                }
+            }
+        }
+
+        for (id, _, _, _, _) in boxes.into_iter() {
+            if map
+                .values()
+                .filter(|mem| mem.contains(&id))
+                .all(|i| i.len() == 1)
+            {
+                return id;
+            }
+        }
+
         0
     }
 }
