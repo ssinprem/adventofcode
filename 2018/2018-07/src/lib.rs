@@ -20,12 +20,8 @@ pub fn parse(file: String) -> (DiGraph<String, String>, HashSet<String>) {
     let mut map = HashMap::new();
 
     for (src, dst) in list.iter() {
-        if !map.contains_key(&src.to_string()) {
-            map.insert(src.to_string(), graph.add_node(src.to_string()));
-        }
-        if !map.contains_key(&dst.to_string()) {
-            map.insert(dst.to_string(), graph.add_node(dst.to_string()));
-        }
+        map.entry(src.to_string()).or_insert_with(|| graph.add_node(src.to_string()));
+        map.entry(dst.to_string()).or_insert_with(|| graph.add_node(dst.to_string()));
     }
 
     for (src, dst) in list.iter() {
@@ -36,39 +32,18 @@ pub fn parse(file: String) -> (DiGraph<String, String>, HashSet<String>) {
 
     (
         graph,
-        map.iter()
-            .map(|(key, _)| key.to_string())
+        map.keys().map(|key| key.to_string())
             .collect::<HashSet<String>>(),
     )
 }
 
 pub mod part1 {
+    use std::collections::BTreeSet;
     use crate::parse;
-
-    pub fn span_node(start: String, edges: &Vec<(String, String)>) -> Vec<String> {
-        let mut temp = vec![start.to_string()];
-
-        let mut nexts = edges
-            .iter().filter(|(src, dst)| src == &start)
-            .map(|(_,dst)| dst.to_string())
-            .collect::<Vec<_>>();
-        nexts.sort();
-
-        println!("=> {nexts:?}");
-        for next in nexts {
-            if edges.iter().filter(|(s,d)| {
-                d == &next
-            }).count() == 1 {
-                temp = [temp, span_node(next, edges)].concat();
-            }
-        }
-
-        temp
-    }
 
     pub fn solve(file: String) -> String {
         let (graph, nodes) = parse(file);
-        let mut left_nodes = nodes.clone();
+        let mut left_nodes = nodes.clone().into_iter().collect::<BTreeSet<String>>();
         let mut finish: Vec<String> = vec![];
 
         let edges = graph
@@ -79,19 +54,26 @@ pub mod part1 {
             })
             .collect::<Vec<(String, String)>>();
 
-        // find first node
-        let mut leftest = left_nodes
-            .iter()
-            .filter(|n_str| !edges.iter().any(|(_src, dst)| *dst == **n_str))
-            .collect::<Vec<_>>();
-        leftest.sort();
+        while ! left_nodes.is_empty() {
+            let temp = left_nodes.clone();
+            let node = temp.iter().find(|node| {
+                let edge = edges.iter()
+                    .filter(|(_src,dst)| dst == *node)
+                    .map(|(src,dst)| (src.to_string(),dst.to_string()))
+                    .collect::<Vec<(String,String)>>();
 
-        println!("{leftest:?}");
+                // without require node
+                edge.is_empty()
+                ||
+                // check require node already in finish
+                edge.iter().all(|(src, _dst)| {
+                    finish.contains(src)
+                })
 
-        for l in leftest {
-            let res = span_node(l.to_string(), &edges);
-            println!("{l} -> {:?}", res);
-            finish = [finish, res].concat();
+            }).unwrap();
+
+            left_nodes.remove(node);
+            finish.push(node.to_string());
         }
 
         finish.into_iter().collect::<String>()
@@ -99,7 +81,7 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
+    pub fn solve(_file: String, _:usize) -> u64 {
         0
     }
 }

@@ -10,5 +10,5 @@ Step B must be finished before step E can begin.
 Step D must be finished before step E can begin.
 Step F must be finished before step E can begin.",
     part1: (part1::solve, "CABDFE".to_string()),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 15, 2)
 );
