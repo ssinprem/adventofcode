@@ -81,7 +81,64 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String, _:usize) -> u64 {
-        0
+    use std::collections::BTreeSet;
+    use crate::parse;
+
+    pub fn solve(file: String, worker_size: usize, extra_take: usize) -> usize {
+        let (graph, nodes) = parse(file);
+        let mut left_nodes = nodes.clone().into_iter().collect::<BTreeSet<String>>();
+        let mut finish: Vec<String> = vec![];
+
+        let edges = graph
+            .edge_weights()
+            .map(|str| {
+                let (src, dst) = str.split_once("_").unwrap();
+                (src.to_string(), dst.to_string())
+            })
+            .collect::<Vec<(String, String)>>();
+
+        let mut sec = 0;
+        let mut workers: Vec<(String, usize)> = Vec::new();
+        while ! left_nodes.is_empty() {
+            
+            for (node, remain) in workers.iter_mut() {
+                *remain -= 1;
+                if *remain == 0 {
+                    left_nodes.remove(node);
+                    finish.push(node.to_string());
+                }
+            }
+            workers = workers.into_iter()
+                .filter(|(_, remain)| remain > &0).collect::<Vec<_>>();
+
+            let temp = left_nodes.clone();
+            while workers.len() < worker_size
+            && let Some(node) = temp.iter().find(|node| {
+                // node not in workers
+                if workers.iter().find(|(worker,_)| worker == *node).is_some() {
+                    return false;
+                }
+
+                let edge = edges.iter()
+                    .filter(|(_src,dst)| dst == *node)
+                    .map(|(src,dst)| (src.to_string(),dst.to_string()))
+                    .collect::<Vec<(String,String)>>();
+
+                // without require node
+                edge.is_empty()
+                ||
+                // check require node already in finish
+                edge.iter().all(|(src, _dst)| {
+                    finish.contains(src)
+                })
+            }) {
+                let cost = (node.chars().next().unwrap() as u8 - b'A' + 1 ) as usize + extra_take;
+                workers.push((node.to_string(), cost));
+            }
+            // println!("{sec:5}  {workers:?}   {finish:?} ");
+            sec += 1;
+        }
+
+        sec - 1
     }
 }
