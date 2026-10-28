@@ -72,8 +72,7 @@ pub mod part1 {
             
             if size > last_size {
                 println!("{}", _display(&last_point));
-                _pause();
-                return s-1;
+                return s;
             }
             last_size = size;
             last_point = points.clone()
