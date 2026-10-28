@@ -1,4 +1,4 @@
-pub fn fuel_power(x: isize, y: isize, serial: isize) -> i32 {
+pub fn fuel_power(x: usize, y: usize, serial: usize) -> i32 {
     let rack_id = x + 10;
     let tmp = rack_id * y;
     let tmp = tmp + serial;
@@ -8,33 +8,31 @@ pub fn fuel_power(x: isize, y: isize, serial: isize) -> i32 {
     tmp as i32 - 5
 }
 
-pub mod part1 {
-    use crate::fuel_power;
-    use std::collections::HashMap;
+pub fn generate_grid(serial: usize) -> [[i32; 301]; 301] {
+    let mut grid = [[0; 301]; 301];
 
-    pub fn solve(file: String) -> (i32, (isize, isize)) {
-        let serial = file.parse::<isize>().expect("cannot parse serial");
-
-        let mut grid = HashMap::new();
-
-        for y in 1..=300_isize {
-            for x in 1..=300_isize {
-                grid.insert((x, y), fuel_power(x, y, serial));
-            }
+    for y in 1..=300 {
+        for x in 1..=300 {
+            grid[x][y] = fuel_power(x, y, serial);
         }
+    }
+
+    grid
+}
+
+pub mod part1 {
+    use crate::generate_grid;
+
+    pub fn solve(file: String) -> (i32, (usize, usize)) {
+        let serial = file.parse::<usize>().expect("cannot parse serial");
+        let grid = generate_grid(serial);
 
         (1..298)
-            .map(|y: isize| {
+            .map(|y| {
                 (1..298)
                     .map(|x| {
                         let sum = (0..3)
-                            .map(|dy| {
-                                (0..3)
-                                    .map(|dx| {
-                                        *grid.get(&(x + dx, y + dy)).expect("cannot get grid value")
-                                    })
-                                    .sum::<i32>()
-                            })
+                            .map(|dy| (0..3).map(|dx| grid[x + dx][y + dy]).sum::<i32>())
                             .sum();
 
                         (sum, (x, y))
@@ -48,54 +46,29 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    use crate::fuel_power;
+    use crate::generate_grid;
     use rayon::prelude::*;
-    use std::collections::HashMap;
 
-    pub fn solve(file: String) -> (i32, (isize, isize, isize)) {
-        let serial = file.parse::<isize>().expect("cannot parse serial");
+    pub fn solve(file: String) -> (i32, (usize, usize, usize)) {
+        let serial = file.parse::<usize>().expect("cannot parse serial");
 
-        let mut grid = HashMap::new();
-
-        for y in 1..=300_isize {
-            for x in 1..=300_isize {
-                grid.insert((x, y), fuel_power(x, y, serial));
-            }
-        }
+        let grid = generate_grid(serial);
 
         (1..300)
             .into_par_iter()
-            .map(|y| {
-                (1..300)
-                    .into_par_iter()
-                    .map(|x| {
-                        let max_size = 300 - x.max(y);
-                        // limit 20x20 for optimize
-                        let max_size = 20.min(max_size); 
-                        (0..max_size)
-                            .into_par_iter()
-                            .map(|size| {
-                                let sum: i32 = (0..size)
-                                    .into_par_iter()
-                                    .map(|dy| {
-                                        (0..size)
-                                            .into_par_iter()
-                                            .map(|dx| {
-                                                *grid
-                                                    .get(&(x + dx, y + dy))
-                                                    .expect("cannot get grid value")
-                                            })
-                                            .sum::<i32>()
-                                    })
-                                    .sum();
-                                // println!("{x},{y},{size},{sum}");
-                                (sum, (x, y, size))
-                            })
-                            .max()
-                            .unwrap()
-                    })
-                    .max()
-                    .unwrap()
+            .map(|size| {
+                let mut best = (i32::MIN, (0, 0, size));
+                for y in 1..=(301 - size) {
+                    for x in 1..=(301 - size) {
+                        let sum = (0..size)
+                            .map(|dy| (0..size).map(|dx| grid[x + dx][y + dy]).sum::<i32>())
+                            .sum::<i32>();
+                        if sum > best.0 {
+                            best = (sum, (x, y, size));
+                        }
+                    }
+                }
+                best
             })
             .max()
             .unwrap()
