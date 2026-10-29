@@ -82,6 +82,24 @@ pub mod part1 {
     }
 }
 
+/*
+ * for part2 , 50_000_000_000 generation is too much
+ * from observe the generation will like the random change
+ *  but till at once generation the pattern not change it just like shift one bit
+ *  
+ *   0:        145 ....#..#.#..##......###...###
+ *   1:         91 ....#...#....#.....#..#..#..#.
+ *  ...
+ *  84:       1045 .................#....#.#.....#.#.........#.#.....#.#..........#.#.....#.#....#.#........#.#......#.#............
+ *  85:       1077 .................##....#.#.....#.#.........#.#.....#.#..........#.#.....#.#....#.#........#.#......#.#............
+ *  86:       1094 ................#.#.....#.#.....#.#.........#.#.....#.#..........#.#.....#.#....#.#........#.#......#.#............
+ *  87:       1114 .................#.#.....#.#.....#.#.........#.#.....#.#..........#.#.....#.#....#.#........#.#......#.#............
+ *  88:       1134 ..................#.#.....#.#.....#.#.........#.#.....#.#..........#.#.....#.#....#.#........#.#......#.#............
+ *  last_gen  = 87
+ *  last_sum  = 1114
+ *  last_diff = 20
+ *   we can calculate from this value,  1114 + (50_000_000_000 - 87) * 20
+ */
 pub mod part2 {
     use crate::{_display, evolve, parse};
     
@@ -89,14 +107,14 @@ pub mod part2 {
 
         let (init, map) = parse(file);
         let mut plants = init.clone();
-        println!("{0:10}: {}", _display(&plants));
         let mut last_sum = plants.iter().map(|(index, char)| {
-                if char.as_str() == "#" {
-                    *index as i64
-                } else {
-                    0
-                }
-            }).sum::<i64>();
+            if char.as_str() == "#" {
+                *index as i64
+            } else {
+                0
+            }
+        }).sum::<i64>();
+        println!("         0: {last_sum:10} {}", _display(&plants));
         let mut last_diff = i64::MAX;
         let mut last_gen = 0;
         let mut last_output = _display(&plants);

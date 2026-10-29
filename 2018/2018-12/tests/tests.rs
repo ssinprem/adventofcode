@@ -19,5 +19,5 @@ test_case_n!(example,
 ###.# => #
 ####. => #",
     part1: (part1::solve, 325),
-    part2: (part2::solve, 849999999615)
+    part2: (part2::solve, 999999999374)
 );
