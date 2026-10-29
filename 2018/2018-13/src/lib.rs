@@ -138,31 +138,28 @@ pub fn tick(
 pub fn check_crash(
     carts: &[(usize, usize, Dir, Next)],
     last_carts: &[(usize, usize, Dir, Next)],
-) -> Option<(usize, usize)> {
+) -> Vec<(usize, usize)> {
     use itertools::Itertools;
-
+    let mut pairs = Vec::new();
     for pair in carts.iter().enumerate().combinations(2) {
         let cart_a = pair[0].1;
         let cart_b = pair[1].1;
 
         if cart_a.0 == cart_b.0 && cart_a.1 == cart_b.1 {
-            return Some((pair[0].0, pair[1].0));
+            pairs.push((pair[0].0, pair[1].0));
         }
     }
 
-    if let Some(crash) = last_carts.iter().enumerate().find_map(|(a_id, cart_a)| {
-        carts.iter().enumerate().find_map(|(b_id, cart_b)| {
-            if cart_a.0 == cart_b.0 && cart_a.1 == cart_b.1 {
-                Some((a_id,b_id))
-            } else {
-                None
+    for (a_id, cart_a) in last_carts.iter().enumerate() {
+        for (b_id, cart_b) in carts.iter().enumerate() {
+            if cart_a.0 == cart_b.0 && cart_a.1 == cart_b.1 
+            && !pairs.contains(&(a_id, b_id)) || !pairs.contains(&(b_id, a_id)) {
+                pairs.push((a_id, b_id));
             }
-        })
-    }) {
-        return Some((crash.0, crash.1));
+        }
     }
 
-    None
+    pairs
 }
 
 pub fn _display(grid: &Grid<Track>, carts: &[(usize, usize, Dir, Next)]) {
@@ -207,20 +204,18 @@ pub fn _display(grid: &Grid<Track>, carts: &[(usize, usize, Dir, Next)]) {
 }
 
 pub mod part1 {
-    use utility::_pause;
-
     use crate::{_display, check_crash, parse, tick};
     pub fn solve(file: String) -> (usize, usize) {
         let (grid, mut carts) = parse(file);
-        _display(&grid, &carts);
         for _ in 0.. {
             let last_carts = carts.clone();
             carts = tick(&grid, carts);
-            if let Some(crash) = check_crash(&carts, &last_carts) {
+            if let pairs = check_crash(&carts, &last_carts)
+                && !pairs.is_empty()
+            {
                 _display(&grid, &carts);
-                let target_a = carts.get(crash.0).unwrap();
-                let target_b = carts.get(crash.1).unwrap();
-
+                let target_a = carts.get(pairs.first().unwrap().0).unwrap();
+                let target_b = carts.get(pairs.first().unwrap().1).unwrap();
                 if target_a.0 < target_b.0 || target_a.1 < target_b.1 {
                     return (target_a.0, target_a.1);
                 } else {
@@ -233,7 +228,33 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> (usize, usize) {
-        (0,0)
+    use crate::{_display, check_crash, parse, tick};
+    pub fn solve(file: String) -> (usize, usize) {
+        let (grid, mut carts) = parse(file);
+        for _ in 0.. {
+            if carts.len() <= 1 {
+                break;
+            }
+            let last_carts = carts.clone();
+            carts = tick(&grid, carts);
+            if let pairs = check_crash(&carts, &last_carts)
+                && ! pairs.is_empty()
+            {
+                let mut remove = pairs
+                    .iter()
+                    .flat_map(|pair| [pair.0, pair.1])
+                    .collect::<Vec<usize>>();
+                remove.sort();
+                while let Some(id) = remove.pop() {
+                    carts.remove(id);
+                }
+            }
+        }
+        _display(&grid, &carts);
+        if let Some(last_cart) = carts.pop() {
+            (last_cart.0, last_cart.1)
+        } else {
+            (0, 0)
+        }
     }
 }
