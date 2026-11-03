@@ -253,8 +253,7 @@ pub fn lets_fight(units: &mut HashMap<usize, Unit>, grid: &Grid<bool>, round: u6
                             |target| target == **target_node,
                             |_e| 1,
                             |_| 0,
-                        )
-                        {
+                        ) {
                             cost == best
                         } else {
                             false
@@ -325,9 +324,8 @@ pub mod part1 {
         let (grid, units) = parse(file);
         let mut units = units.into_iter().enumerate().collect::<HashMap<_, _>>();
 
-        // println!("Initially:");
-        // _display(&grid, &units);
-
+        println!("Initially:");
+        _display(&grid, &units);
         let mut full_rounds: u64 = 0;
         loop {
             if let Some(outcome) = lets_fight(&mut units, &grid, full_rounds) {
@@ -336,13 +334,54 @@ pub mod part1 {
                 return outcome;
             }
             full_rounds += 1;
-            println!("-- after {full_rounds} round");
-            _display(&grid, &units);
         }
     }
 }
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
+    use crate::{_display, lets_fight, parse};
+    use std::collections::HashMap;
+
+    pub fn solve(file: String) -> u64 {
+        let (grid, units) = parse(file);
+        let save_units = units.into_iter().enumerate().collect::<HashMap<_, _>>();
+
+        let elf_num = save_units
+            .iter()
+            .filter(|(_, unit)| unit.team == 'E')
+            .count();
+        for elf_atk in 4.. {
+            let mut full_rounds: u64 = 0;
+            let mut units = save_units
+                .clone()
+                .iter()
+                .map(|(id, unit)| {
+                    let mut unit = *unit;
+                    if unit.team == 'E' {
+                        unit.atk = elf_atk;
+                    } else {
+                        unit.atk = 3;
+                    }
+                    (*id, unit)
+                })
+                .collect::<HashMap<_, _>>();
+            loop {
+                if let Some(outcome) = lets_fight(&mut units, &grid, full_rounds) {
+                    println!(
+                        "-- With elf atk {elf_atk} - (last turn) after {full_rounds} round"
+                    );
+                    _display(&grid, &units);
+                    // Elf win without single death
+                    if units.iter().filter(|(_, unit)| unit.team == 'E').count() == elf_num {
+                        _display(&grid, &save_units);
+
+                        _display(&grid, &units);
+                        return outcome;
+                    }
+                    break;
+                }
+                full_rounds += 1;
+            }
+        }
         0
     }
 }

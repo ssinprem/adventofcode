@@ -9,8 +9,8 @@ test_case_n!(example1,
 #..G#E#
 #.....#
 #######",
-    part1: (part1::solve, 47  * 590),
-    part2: (part2::solve, 0)
+    part1: (part1::solve, 47 * 590),
+    part2: (part2::solve, 29 * 172)
 );
 
 test_case_n!(example2,
@@ -21,8 +21,7 @@ test_case_n!(example2,
 #...#E#
 #...E.#
 #######",
-    part1: (part1::solve, 37 * 982),
-    part2: (part2::solve, 0)
+    part1: (part1::solve, 37 * 982)
 );
 
 test_case_n!(example3,
@@ -34,7 +33,7 @@ test_case_n!(example3,
 #..E#.#
 #######",
     part1: (part1::solve, 46 * 859),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 33 * 948)
 );
 
 test_case_n!(example4,
@@ -46,7 +45,7 @@ test_case_n!(example4,
 #...E.#
 #######",
     part1: (part1::solve, 35 * 793),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 37 * 94)
 );
 
 test_case_n!(example5,
@@ -58,7 +57,7 @@ test_case_n!(example5,
 #...#G#
 #######",
     part1: (part1::solve, 54 * 536),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 39 * 166)
 );
 
 test_case_n!(example6,
@@ -72,5 +71,5 @@ test_case_n!(example6,
 #.....G.#
 #########",
     part1: (part1::solve, 20 * 937),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 30 * 38)
 );
