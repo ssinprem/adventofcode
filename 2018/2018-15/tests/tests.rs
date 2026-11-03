@@ -13,7 +13,7 @@ test_case_n!(example1,
     part2: (part2::solve, 0)
 );
 
-test_case_n!(exampl2,
+test_case_n!(example2,
 "#######
 #G..#E#
 #E#E.E#
@@ -25,7 +25,7 @@ test_case_n!(exampl2,
     part2: (part2::solve, 0)
 );
 
-test_case_n!(exampl3,
+test_case_n!(example3,
 "#######
 #E..EG#
 #.#G.E#
@@ -37,7 +37,7 @@ test_case_n!(exampl3,
     part2: (part2::solve, 0)
 );
 
-test_case_n!(exampl4,
+test_case_n!(example4,
 "#######
 #E.G#.#
 #.#G..#
@@ -49,7 +49,7 @@ test_case_n!(exampl4,
     part2: (part2::solve, 0)
 );
 
-test_case_n!(exampl5,
+test_case_n!(example5,
 "#######
 #.E...#
 #.#..G#
@@ -61,7 +61,7 @@ test_case_n!(exampl5,
     part2: (part2::solve, 0)
 );
 
-test_case_n!(exampl6,
+test_case_n!(example6,
 "#########
 #G......#
 #.E.#...#
@@ -74,5 +74,3 @@ test_case_n!(exampl6,
     part1: (part1::solve, 20 * 937),
     part2: (part2::solve, 0)
 );
-
-

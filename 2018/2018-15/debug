@@ -1,0 +1,1485 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.08s
+     Running tests/tests.rs (/home/ssinprem/Rust-dev/adventofcode/target/debug/deps/tests-4569c3aecb8fe9a0)
+
+running 1 test
+Initially:
+####### 
+#G..#E#  G(200) E(200)
+#E#E.E#  E(200) E(200) E(200)
+#G.##.#  G(200)
+#...#E#  E(200)
+#...E.#  E(200)
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 200 } -> 
+   Pads: [(3, 1), (4, 2), (3, 5), (5, 5), (5, 3), (4, 2), (1, 1), (1, 3), (5, 3), (5, 5)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 200 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 197 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 200 }
+ E#3 Unit { team: 'E', pos: (3, 2), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   Path: [(3, 2), (3, 1), (2, 1)]
+   walk to (3, 1)
+ E#4 Unit { team: 'E', pos: (5, 2), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 2)
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 200 } -> 
+   Pads: [(3, 2), (2, 1), (3, 5), (5, 5), (5, 3), (4, 2), (1, 1), (1, 3), (5, 3), (5, 5)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 197 }
+ E#6 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+ E#7 Unit { team: 'E', pos: (4, 5), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   Path: [(4, 5), (3, 5), (3, 4), (2, 4), (2, 3)]
+   walk to (3, 5)
+-- after 1 round
+####### 
+#G.E#E#  G(197) E(200) E(200)
+#E#..E#  E(194) E(200)
+#G.##.#  G(200)
+#...#E#  E(200)
+#..E..#  E(200)
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 197 } -> 
+   Pads: [(3, 2), (2, 1), (3, 4), (2, 5), (4, 5), (5, 3), (4, 2), (1, 1), (1, 3), (5, 3), (5, 5)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 194 }
+ E#3 Unit { team: 'E', pos: (3, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   Path: [(3, 1), (2, 1)]
+   walk to (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 197 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 191 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 194 }
+ E#4 Unit { team: 'E', pos: (5, 2), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 2)
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 200 } -> 
+   Pads: [(1, 1), (3, 1), (3, 4), (2, 5), (4, 5), (5, 3), (4, 2), (1, 1), (1, 3), (5, 3), (5, 5)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 191 }
+ E#6 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+ E#7 Unit { team: 'E', pos: (3, 5), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   Path: [(3, 5), (3, 4), (2, 4), (2, 3)]
+   walk to (3, 4)
+-- after 2 round
+####### 
+#GE.#E#  G(191) E(200) E(200)
+#E#..E#  E(188) E(200)
+#G.##.#  G(200)
+#..E#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 191 } -> 
+   Pads: [(1, 1), (3, 1), (3, 5), (2, 4), (5, 3), (4, 2), (1, 1), (1, 3), (5, 3), (5, 5)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 188 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 191 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 185 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 188 }
+ E#4 Unit { team: 'E', pos: (5, 2), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 2)
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 200 } -> 
+   Pads: [(1, 1), (3, 1), (3, 5), (2, 4), (5, 3), (4, 2), (1, 1), (1, 3), (5, 3), (5, 5)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 185 }
+ E#7 Unit { team: 'E', pos: (3, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   Path: [(3, 4), (2, 4), (2, 3)]
+   walk to (2, 4)
+ E#6 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   Path: [(5, 4), (5, 5), (4, 5), (3, 5), (2, 5), (1, 5), (1, 4)]
+   walk to (5, 5)
+-- after 3 round
+####### 
+#GE.#E#  G(185) E(200) E(200)
+#E#..E#  E(182) E(200)
+#G.##.#  G(200)
+#.E.#.#  E(200)
+#....E#  E(200)
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 185 } -> 
+   Pads: [(1, 1), (3, 1), (2, 3), (2, 5), (1, 4), (3, 4), (5, 3), (4, 2), (1, 1), (1, 3), (5, 4), (4, 5)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 182 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 185 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 179 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 182 }
+ E#4 Unit { team: 'E', pos: (5, 2), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 2)
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 200 } -> 
+   Pads: [(1, 1), (3, 1), (2, 3), (2, 5), (1, 4), (3, 4), (5, 3), (4, 2), (1, 1), (1, 3), (5, 4), (4, 5)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 179 }
+ E#7 Unit { team: 'E', pos: (2, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   Path: [(2, 4), (2, 3)]
+   walk to (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 200 }
+ E#6 Unit { team: 'E', pos: (5, 5), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   Path: [(5, 5), (4, 5), (3, 5), (3, 4), (2, 4), (1, 4)]
+   walk to (4, 5)
+-- after 4 round
+####### 
+#GE.#E#  G(179) E(200) E(200)
+#E#..E#  E(176) E(200)
+#GE##.#  G(197) E(200)
+#...#.# 
+#...E.#  E(200)
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 179 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (4, 2), (1, 1), (1, 3), (3, 5), (5, 5)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 176 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 179 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 173 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 176 }
+ E#4 Unit { team: 'E', pos: (5, 2), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 2)
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 197 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (4, 2), (1, 1), (1, 3), (3, 5), (5, 5)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 173 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 197 }
+ E#6 Unit { team: 'E', pos: (4, 5), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   Path: [(4, 5), (3, 5), (3, 4), (2, 4), (1, 4)]
+   walk to (3, 5)
+-- after 5 round
+####### 
+#GE.#E#  G(173) E(200) E(200)
+#E#..E#  E(170) E(200)
+#GE##.#  G(194) E(200)
+#...#.# 
+#..E..#  E(200)
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 173 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (4, 2), (1, 1), (1, 3), (3, 4), (2, 5), (4, 5)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 170 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 173 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 167 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 170 }
+ E#4 Unit { team: 'E', pos: (5, 2), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 2)
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 194 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (4, 2), (1, 1), (1, 3), (3, 4), (2, 5), (4, 5)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 167 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 194 }
+ E#6 Unit { team: 'E', pos: (3, 5), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   Path: [(3, 5), (3, 4), (2, 4), (1, 4)]
+   walk to (3, 4)
+-- after 6 round
+####### 
+#GE.#E#  G(167) E(200) E(200)
+#E#..E#  E(164) E(200)
+#GE##.#  G(191) E(200)
+#..E#.#  E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 167 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (4, 2), (1, 1), (1, 3), (3, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 164 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 167 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 161 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 164 }
+ E#4 Unit { team: 'E', pos: (5, 2), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   Path: [(5, 2), (5, 3), (5, 4), (5, 5), (4, 5), (3, 5), (2, 5), (2, 4), (1, 4)]
+   walk to (5, 3)
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 191 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 2), (5, 4), (5, 2), (1, 1), (1, 3), (3, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 161 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 191 }
+ E#6 Unit { team: 'E', pos: (3, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   Path: [(3, 4), (2, 4), (1, 4)]
+   walk to (2, 4)
+-- after 7 round
+####### 
+#GE.#E#  G(161) E(200) E(200)
+#E#...#  E(158)
+#GE##E#  G(188) E(200) E(200)
+#.E.#.#  E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 161 } -> 
+   Pads: [(1, 1), (3, 1), (1, 3), (5, 2), (5, 4), (5, 2), (1, 1), (1, 3), (2, 5), (1, 4), (3, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 158 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 161 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 155 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 158 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 188 } -> 
+   Pads: [(1, 1), (3, 1), (1, 3), (5, 2), (5, 4), (5, 2), (1, 1), (1, 3), (2, 5), (1, 4), (3, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 155 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 188 }
+ E#4 Unit { team: 'E', pos: (5, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   Path: [(5, 3), (5, 4), (5, 5), (4, 5), (3, 5), (2, 5), (1, 5), (1, 4)]
+   walk to (5, 4)
+ E#6 Unit { team: 'E', pos: (2, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   Path: [(2, 4), (1, 4)]
+   walk to (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 185 }
+-- after 8 round
+####### 
+#GE.#E#  G(155) E(200) E(200)
+#E#...#  E(152)
+#GE##.#  G(182) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 155 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 152 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 155 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 149 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 152 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 182 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 149 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 182 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 179 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 9 round
+####### 
+#GE.#E#  G(149) E(200) E(200)
+#E#...#  E(146)
+#GE##.#  G(176) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 149 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 146 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 149 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 143 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 146 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 176 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 143 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 176 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 173 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 10 round
+####### 
+#GE.#E#  G(143) E(200) E(200)
+#E#...#  E(140)
+#GE##.#  G(170) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 143 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 140 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 143 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 137 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 140 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 170 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 137 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 170 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 167 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 11 round
+####### 
+#GE.#E#  G(137) E(200) E(200)
+#E#...#  E(134)
+#GE##.#  G(164) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 137 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 134 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 137 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 131 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 134 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 164 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 131 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 164 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 161 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 12 round
+####### 
+#GE.#E#  G(131) E(200) E(200)
+#E#...#  E(128)
+#GE##.#  G(158) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 131 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 128 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 131 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 125 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 128 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 158 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 125 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 158 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 155 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 13 round
+####### 
+#GE.#E#  G(125) E(200) E(200)
+#E#...#  E(122)
+#GE##.#  G(152) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 125 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 122 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 125 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 119 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 122 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 152 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 119 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 152 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 149 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 14 round
+####### 
+#GE.#E#  G(119) E(200) E(200)
+#E#...#  E(116)
+#GE##.#  G(146) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 119 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 116 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 119 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 113 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 116 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 146 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 113 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 146 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 143 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 15 round
+####### 
+#GE.#E#  G(113) E(200) E(200)
+#E#...#  E(110)
+#GE##.#  G(140) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 113 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 110 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 113 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 107 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 110 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 140 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 107 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 140 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 137 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 16 round
+####### 
+#GE.#E#  G(107) E(200) E(200)
+#E#...#  E(104)
+#GE##.#  G(134) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 107 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 104 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 107 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 101 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 104 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 134 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 101 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 134 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 131 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 17 round
+####### 
+#GE.#E#  G(101) E(200) E(200)
+#E#...#  E( 98)
+#GE##.#  G(128) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 101 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 98 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 101 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 95 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 98 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 128 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 95 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 128 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 125 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 18 round
+####### 
+#GE.#E#  G( 95) E(200) E(200)
+#E#...#  E( 92)
+#GE##.#  G(122) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 95 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 92 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 95 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 89 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 92 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 122 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 89 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 122 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 119 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 19 round
+####### 
+#GE.#E#  G( 89) E(200) E(200)
+#E#...#  E( 86)
+#GE##.#  G(116) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 89 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 86 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 89 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 83 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 86 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 116 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 83 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 116 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 113 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 20 round
+####### 
+#GE.#E#  G( 83) E(200) E(200)
+#E#...#  E( 80)
+#GE##.#  G(110) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 83 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 80 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 83 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 77 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 80 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 110 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 77 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 110 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 107 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 21 round
+####### 
+#GE.#E#  G( 77) E(200) E(200)
+#E#...#  E( 74)
+#GE##.#  G(104) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 77 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 74 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 77 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 71 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 74 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 104 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 71 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 104 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 101 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 22 round
+####### 
+#GE.#E#  G( 71) E(200) E(200)
+#E#...#  E( 68)
+#GE##.#  G( 98) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 71 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 68 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 71 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 65 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 68 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 98 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 65 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 98 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 95 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 23 round
+####### 
+#GE.#E#  G( 65) E(200) E(200)
+#E#...#  E( 62)
+#GE##.#  G( 92) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 65 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 62 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 65 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 59 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 62 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 92 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 59 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 92 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 89 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 24 round
+####### 
+#GE.#E#  G( 59) E(200) E(200)
+#E#...#  E( 56)
+#GE##.#  G( 86) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 59 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 56 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 59 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 53 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 56 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 86 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 53 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 86 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 83 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 25 round
+####### 
+#GE.#E#  G( 53) E(200) E(200)
+#E#...#  E( 50)
+#GE##.#  G( 80) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 53 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 50 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 53 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 47 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 50 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 80 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 47 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 80 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 77 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 26 round
+####### 
+#GE.#E#  G( 47) E(200) E(200)
+#E#...#  E( 44)
+#GE##.#  G( 74) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 47 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 44 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 47 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 41 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 44 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 74 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 41 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 74 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 71 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 27 round
+####### 
+#GE.#E#  G( 41) E(200) E(200)
+#E#...#  E( 38)
+#GE##.#  G( 68) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 41 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 38 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 41 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 35 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 38 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 68 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 35 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 68 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 65 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 28 round
+####### 
+#GE.#E#  G( 35) E(200) E(200)
+#E#...#  E( 32)
+#GE##.#  G( 62) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 35 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 32 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 35 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 29 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 32 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 62 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 29 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 62 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 59 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 29 round
+####### 
+#GE.#E#  G( 29) E(200) E(200)
+#E#...#  E( 26)
+#GE##.#  G( 56) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 29 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 26 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 29 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 23 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 26 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 56 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 23 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 56 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 53 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 30 round
+####### 
+#GE.#E#  G( 23) E(200) E(200)
+#E#...#  E( 20)
+#GE##.#  G( 50) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 23 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 20 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 23 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 17 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 20 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 50 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 17 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 50 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 47 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 31 round
+####### 
+#GE.#E#  G( 17) E(200) E(200)
+#E#...#  E( 14)
+#GE##.#  G( 44) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 17 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 14 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 17 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 11 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 14 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 44 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 11 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 44 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 41 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 32 round
+####### 
+#GE.#E#  G( 11) E(200) E(200)
+#E#...#  E(  8)
+#GE##.#  G( 38) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 11 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 8 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 11 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#2 Unit { team: 'E', pos: (1, 2), hp: 5 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 8 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 38 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 5 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 38 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 35 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 33 round
+####### 
+#GE.#E#  G(  5) E(200) E(200)
+#E#...#  E(  2)
+#GE##.#  G( 32) E(200)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 5 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 1), (1, 3), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (1, 2), hp: 2 }
+   #2 dead ☠️
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 5 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 32 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (2, 3), hp: 200 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 197 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 32 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 29 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 34 round
+####### 
+#GE.#E#  G(  2) E(200) E(200)
+#.#...# 
+#GE##.#  G( 26) E(197)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ G#0 Unit { team: 'G', pos: (1, 1), hp: 2 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 1)
+   ⚔️ attack  Unit { team: 'E', pos: (2, 1), hp: 200 }
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 197 } -> 
+   Pads: [(1, 2), (2, 1), (1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 1)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 1), hp: 2 }
+   #0 dead ☠️
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 26 } -> 
+   Pads: [(1, 1), (3, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (2, 3), hp: 197 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 194 } -> 
+   Pads: [(1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 26 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 23 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 35 round
+####### 
+#.E.#E#  E(197) E(200)
+#.#...# 
+#GE##.#  G( 20) E(194)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ E#3 Unit { team: 'E', pos: (2, 1), hp: 197 } -> 
+   Pads: [(1, 2), (1, 4), (2, 3)]
+   Path: [(2, 1), (1, 1), (1, 2)]
+   walk to (1, 1)
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 20 } -> 
+   Pads: [(1, 2), (2, 1), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (2, 3), hp: 194 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 191 } -> 
+   Pads: [(1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 20 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 17 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 36 round
+####### 
+#E..#E#  E(197) E(200)
+#.#...# 
+#GE##.#  G( 14) E(191)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ E#3 Unit { team: 'E', pos: (1, 1), hp: 197 } -> 
+   Pads: [(1, 2), (1, 4), (2, 3)]
+   Path: [(1, 1), (1, 2)]
+   walk to (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 14 }
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 11 } -> 
+   Pads: [(1, 1), (1, 3), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (2, 3), hp: 191 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 188 } -> 
+   Pads: [(1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 11 }
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: [(1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 4)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 8 }
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: [(1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 4)
+-- after 37 round
+####### 
+#...#E#  E(200)
+#E#...#  E(197)
+#GE##.#  G(  5) E(188)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+ E#1 Unit { team: 'E', pos: (5, 1), hp: 200 } -> 
+   Pads: [(1, 2), (1, 4), (2, 3)]
+   no walk stay at (5, 1)
+ E#3 Unit { team: 'E', pos: (1, 2), hp: 197 } -> 
+   Pads: [(1, 2), (1, 4), (2, 3)]
+   no walk stay at (1, 2)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 5 }
+ G#5 Unit { team: 'G', pos: (1, 3), hp: 2 } -> 
+   Pads: [(1, 1), (1, 3), (2, 4), (1, 3), (5, 3), (5, 5), (5, 2), (1, 3), (1, 5), (2, 4)]
+   no walk stay at (1, 3)
+   ⚔️ attack  Unit { team: 'E', pos: (2, 3), hp: 188 }
+ E#7 Unit { team: 'E', pos: (2, 3), hp: 185 } -> 
+   Pads: [(1, 2), (1, 4), (2, 3)]
+   no walk stay at (2, 3)
+   ⚔️ attack  Unit { team: 'G', pos: (1, 3), hp: 2 }
+   #5 dead ☠️
+ E#6 Unit { team: 'E', pos: (1, 4), hp: 200 } -> 
+   Pads: []
+   no walk stay at (1, 4)
+ E#4 Unit { team: 'E', pos: (5, 4), hp: 200 } -> 
+   Pads: []
+   no walk stay at (5, 4)
+-- after 38 round
+####### 
+#...#E#  E(200)
+#E#...#  E(197)
+#.E##.#  E(185)
+#E..#E#  E(200) E(200)
+#.....# 
+####### 
+
+
+thread 'exampl2_part1' (1652199) panicked at 2018/2018-15/tests/tests.rs:16:1:
+assertion `left == right` failed
+  left: 37316
+ right: 36334
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test exampl2_part1 ... FAILED
+
+failures:
+
+failures:
+    exampl2_part1
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 11 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p beverage_bandits --test tests`
