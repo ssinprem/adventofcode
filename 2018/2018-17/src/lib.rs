@@ -72,93 +72,96 @@ pub fn _display(clays: &HashSet<(usize, usize)>, waters: &HashMap<(usize, usize)
     println!();
 }
 
-pub mod part1 {
-    use std::collections::HashMap;
+pub fn process(clays: &HashSet<(usize, usize)>) -> HashMap<(usize, usize), Cell> {
+    let maxy = clays.iter().max_by_key(|(_x, y)| *y).unwrap().1;
+    let mut waters = HashMap::new();
+    waters.insert((500, 0), Cell::Source);
+    let mut last_waters = HashMap::new();
+    while last_waters != waters {
+        last_waters = waters.clone();
 
-    use crate::{_display, Cell, parse};
+        for (&(x, y), &c) in waters
+            .clone()
+            .iter()
+            .filter(|(_, c)| [Cell::Source, Cell::Flow].contains(*c))
+        {
+            if (c == Cell::Source || c == Cell::Flow)
+                && y < maxy
+                && !clays.contains(&(x, y + 1))
+                && !waters.contains_key(&(x, y + 1))
+            {
+                // println!("{x},{y}  {c:?} => Cell:Flow  below empty");
+                waters.insert((x, y + 1), Cell::Flow);
+            } else if c == Cell::Flow
+                && (clays.contains(&(x, y + 1))
+                    || waters.get(&(x, y + 1)).unwrap_or(&Cell::None) == &Cell::Full)
+            {
+                // println!("{x},{y}  {c:?}    below block going left and right");
+                let mut rows = vec![(x, y)];
+                let mut found_block_left = false;
+                let mut found_block_right = false;
+                for i in 1.. {
+                    if clays.contains(&(x - i, y)) {
+                        found_block_left = true;
+                        break;
+                    }
+                    rows.push((x - i, y));
+                    // have next floor ?
+                    if clays.contains(&(x - i, y + 1)) {
+                        continue;
+                    }
+                    // have full water cell
+                    if let Some(w) = waters.get(&(x - i, y + 1))
+                        && w == &Cell::Full
+                    {
+                        continue;
+                    }
+
+                    break;
+                }
+                for i in 1.. {
+                    if clays.contains(&(x + i, y)) {
+                        found_block_right = true;
+                        break;
+                    }
+                    rows.push((x + i, y));
+                    // have next floor ?
+                    if clays.contains(&(x + i, y + 1)) {
+                        continue;
+                    }
+                    // have full water cell
+                    if let Some(w) = waters.get(&(x + i, y + 1))
+                        && w == &Cell::Full
+                    {
+                        continue;
+                    }
+
+                    break;
+                }
+                for (rx, ry) in rows {
+                    if found_block_left && found_block_right {
+                        waters.insert((rx, ry), Cell::Full);
+                    } else {
+                        waters.insert((rx, ry), Cell::Flow);
+                    }
+                }
+            }
+        }
+    }
+
+    waters
+}
+
+pub mod part1 {
+    use crate::{_display, parse, process};
 
     pub fn solve(file: String) -> usize {
         let clays = parse(file);
         let miny = clays.iter().min_by_key(|(_x, y)| *y).unwrap().1;
         let maxy = clays.iter().max_by_key(|(_x, y)| *y).unwrap().1;
-        let mut waters = HashMap::new();
-        waters.insert((500, 0), Cell::Source);
-        let mut last_waters = HashMap::new();
 
-        _display(&clays, &waters);
-        while last_waters != waters {
-            last_waters = waters.clone();
-
-            for (&(x, y), &c) in waters
-                .clone()
-                .iter()
-                .filter(|(_, c)| [Cell::Source, Cell::Flow].contains(*c))
-            {
-                if (c == Cell::Source || c == Cell::Flow)
-                    && y < maxy
-                    && !clays.contains(&(x, y + 1))
-                    && !waters.contains_key(&(x, y + 1))
-                {
-                    // println!("{x},{y}  {c:?} => Cell:Flow  below empty");
-                    waters.insert((x, y + 1), Cell::Flow);
-                } else if c == Cell::Flow
-                    && (clays.contains(&(x, y + 1))
-                        || waters.get(&(x, y + 1)).unwrap_or(&Cell::None) == &Cell::Full)
-                {
-                    // println!("{x},{y}  {c:?}    below block going left and right");
-                    let mut rows = vec![(x, y)];
-                    let mut found_block_left = false;
-                    let mut found_block_right = false;
-                    for i in 1.. {
-                        if clays.contains(&(x - i, y)) {
-                            found_block_left = true;
-                            break;
-                        }
-                        rows.push((x - i, y));
-                        // have next floor ?
-                        if clays.contains(&(x - i, y + 1)) {
-                            continue;
-                        }
-                        // have full water cell
-                        if let Some(w) = waters.get(&(x - i, y + 1))
-                            && w == &Cell::Full
-                        {
-                            continue;
-                        }
-
-                        break;
-                    }
-                    for i in 1.. {
-                        if clays.contains(&(x + i, y)) {
-                            found_block_right = true;
-                            break;
-                        }
-                        rows.push((x + i, y));
-                        // have next floor ?
-                        if clays.contains(&(x + i, y + 1)) {
-                            continue;
-                        }
-                        // have full water cell
-                        if let Some(w) = waters.get(&(x + i, y + 1))
-                            && w == &Cell::Full
-                        {
-                            continue;
-                        }
-
-                        break;
-                    }
-                    for (rx, ry) in rows {
-                        if found_block_left && found_block_right {
-                            waters.insert((rx, ry), Cell::Full);
-                        } else {
-                            waters.insert((rx, ry), Cell::Flow);
-                        }
-                    }
-                }
-            }
-            // utility::_pause();
-        }
-        _display(&clays, &waters);
+        let waters = process(&clays);
+        // _display(&clays, &waters);
         waters
             .iter()
             .filter(|((_x, y), _)| y >= &miny && y <= &maxy)
@@ -167,7 +170,18 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use crate::{_display, Cell, parse, process};
+
+    pub fn solve(file: String) -> usize {
+        let clays = parse(file);
+        let miny = clays.iter().min_by_key(|(_x, y)| *y).unwrap().1;
+        let maxy = clays.iter().max_by_key(|(_x, y)| *y).unwrap().1;
+
+        let waters = process(&clays);
+        _display(&clays, &waters);
+        waters
+            .iter()
+            .filter(|((_x, y), w)| y >= &miny && y <= &maxy && w == &&Cell::Full)
+            .count()
     }
 }

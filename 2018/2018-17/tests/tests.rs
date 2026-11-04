@@ -11,5 +11,5 @@ x=498, y=10..13
 x=504, y=10..13
 y=13, x=498..504",
     part1: (part1::solve, 57),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 29)
 );
