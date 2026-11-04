@@ -1,3 +1,4 @@
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
 pub enum Opcode {
     Addr,
     Addi,
@@ -142,7 +143,7 @@ pub mod part1 {
                     .filter(|opcode| {
                         let output = operate(
                             &before,
-                            *opcode,
+                            opcode,
                             &inst.iter().skip(1).copied().collect::<Vec<usize>>(),
                         );
 
@@ -156,7 +157,65 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use crate::{ALL_OPCODE, Opcode, operate, parse};
+    use std::collections::{HashMap, HashSet};
+    pub fn solve(file: String) -> usize {
+        let (cases, insts) = parse(file);
+
+        let mut opcode_convert: HashMap<usize, HashSet<Opcode>> = HashMap::new();
+        for c in 0..16 {
+            opcode_convert.insert(c, ALL_OPCODE.into_iter().collect::<HashSet<Opcode>>());
+        }
+
+        cases.iter().for_each(|case| {
+            let before = case[0].clone();
+            let inst = case[1].clone();
+            let after = case[2].clone();
+
+            let oprand = inst.iter().skip(1).copied().collect::<Vec<usize>>();
+            let op_candidate = opcode_convert.get_mut(&inst[0]).unwrap();
+
+            let ops = op_candidate.iter().copied().collect::<Vec<Opcode>>();
+
+            for opcode in ops {
+                let output = operate(&before, &opcode, &oprand);
+                if output != after {
+                    op_candidate.remove(&opcode);
+                }
+            }
+        });
+
+        let mut opcode_final = HashMap::new();
+        while opcode_final.len() != 16 {
+            let opcode_temp = opcode_convert.iter().collect::<Vec<_>>();
+            for (code, set) in opcode_temp.iter() {
+                if set.len() == 1 {
+                    opcode_final.insert(**code, *set.iter().next().unwrap());
+                } else {
+                    let candidate = set
+                        .iter()
+                        .filter(|op| !opcode_final.iter().any(|(_c, v)| v == *op))
+                        .copied()
+                        .collect::<Vec<Opcode>>();
+                    if candidate.len() == 1
+                        && let Some(opcode) = candidate.into_iter().next()
+                    {
+                        opcode_final.insert(**code, opcode);
+                    }
+                }
+            }
+        }
+        println!("{opcode_final:?}");
+
+        let mut reg = vec![0, 0, 0, 0];
+        for inst in insts {
+            let opcode_n = inst[0];
+            let oprand = inst[1..].to_vec();
+            let opcode = opcode_final.get(&opcode_n).unwrap();
+            reg = operate(&reg, opcode, &oprand);
+            println!("{opcode:?} {oprand:?} => {reg:?}");
+        }
+
+        reg[0]
     }
 }
