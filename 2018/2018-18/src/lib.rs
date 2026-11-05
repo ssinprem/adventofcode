@@ -48,23 +48,14 @@ pub fn process(map: &Grid<Cell>) -> Grid<Cell> {
                 })
                 .copied()
                 .collect::<Vec<Cell>>();
-                let new_cell = new_map.get_mut(row, col).unwrap();
-                if cell == &Cell::Open && nearby.iter().filter(|n| n == &&Cell::Tree).count() >= 3 {
-                    *new_cell = Cell::Tree;
-                } else if cell == &Cell::Tree
-                    && nearby.iter().filter(|n| n == &&Cell::Lumberyard).count() >= 3
-                {
-                    *new_cell = Cell::Lumberyard;
-                } else if cell == &Cell::Lumberyard {
-                    if nearby.iter().filter(|n| n == &&Cell::Tree).count() >= 1
-                        && nearby.iter().filter(|n| n == &&Cell::Lumberyard).count() >= 1
-                    {
-                        *new_cell = Cell::Lumberyard;
-                    } else {
-                        *new_cell = Cell::Open;
-                    }
-                } else {
-                    *new_cell = *cell;
+
+                let trees = nearby.iter().filter(|n| n == &&Cell::Tree).count();
+                let yards = nearby.iter().filter(|n| n == &&Cell::Lumberyard).count();
+                new_map[(row, col)] = match cell {
+                    Cell::Open if trees >= 3 => Cell::Tree,
+                    Cell::Tree if yards >= 3 => Cell::Lumberyard,
+                    Cell::Lumberyard if trees == 0 || yards == 0 => Cell::Open,
+                    c => *c,
                 }
             }
         }
@@ -95,7 +86,7 @@ pub fn _display(map: &Grid<Cell>) {
 }
 
 pub mod part1 {
-    use crate::{_display, Cell, parse, process};
+    use crate::{Cell, parse, process};
 
     pub fn solve(file: String) -> usize {
         let mut map = parse(file);
@@ -111,29 +102,20 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    use std::collections::{HashMap, HashSet};
-
-    use crate::{_display, Cell, parse, process};
+    use crate::{Cell, parse, process};
 
     pub fn solve(file: String) -> usize {
         let mut map = parse(file);
-        let mut time_line = HashMap::new();
-        time_line.insert(0, map.clone());
-        for i in 1..=1000 {
+        let mut history = vec![map.clone()];
+        let start_loop = loop {
             map = process(&map);
-            if time_line.values().find(|g| **g == map).is_none() {
-                time_line.insert(i, map.clone());
-            } else {
-                break;
+            if let Some(pos) = history.iter().position(|g| *g == map) {
+                break pos;
             }
-        }
-
-        let start_loop = *time_line.iter().find(|(_id, g)| **g == map).unwrap().0;
-        let repeat = time_line.len() - start_loop;
-        let target = 1_000_000_000_usize;
-        let id = start_loop + (target - start_loop) % repeat;
-
-        let map = time_line.get(&id).unwrap();
+            history.push(map.clone());
+        };
+        let repeat = history.len() - start_loop;
+        let map = &history[start_loop + (1_000_000_000 - start_loop) % repeat];
         let wood = map.iter().filter(|c| c == &&Cell::Tree).count();
         let yard = map.iter().filter(|c| c == &&Cell::Lumberyard).count();
 
