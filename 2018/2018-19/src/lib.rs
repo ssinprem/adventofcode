@@ -55,7 +55,7 @@ pub mod part1 {
 
         while let Some((opcode, a, b ,c)) = insts.get(reg[ip_reg] as usize) {
             reg = operate(&reg, opcode, &vec![*a,*b,*c]);
-            println!("{opcode:?} {a} {b} {c} => {reg:?}");
+            // println!("{opcode:?} {a} {b} {c} => {reg:?}");
             reg[ip_reg] += 1;
         }
         reg[0].try_into().unwrap()
@@ -63,7 +63,24 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use chronal_classification::operate;
+    use crate::parse;
+
+    pub fn solve(file: String) -> u64 {
+        let (ip_reg, insts) = parse(file);
+        let mut reg = vec![1, 0, 0, 0, 0, 0];
+
+        while let Some((opcode, a, b ,c)) = insts.get(reg[ip_reg] as usize) {
+            reg = operate(&reg, opcode, &vec![*a,*b,*c]);
+            if reg[ip_reg] == 0 { break;}
+            reg[ip_reg] += 1;
+        }
+        println!("{reg:?}");
+        // reg[0].try_into().unwrap()
+        let n = reg[5] as u64;
+        (1..=n.isqrt())
+            .filter(|d| n % d == 0)
+            .map(|d| if d * d == n { d } else { d + n / d})
+            .sum()
     }
 }

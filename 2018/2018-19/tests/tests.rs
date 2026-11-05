@@ -10,6 +10,5 @@ addr 1 2 3
 setr 1 0 0
 seti 8 0 4
 seti 9 0 5",
-    part1: (part1::solve, 7),
-    part2: (part2::solve, 0)
+    part1: (part1::solve, 7)
 );
