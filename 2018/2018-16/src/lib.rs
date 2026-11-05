@@ -37,65 +37,65 @@ const ALL_OPCODE: [Opcode; 16] = [
     Opcode::Eqrr,
 ];
 
-pub fn operate(reg: &[usize], opcode: &Opcode, oprand: &[usize]) -> Vec<usize> {
+pub fn operate(reg: &[u64], opcode: &Opcode, oprand: &[u64]) -> Vec<u64> {
     let mut output = reg.to_vec();
     let opr_a = oprand[0];
     let opr_b = oprand[1];
     let opr_c = oprand[2];
     match opcode {
         Opcode::Addr => {
-            output[opr_c] = reg[opr_a] + reg[opr_b];
+            output[opr_c as usize] = reg[opr_a as usize] + reg[opr_b as usize];
         }
         Opcode::Addi => {
-            output[opr_c] = reg[opr_a] + opr_b;
+            output[opr_c as usize] = reg[opr_a as usize] + opr_b;
         }
         Opcode::Mulr => {
-            output[opr_c] = reg[opr_a] * reg[opr_b];
+            output[opr_c as usize] = reg[opr_a as usize] * reg[opr_b as usize];
         }
         Opcode::Muli => {
-            output[opr_c] = reg[opr_a] * opr_b;
+            output[opr_c as usize] = reg[opr_a as usize] * opr_b;
         }
         Opcode::Banr => {
-            output[opr_c] = reg[opr_a] & reg[opr_b];
+            output[opr_c as usize] = reg[opr_a as usize] & reg[opr_b as usize];
         }
         Opcode::Bani => {
-            output[opr_c] = reg[opr_a] & opr_b;
+            output[opr_c as usize] = reg[opr_a as usize] & opr_b;
         }
         Opcode::Borr => {
-            output[opr_c] = reg[opr_a] | reg[opr_b];
+            output[opr_c as usize] = reg[opr_a as usize] | reg[opr_b as usize];
         }
         Opcode::Bori => {
-            output[opr_c] = reg[opr_a] | opr_b;
+            output[opr_c as usize] = reg[opr_a as usize] | opr_b;
         }
         Opcode::Setr => {
-            output[opr_c] = reg[opr_a];
+            output[opr_c as usize] = reg[opr_a as usize];
         }
         Opcode::Seti => {
-            output[opr_c] = opr_a;
+            output[opr_c as usize] = opr_a;
         }
         Opcode::Gtir => {
-            output[opr_c] = if opr_a > reg[opr_b] { 1 } else { 0 };
+            output[opr_c as usize] = if opr_a > reg[opr_b as usize] { 1 } else { 0 };
         }
         Opcode::Gtri => {
-            output[opr_c] = if reg[opr_a] > opr_b { 1 } else { 0 };
+            output[opr_c as usize] = if reg[opr_a as usize] > opr_b { 1 } else { 0 };
         }
         Opcode::Gtrr => {
-            output[opr_c] = if reg[opr_a] > reg[opr_b] { 1 } else { 0 };
+            output[opr_c as usize] = if reg[opr_a as usize] > reg[opr_b as usize] { 1 } else { 0 };
         }
         Opcode::Eqir => {
-            output[opr_c] = if opr_a == reg[opr_b] { 1 } else { 0 };
+            output[opr_c as usize] = if opr_a == reg[opr_b as usize] { 1 } else { 0 };
         }
         Opcode::Eqri => {
-            output[opr_c] = if reg[opr_a] == opr_b { 1 } else { 0 };
+            output[opr_c as usize] = if reg[opr_a as usize] == opr_b { 1 } else { 0 };
         }
         Opcode::Eqrr => {
-            output[opr_c] = if reg[opr_a] == reg[opr_b] { 1 } else { 0 };
+            output[opr_c as usize] = if reg[opr_a as usize] == reg[opr_b as usize] { 1 } else { 0 };
         }
     }
     output.to_vec()
 }
 
-pub fn parse(file: String) -> (Vec<Vec<Vec<usize>>>, Vec<Vec<usize>>) {
+pub fn parse(file: String) -> (Vec<Vec<Vec<u64>>>, Vec<Vec<u64>>) {
     use regex::Regex;
     let (case_str, inst_str) = file.split_once("\n\n\n").unwrap();
     let regex = Regex::new(r"(\d+)").unwrap();
@@ -107,7 +107,7 @@ pub fn parse(file: String) -> (Vec<Vec<Vec<usize>>>, Vec<Vec<usize>>) {
                     .map(|line| {
                         regex
                             .captures_iter(line)
-                            .map(|nstr| nstr.get(1).unwrap().as_str().parse::<usize>().unwrap())
+                            .map(|nstr| nstr.get(1).unwrap().as_str().parse::<u64>().unwrap())
                             .collect::<Vec<_>>()
                     })
                     .collect::<Vec<_>>()
@@ -118,7 +118,7 @@ pub fn parse(file: String) -> (Vec<Vec<Vec<usize>>>, Vec<Vec<usize>>) {
             .filter(|line| !line.is_empty())
             .map(|line| {
                 line.split_whitespace()
-                    .map(|str| str.parse::<usize>().unwrap())
+                    .map(|str| str.parse::<u64>().unwrap())
                     .collect::<Vec<_>>()
             })
             .collect::<Vec<_>>(),
@@ -144,7 +144,7 @@ pub mod part1 {
                         let output = operate(
                             &before,
                             opcode,
-                            &inst.iter().skip(1).copied().collect::<Vec<usize>>(),
+                            &inst.iter().skip(1).copied().collect::<Vec<u64>>(),
                         );
 
                         output == after
@@ -172,8 +172,8 @@ pub mod part2 {
             let inst = case[1].clone();
             let after = case[2].clone();
 
-            let oprand = inst.iter().skip(1).copied().collect::<Vec<usize>>();
-            let op_candidate = opcode_convert.get_mut(&inst[0]).unwrap();
+            let oprand = inst.iter().skip(1).copied().collect::<Vec<u64>>();
+            let op_candidate = opcode_convert.get_mut(&(inst[0] as usize)).unwrap();
 
             let ops = op_candidate.iter().copied().collect::<Vec<Opcode>>();
 
@@ -211,11 +211,11 @@ pub mod part2 {
         for inst in insts {
             let opcode_n = inst[0];
             let oprand = inst[1..].to_vec();
-            let opcode = opcode_final.get(&opcode_n).unwrap();
+            let opcode = opcode_final.get(&(opcode_n as usize)).unwrap();
             reg = operate(&reg, opcode, &oprand);
             println!("{opcode:?} {oprand:?} => {reg:?}");
         }
 
-        reg[0]
+        reg[0].try_into().unwrap()
     }
 }
