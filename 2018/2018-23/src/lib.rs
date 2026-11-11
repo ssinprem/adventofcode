@@ -1,4 +1,6 @@
-pub fn parse(file: String) -> Vec<((isize, isize, isize), usize)> {
+pub type P = (isize, isize, isize);
+
+pub fn parse(file: String) -> Vec<(P, usize)> {
     let regex = regex::Regex::new(r"pos=<([-0-9]+),([-0-9]+),([-0-9]+)>, r=(\d+)").unwrap();
     file.lines()
         .map(|line| {
@@ -12,7 +14,7 @@ pub fn parse(file: String) -> Vec<((isize, isize, isize), usize)> {
         .collect()
 }
 
-pub fn range(bot1: &(isize, isize, isize), bot2: &(isize, isize, isize)) -> usize {
+pub fn range(bot1: &P, bot2: &P) -> usize {
     bot1.0.abs_diff(bot2.0) + bot1.1.abs_diff(bot2.1) + bot1.2.abs_diff(bot2.2)
 }
 
@@ -33,7 +35,61 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
+    use std::{cmp::Reverse, collections::BinaryHeap};
+
+    use crate::{P, parse, range};
+
+    pub fn solve(file: String) -> usize {
+        let bots = parse(file);
+
+        let count_in = |lo: &P, size: usize| -> usize {
+            bots.iter()
+                .filter(|(p, r)| {
+                    // nearest point of the cube to this bot
+                    let size = size as isize - 1;
+                    let nearest = (
+                        p.0.clamp(lo.0, lo.0 + size),
+                        p.1.clamp(lo.1, lo.1 + size),
+                        p.2.clamp(lo.2, lo.2 + size),
+                    );
+                    range(p, &nearest) <= *r
+                })
+                .count()
+        };
+
+        let min = bots
+            .iter()
+            .map(|(p, _)| p.0.min(p.1).min(p.2))
+            .min()
+            .unwrap();
+        let max = bots
+            .iter()
+            .map(|(p, _)| p.0.max(p.1).max(p.2))
+            .max()
+            .unwrap();
+        let mut size = 1_usize;
+        while size < (max - min + 1) as usize {
+            size *= 2;
+        }
+        let lo = (min, min, min);
+        let mut heap = BinaryHeap::new();
+
+        heap.push((count_in(&lo, size), Reverse(size), lo));
+        while let Some((_count, Reverse(size), lo)) = heap.pop() {
+            if size == 1 {
+                return range(&lo, &(0, 0, 0));
+            }
+            let half = size / 2;
+            for dx in [0, half as isize] {
+                for dy in [0, half as isize] {
+                    for dz in [0, half as isize] {
+                        let c = (lo.0 + dx, lo.1 + dy, lo.2 + dz);
+                        heap.push((count_in(&c, half), Reverse(half), c));
+                    }
+                }
+            }
+        }
+
         0
     }
 }
