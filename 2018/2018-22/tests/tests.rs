@@ -5,5 +5,5 @@ test_case_n!(example,
 "depth: 510
 target: 10,10",
     part1: (part1::solve, 114),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 45)
 );
