@@ -127,68 +127,72 @@ pub fn parse(file: String) -> Vec<Group> {
     groups
 }
 
-pub mod part1 {
-    use crate::{Team, parse};
+pub fn battle(groups: &mut Vec<Group>) {
     use std::cmp::Reverse;
+
+    // target selection  , sort from Effective Power, Initiative
+    groups.sort_by_key(|g| (Reverse(g.units * g.atk), Reverse(g.initiative)));
+    let mut taken = vec![];
+    for g in groups.clone() {
+        let mut target = vec![];
+        let enemys = groups
+            .iter()
+            .filter(|e| e.team != g.team)
+            .collect::<Vec<_>>();
+        let atk = g.atk * g.units;
+
+        for enemy in enemys {
+            if taken
+                .iter()
+                .map(|(_init, _a, t)| t)
+                .collect::<Vec<_>>()
+                .contains(&&enemy.name)
+            {
+                continue;
+            }
+
+            let mut damage = atk;
+            let eff_pwr = enemy.units * enemy.atk;
+            if enemy.weak.contains(&g.atype) {
+                damage *= 2;
+            } else if enemy.immune.contains(&g.atype) {
+                continue;
+            }
+
+            target.push((enemy.name.to_string(), damage, eff_pwr, enemy.initiative));
+        }
+        target.sort_by_key(|t| (Reverse(t.1), Reverse(t.2), Reverse(t.3)));
+        if !target.is_empty() {
+            taken.push((g.initiative, g.name, target.first().unwrap().0.to_string()));
+        }
+    }
+
+    // attacking  sort by Initiative
+    taken.sort_by_key(|(init, _, _)| Reverse(*init));
+    for (_init, a, d) in taken {
+        let atk = groups.iter().find(|g| g.name == a).unwrap();
+        let (atk_power, atk_type) = (atk.atk * atk.units, atk.atype.clone());
+        let def_id = groups.iter().position(|g| g.name == d).unwrap();
+        {
+            let def = groups.get_mut(def_id).unwrap();
+
+            let mut damage = atk_power;
+            if def.weak.contains(&atk_type) {
+                damage *= 2;
+            }
+            let loss = damage / def.hp;
+            def.units = def.units.saturating_sub(loss);
+        }
+    }
+}
+
+pub mod part1 {
+    use crate::{Team, battle, parse};
 
     pub fn solve(file: String) -> usize {
         let mut groups = parse(file);
         loop {
-            // target selection  , sort from Effective Power, Initiative
-            groups.sort_by_key(|g| (Reverse(g.units * g.atk), Reverse(g.initiative)));
-            let mut taken = vec![];
-            for g in groups.clone() {
-                let mut target = vec![];
-                let enemys = groups
-                    .iter()
-                    .filter(|e| e.team != g.team)
-                    .collect::<Vec<_>>();
-                let atk = g.atk * g.units;
-
-                for enemy in enemys {
-                    if taken
-                        .iter()
-                        .map(|(_init, _a, t)| t)
-                        .collect::<Vec<_>>()
-                        .contains(&&enemy.name)
-                    {
-                        continue;
-                    }
-
-                    let mut damage = atk;
-                    let eff_pwr = enemy.units * enemy.atk;
-                    if enemy.weak.contains(&g.atype) {
-                        damage *= 2;
-                    } else if enemy.immune.contains(&g.atype) {
-                        continue;
-                    }
-
-                    target.push((enemy.name.to_string(), damage, eff_pwr, enemy.initiative));
-                }
-                target.sort_by_key(|t| (Reverse(t.1), Reverse(t.2), Reverse(t.3)));
-                if !target.is_empty() {
-                    taken.push((g.initiative, g.name, target.first().unwrap().0.to_string()));
-                }
-            }
-
-            // attacking  sort by Initiative
-            taken.sort_by_key(|(init, _, _)| Reverse(*init));
-            for (_init, a, d) in taken {
-                let atk = groups.iter().find(|g| g.name == a).unwrap();
-                let (atk_power, atk_type) = (atk.atk * atk.units, atk.atype.clone());
-                let def_id = groups.iter().position(|g| g.name == d).unwrap();
-                {
-                    let def = groups.get_mut(def_id).unwrap();
-
-                    let mut damage = atk_power;
-                    if def.weak.contains(&atk_type) {
-                        damage *= 2;
-                    }
-                    let loss = damage / def.hp;
-                    def.units = def.units.saturating_sub(loss);
-                }
-            }
-
+            battle(&mut groups);
             groups.retain(|g| g.units > 0);
             if groups.iter().all(|g| g.team == Team::Immune)
                 || groups.iter().all(|g| g.team == Team::Infection)
@@ -196,13 +200,40 @@ pub mod part1 {
                 break;
             }
         }
-
         groups.iter().map(|g| g.units).sum::<usize>()
     }
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
+    use crate::{Team, battle, parse};
+
+    pub fn solve(file: String) -> usize {
+        let origin_groups = parse(file);
+        for i in 1.. {
+            let mut groups = origin_groups.clone();
+            groups = groups.into_iter().map(|mut g| {
+                if g.team == Team::Immune {
+                    g.atk += i;
+                }
+                g
+            }).collect::<Vec<_>>();
+            loop {
+                let units = groups.iter().map(|g| g.units).sum::<usize>();
+                battle(&mut groups);
+                groups.retain(|g| g.units > 0);
+                // units non change, skip this round
+                if units == groups.iter().map(|g| g.units).sum() {
+                    break;
+                }
+                if groups.iter().all(|g| g.team == Team::Infection)
+                {
+                    break;
+                } else if groups.iter().all(|g| g.team == Team::Immune)
+                {
+                    return groups.iter().map(|g| g.units).sum();
+                }
+            }
+        }
         0
     }
 }
