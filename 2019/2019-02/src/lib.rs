@@ -9,7 +9,6 @@ pub fn process(memory: &[usize]) -> Vec<usize> {
     let mut pc = 0;
     loop {
         let inst = memory[pc];
-
         if inst == 1 {
             let a_pos = memory[pc + 1];
             let b_pos = memory[pc + 2];
@@ -55,7 +54,23 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
+    use crate::{parse, process};
+    const TARGET: usize = 19690720;
+
+    pub fn solve(file: String) -> usize {
+        let memory = parse(file);
+
+        for i in 0..=99 {
+            for j in 0..=99 {
+                let mut temp = memory.clone();
+                temp[1] = i;
+                temp[2] = j;
+                let temp = process(&temp);
+                if temp[0] == TARGET {
+                    return i * 100 + j;
+                }
+            }
+        }
         0
     }
 }
