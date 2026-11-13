@@ -1,5 +1,5 @@
 pub fn fuel(mass: usize) -> usize {
-    (mass / 3) - 2
+    (mass / 3).saturating_sub(2)
 }
 
 pub mod part1 {
@@ -16,7 +16,23 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+use crate::fuel;
+
+    pub fn solve(file: String) -> usize {
+        file.lines()
+            .map(|line| {
+                let mass = line.parse::<usize>().unwrap();
+                let mut tank = 0;
+                let mut fuels = fuel(mass);
+                tank += fuels;
+                while let fuel_for_fuel = fuel(fuels)
+                && fuel_for_fuel > 0
+                {
+                    tank += fuel_for_fuel;
+                    fuels = fuel_for_fuel;
+                }
+                tank
+            })
+            .sum()
     }
 }
