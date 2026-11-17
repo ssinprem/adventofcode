@@ -1,4 +1,4 @@
-use particle_swarm::*;
+use aoc_2017_20::*;
 use utility::test_case_n;
 
 test_case_n!(example,

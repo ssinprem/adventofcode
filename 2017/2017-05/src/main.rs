@@ -1,4 +1,4 @@
-use a_maze_of_twisty_trampolines_all_alike::*;
+use aoc_2017_05::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

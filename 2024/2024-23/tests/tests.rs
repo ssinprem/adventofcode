@@ -1,4 +1,4 @@
-use party_lan::*;
+use aoc_2024_23::*;
 use utility::test_case_n;
 
 test_case_n!(example,"

@@ -1,4 +1,4 @@
-use immune_system_simulator_20xx::*;
+use aoc_2018_24::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

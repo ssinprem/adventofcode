@@ -1,4 +1,4 @@
-use bridge_repair::*;
+use aoc_2024_07::*;
 use utility::test_case_n;
 
 test_case_n!(example,

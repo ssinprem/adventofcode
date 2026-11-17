@@ -1,4 +1,4 @@
-use experimental_emergency_teleportation::*;
+use aoc_2018_23::*;
 use utility::test_case_n;
 
 test_case_n!(example,

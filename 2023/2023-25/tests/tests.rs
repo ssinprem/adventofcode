@@ -1,4 +1,4 @@
-use snowverload::*;
+use aoc_2023_25::*;
 use utility::test_case_n;
 
 test_case_n!(example,

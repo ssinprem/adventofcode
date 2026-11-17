@@ -1,4 +1,4 @@
-use mode_maze::*;
+use aoc_2018_22::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

@@ -1,4 +1,4 @@
-use cosmic_expansion::*;
+use aoc_2023_11::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

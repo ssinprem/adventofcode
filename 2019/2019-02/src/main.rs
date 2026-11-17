@@ -1,4 +1,4 @@
-use n1202_program_alarm::*;
+use aoc_2019_02::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

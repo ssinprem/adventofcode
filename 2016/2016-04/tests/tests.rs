@@ -1,4 +1,4 @@
-use security_through_obscurity::*;
+use aoc_2016_04::*;
 use utility::test_case_n;
 
 test_case_n!(example,

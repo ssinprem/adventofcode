@@ -1,4 +1,4 @@
-use a_series_of_tubes::*;
+use aoc_2017_19::*;
 use utility::test_case_n;
 
 test_case_n!(example,

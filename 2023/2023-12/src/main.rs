@@ -1,4 +1,4 @@
-use hot_springs::*;
+use aoc_2023_12::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

@@ -1,4 +1,4 @@
-use jsabacusframwork_io::*;
+use aoc_2015_12::*;
 
 #[test]
 fn example_part1() {

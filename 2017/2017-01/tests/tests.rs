@@ -1,4 +1,4 @@
-use inverse_captcha::*;
+use aoc_2017_01::*;
 use utility::test_case_n;
 
 test_case_n!(example1, "1122", part1: (part1::solve, 3));

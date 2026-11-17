@@ -1,4 +1,4 @@
-use point_of_incidence::*;
+use aoc_2023_13::*;
 use utility::test_case_n;
 
 test_case_n!(example,"

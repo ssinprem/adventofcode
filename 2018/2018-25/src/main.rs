@@ -1,4 +1,4 @@
-use four_dimensional_adventure::*;
+use aoc_2018_25::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

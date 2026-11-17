@@ -1,4 +1,4 @@
-use one_time_pad::*;
+use aoc_2016_14::*;
 use utility::test_case_n;
 
 test_case_n!(example,

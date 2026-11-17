@@ -1,4 +1,4 @@
-use the_halting_problem::*;
+use aoc_2017_25::*;
 use utility::test_case_n;
 
 test_case_n!(example,

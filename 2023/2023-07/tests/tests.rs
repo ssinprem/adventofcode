@@ -1,6 +1,6 @@
 use std::{assert_eq, cmp::Ordering};
 
-use camel_card::*;
+use aoc_2023_07::*;
 use utility::test_case_n;
 
 test_case_n!(example,

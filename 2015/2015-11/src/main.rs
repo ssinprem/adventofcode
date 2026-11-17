@@ -1,4 +1,4 @@
-use corparate_policy::*;
+use aoc_2015_11::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

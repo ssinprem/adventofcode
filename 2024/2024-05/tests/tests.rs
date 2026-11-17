@@ -1,4 +1,4 @@
-use print_queue::*;
+use aoc_2024_05::*;
 use utility::test_case_n;
 
 test_case_n!(example,

@@ -1,4 +1,4 @@
-use step_counter::*;
+use aoc_2023_21::*;
 use utility::test_case_n;
 
 test_case_n!(example,

@@ -1,4 +1,4 @@
-use electromagnetic_moat::*;
+use aoc_2017_24::*;
 use utility::test_case_n;
 
 test_case_n!(example,

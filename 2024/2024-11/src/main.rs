@@ -1,4 +1,4 @@
-use plutonian_pebbles::*;
+use aoc_2024_11::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

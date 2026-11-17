@@ -1,4 +1,4 @@
-use dueling_generators::*;
+use aoc_2017_15::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

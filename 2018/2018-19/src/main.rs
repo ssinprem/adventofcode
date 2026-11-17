@@ -1,4 +1,4 @@
-use go_with_the_flow::*;
+use aoc_2018_19::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

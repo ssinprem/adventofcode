@@ -1,4 +1,4 @@
-use reindeer_olympics::*;
+use aoc_2015_14::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

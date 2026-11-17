@@ -1,4 +1,4 @@
-use reactor::*;
+use aoc_2025_11::*;
 use utility::test_case_n;
 
 test_case_n!(example,

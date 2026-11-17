@@ -1,4 +1,4 @@
-use fractal_art::*;
+use aoc_2017_21::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

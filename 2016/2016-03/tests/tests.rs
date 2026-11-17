@@ -1,4 +1,4 @@
-use squares_with_three_sides::*;
+use aoc_2016_03::*;
 use utility::test_case_n;
 
 test_case_n!(example,

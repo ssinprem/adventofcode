@@ -1,4 +1,4 @@
-use factory::*;
+use aoc_2025_10::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

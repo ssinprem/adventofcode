@@ -1,4 +1,4 @@
-use memory_maneuver::*;
+use aoc_2018_08::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

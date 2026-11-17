@@ -1,4 +1,4 @@
-use hoof_it::*;
+use aoc_2024_10::*;
 use utility::test_case_n;
 
 test_case_n!(example,"

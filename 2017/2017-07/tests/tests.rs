@@ -1,4 +1,4 @@
-use recursive_circus::*;
+use aoc_2017_07::*;
 use utility::test_case_n;
 
 test_case_n!(example,

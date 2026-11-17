@@ -1,4 +1,4 @@
-use factory::*;
+use aoc_2025_10::*;
 use utility::*;
 
 test_case_n!(example,

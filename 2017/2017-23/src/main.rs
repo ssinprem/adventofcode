@@ -1,4 +1,4 @@
-use coprocessor_conflagration::*;
+use aoc_2017_23::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

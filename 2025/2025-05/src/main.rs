@@ -1,4 +1,4 @@
-use cafetaria::*;
+use aoc_2025_05::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

@@ -1,4 +1,4 @@
-use bridge_repair::*;
+use aoc_2024_07::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

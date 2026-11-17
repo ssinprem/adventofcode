@@ -1,4 +1,4 @@
-use explosives_in_cyberspace::*;
+use aoc_2016_09::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

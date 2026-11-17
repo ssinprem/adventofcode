@@ -1,5 +1,5 @@
-use chronal_classification::{Opcode, operate};
-use go_with_the_flow::parse;
+use aoc_2018_16::{Opcode, operate};
+use aoc_2018_19::parse;
 
 /// Run the program (with reg0 = 0) and yield the value that register 0 is
 /// compared against each time the halting check (`eqrr x 0 y`) executes.

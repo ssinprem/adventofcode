@@ -1,4 +1,4 @@
-use ram_run::*;
+use aoc_2024_18::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

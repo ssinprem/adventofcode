@@ -1,4 +1,4 @@
-use dragon_checksum::*;
+use aoc_2016_16::*;
 use utility::test_case_n;
 
 test_case_n!(example1,

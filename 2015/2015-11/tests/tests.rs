@@ -1,4 +1,4 @@
-use corparate_policy::*;
+use aoc_2015_11::*;
 use utility::test_case_n;
 
 test_case_n!(example1,

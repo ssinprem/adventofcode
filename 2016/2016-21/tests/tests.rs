@@ -1,4 +1,4 @@
-use scrambles_letters_and_hash::*;
+use aoc_2016_21::*;
 use utility::test_case_n;
 
 test_case_n!(example,

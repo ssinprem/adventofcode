@@ -1,4 +1,4 @@
-use crossed_wires_2024_03::*;
+use aoc_2019_03::*;
 use utility::test_case_n;
 
 test_case_n!(example1,

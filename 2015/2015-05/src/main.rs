@@ -1,4 +1,4 @@
-use doesnt_he_have_intern_elves_for_this::*;
+use aoc_2015_05::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

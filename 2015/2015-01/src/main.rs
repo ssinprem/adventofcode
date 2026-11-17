@@ -1,4 +1,4 @@
-use not_quite_lisp::*;
+use aoc_2015_01::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

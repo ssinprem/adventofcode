@@ -1,5 +1,5 @@
 use utility::test_case_n;
-use warehouse_woes::*;
+use aoc_2024_15::*;
 
 test_case_n!(smaller_example,"
 ########

@@ -1,4 +1,4 @@
-use party_lan::*;
+use aoc_2024_23::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

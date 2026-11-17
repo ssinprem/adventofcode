@@ -1,4 +1,4 @@
-use monkey_market::{part2::{get_changes, get_sell_price}, *};
+use aoc_2024_22::{part2::{get_changes, get_sell_price}, *};
 use utility::test_case_n;
 
 test_case_n!(example,"

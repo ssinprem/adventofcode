@@ -1,4 +1,4 @@
-use mode_maze::*;
+use aoc_2018_22::*;
 use utility::test_case_n;
 
 test_case_n!(example,

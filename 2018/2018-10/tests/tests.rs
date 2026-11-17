@@ -1,4 +1,4 @@
-use the_stars_align::*;
+use aoc_2018_10::*;
 use utility::test_case_n;
 
 test_case_n!(example,

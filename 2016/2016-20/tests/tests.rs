@@ -1,4 +1,4 @@
-use firwall_rules::*;
+use aoc_2016_20::*;
 use utility::test_case_n;
 
 test_case_n!(example,

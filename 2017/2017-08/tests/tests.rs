@@ -1,4 +1,4 @@
-use i_heard_you_like_registers::*;
+use aoc_2017_08::*;
 use utility::test_case_n;
 
 test_case_n!(example,

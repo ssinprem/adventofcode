@@ -1,4 +1,4 @@
-use print_dept::*;
+use aoc_2025_04::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

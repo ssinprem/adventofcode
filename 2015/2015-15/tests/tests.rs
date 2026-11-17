@@ -1,4 +1,4 @@
-use science_for_hungry_people::*;
+use aoc_2015_15::*;
 use utility::test_case_n;
 
 test_case_n!(example,

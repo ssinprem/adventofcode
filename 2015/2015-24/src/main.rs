@@ -1,4 +1,4 @@
-use it_hangs_in_the_balance::*;
+use aoc_2015_24::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

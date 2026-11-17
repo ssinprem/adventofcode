@@ -1,4 +1,4 @@
-use monkey_market::*;
+use aoc_2024_22::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

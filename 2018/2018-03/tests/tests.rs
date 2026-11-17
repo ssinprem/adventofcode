@@ -1,4 +1,4 @@
-use no_matter_how_you_slice_it::*;
+use aoc_2018_03::*;
 use utility::test_case_n;
 
 test_case_n!(example,

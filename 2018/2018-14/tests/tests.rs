@@ -1,4 +1,4 @@
-use chocolate_charts::*;
+use aoc_2018_14::*;
 use utility::test_case_n;
 
 test_case_n!(example1, "9", part1: (part1::solve, "5158916779".to_string(), &[3,7]));

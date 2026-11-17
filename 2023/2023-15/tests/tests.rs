@@ -1,4 +1,4 @@
-use lens_library::*;
+use aoc_2023_15::*;
 use utility::test_case_n;
 
 test_case_n!(example,

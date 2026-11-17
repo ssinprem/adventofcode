@@ -1,4 +1,4 @@
-use doesnt_he_have_intern_elves_for_this::*;
+use aoc_2015_05::*;
 
 #[test]
 fn example_part1(){

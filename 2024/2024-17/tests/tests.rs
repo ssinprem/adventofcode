@@ -1,4 +1,4 @@
-use chronospatial_computer::*;
+use aoc_2024_17::*;
 use utility::test_case_n;
 
 test_case_n!(example,"

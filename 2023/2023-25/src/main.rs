@@ -1,4 +1,4 @@
-use snowverload::*;
+use aoc_2023_25::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

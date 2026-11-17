@@ -1,4 +1,4 @@
-use ram_run::*;
+use aoc_2024_18::*;
 use utility::test_case_n;
 
 test_case_n!(example,"

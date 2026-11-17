@@ -1,4 +1,4 @@
-use chronal_charge::*;
+use aoc_2018_11::*;
 use utility::test_case_n;
 
 test_case_n!(example1, "18",

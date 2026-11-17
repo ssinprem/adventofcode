@@ -1,4 +1,4 @@
-use an_elephant_named_joseph::*;
+use aoc_2016_19::*;
 use utility::test_case_n;
 
 test_case_n!(example,

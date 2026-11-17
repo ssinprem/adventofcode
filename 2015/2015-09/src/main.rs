@@ -1,4 +1,4 @@
-use all_in_a_single_night::*;
+use aoc_2015_09::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

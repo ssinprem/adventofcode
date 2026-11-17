@@ -1,4 +1,4 @@
-use balance_bots::*;
+use aoc_2016_10::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

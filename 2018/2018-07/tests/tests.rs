@@ -1,4 +1,4 @@
-use the_sum_of_its_parts::*;
+use aoc_2018_07::*;
 use utility::test_case_n;
 
 test_case_n!(example,

@@ -1,4 +1,4 @@
-use spiral_memory::*;
+use aoc_2017_03::*;
 use std::error::Error;
 
 fn main() -> Result<(), Box<dyn Error>> {

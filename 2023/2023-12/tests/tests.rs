@@ -1,6 +1,6 @@
 use std::assert_eq;
 
-use hot_springs::*;
+use aoc_2023_12::*;
 use utility::test_case_n;
 
 test_case_n!(example1, "

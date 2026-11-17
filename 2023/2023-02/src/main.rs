@@ -1,4 +1,4 @@
-use cube_conundrum::*;
+use aoc_2023_02::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

@@ -1,4 +1,4 @@
-use explosives_in_cyberspace::*;
+use aoc_2016_09::*;
 use utility::test_case_n;
 
 test_case_n!(example1, "ADVENT", part1: (part1::solve, 6));

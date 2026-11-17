@@ -1,4 +1,4 @@
-use timing_is_everything::*;
+use aoc_2016_15::*;
 use utility::test_case_n;
 
 test_case_n!(example,

@@ -1,4 +1,4 @@
-use inventory_management_system::*;
+use aoc_2018_02::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

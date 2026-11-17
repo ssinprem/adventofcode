@@ -1,4 +1,4 @@
-use infinite_elves_and_infinite_houses::*;
+use aoc_2015_20::*;
 use utility::test_case_n;
 
 test_case_n!(example,

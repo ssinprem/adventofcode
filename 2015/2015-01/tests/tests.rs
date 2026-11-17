@@ -1,4 +1,4 @@
-use not_quite_lisp::*;
+use aoc_2015_01::*;
 
 #[test]
 fn example_part1() {

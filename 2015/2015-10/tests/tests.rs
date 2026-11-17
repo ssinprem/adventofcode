@@ -1,4 +1,4 @@
-use elves_look_elves_say::*;
+use aoc_2015_10::*;
 use utility::test_case_n;
 
 test_case_n!(example,

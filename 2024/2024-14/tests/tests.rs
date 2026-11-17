@@ -1,4 +1,4 @@
-use restroon_redoubt::*;
+use aoc_2024_14::*;
 use utility::test_case_n;
 
 test_case_n!(example,"

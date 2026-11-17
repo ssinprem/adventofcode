@@ -1,4 +1,4 @@
-use cube_conundrum::*;
+use aoc_2023_02::*;
 use utility::test_case_n;
 
 test_case_n!(example,

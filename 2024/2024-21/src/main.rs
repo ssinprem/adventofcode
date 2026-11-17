@@ -1,4 +1,4 @@
-use keypad_conundrum::*;
+use aoc_2024_21::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

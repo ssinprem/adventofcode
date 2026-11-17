@@ -1,4 +1,4 @@
-use jsabacusframwork_io::*;
+use aoc_2015_12::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

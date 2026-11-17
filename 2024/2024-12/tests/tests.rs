@@ -1,4 +1,4 @@
-use garden_groups::*;
+use aoc_2024_12::*;
 use utility::test_case_n;
 
 test_case_n!(first_example,"

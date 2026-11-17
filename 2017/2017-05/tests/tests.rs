@@ -1,4 +1,4 @@
-use a_maze_of_twisty_trampolines_all_alike::*;
+use aoc_2017_05::*;
 use utility::test_case_n;
 
 test_case_n!(example,

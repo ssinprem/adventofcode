@@ -1,4 +1,4 @@
-use a_long_walk::*;
+use aoc_2023_23::*;
 use utility::test_case_n;
 
 test_case_n!(example,

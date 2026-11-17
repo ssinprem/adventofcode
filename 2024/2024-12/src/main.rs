@@ -1,4 +1,4 @@
-use garden_groups::*;
+use aoc_2024_12::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

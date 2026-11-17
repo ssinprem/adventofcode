@@ -1,4 +1,4 @@
-use secret_entrance::*;
+use aoc_2025_01::*;
 use utility::test_case_n;
 
 test_case_n!(basic,

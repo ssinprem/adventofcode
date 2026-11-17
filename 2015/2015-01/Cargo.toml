@@ -1,5 +1,5 @@
 [package]
-name = "not_quite_lisp"
+name = "aoc_2015_01"
 version = "0.1.0"
 edition = "2024"
 

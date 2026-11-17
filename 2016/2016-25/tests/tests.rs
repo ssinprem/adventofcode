@@ -1,4 +1,4 @@
-use clock_signal::*;
+use aoc_2016_25::*;
 use utility::test_case_n;
 
 test_case_n!(example,

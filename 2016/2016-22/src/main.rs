@@ -1,4 +1,4 @@
-use grid_computing::*;
+use aoc_2016_22::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

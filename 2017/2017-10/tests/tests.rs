@@ -1,4 +1,4 @@
-use knot_hash::*;
+use aoc_2017_10::*;
 use utility::test_case_n;
 
 test_case_n!(example,

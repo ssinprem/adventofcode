@@ -1,4 +1,4 @@
-use clock_signal::*;
+use aoc_2016_25::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

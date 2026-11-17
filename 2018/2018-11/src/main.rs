@@ -1,4 +1,4 @@
-use chronal_charge::*;
+use aoc_2018_11::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

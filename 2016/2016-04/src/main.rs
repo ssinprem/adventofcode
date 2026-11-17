@@ -1,4 +1,4 @@
-use security_through_obscurity::*;
+use aoc_2016_04::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

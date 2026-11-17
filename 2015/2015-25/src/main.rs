@@ -1,4 +1,4 @@
-use let_it_snow::*;
+use aoc_2015_25::*;
 use std::error::Error;
 
 fn main() -> Result<(), Box<dyn Error>>{

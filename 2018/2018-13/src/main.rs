@@ -1,4 +1,4 @@
-use mine_cart_madness::*;
+use aoc_2018_13::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

@@ -1,4 +1,4 @@
-use spiral_memory::*;
+use aoc_2017_03::*;
 
 #[test]
 fn test_part1() {

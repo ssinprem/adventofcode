@@ -1,4 +1,4 @@
-use reindeer_maze::*;
+use aoc_2024_16::*;
 use utility::test_case_n;
 
 test_case_n!(example,"

@@ -1,4 +1,4 @@
-use crossed_wires::*;
+use aoc_2024_24::*;
 use utility::test_case_n;
 
 test_case_n!(small_example,"

@@ -1,4 +1,4 @@
-use the_ideal_stocking_stuffer::*;
+use aoc_2015_04::*;
 use utility::test_case_n;
 
 test_case_n!(example1,

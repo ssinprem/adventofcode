@@ -1,4 +1,4 @@
-use internet_protocol_v7::*;
+use aoc_2016_07::*;
 use utility::test_case_n;
 
 test_case_n!(example,

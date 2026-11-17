@@ -1,4 +1,4 @@
-use sporifica_virus::*;
+use aoc_2017_22::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

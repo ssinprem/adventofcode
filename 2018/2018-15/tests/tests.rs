@@ -1,4 +1,4 @@
-use beverage_bandits::*;
+use aoc_2018_15::*;
 use utility::test_case_n;
 
 test_case_n!(example1,

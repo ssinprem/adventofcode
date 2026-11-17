@@ -1,4 +1,4 @@
-use cosmic_expansion::*;
+use aoc_2023_11::*;
 use utility::test_case_n;
 
 test_case_n!(example,"

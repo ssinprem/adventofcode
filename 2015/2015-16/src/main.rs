@@ -1,4 +1,4 @@
-use aunt_sue::*;
+use aoc_2015_16::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

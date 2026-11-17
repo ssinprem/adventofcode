@@ -1,4 +1,4 @@
-use plutonian_pebbles::*;
+use aoc_2024_11::*;
 use utility::test_case_n;
 
 test_case_n!(example,

@@ -1,4 +1,4 @@
-use air_duct_spelunking::*;
+use aoc_2016_24::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

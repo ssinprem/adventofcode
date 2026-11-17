@@ -1,4 +1,4 @@
-use probably_a_fire_hazard::*;
+use aoc_2015_06::*;
 use utility::test_case_n;
 
 test_case_n!(example,

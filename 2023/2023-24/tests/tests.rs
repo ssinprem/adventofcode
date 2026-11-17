@@ -1,4 +1,4 @@
-use never_tell_me_the_odds::*;
+use aoc_2023_24::*;
 use utility::test_case_n;
 
 test_case_n!(example,

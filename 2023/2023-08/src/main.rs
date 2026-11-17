@@ -1,4 +1,4 @@
-use haunted_wasteland::*;
+use aoc_2023_08::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

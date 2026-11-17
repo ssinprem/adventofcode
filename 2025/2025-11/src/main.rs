@@ -1,4 +1,4 @@
-use reactor::*;
+use aoc_2025_11::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

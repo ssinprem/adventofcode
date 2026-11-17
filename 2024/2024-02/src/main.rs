@@ -1,4 +1,4 @@
-use rednosed_reports::*;
+use aoc_2024_02::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

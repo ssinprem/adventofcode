@@ -1,4 +1,4 @@
-use the_tyranny_of_the_rocket_equation::*;
+use aoc_2019_01::*;
 
 #[test]
 fn test_part1() {

@@ -1,4 +1,4 @@
-use grid_computing::*;
+use aoc_2016_22::*;
 use utility::test_case_n;
 
 test_case_n!(example,

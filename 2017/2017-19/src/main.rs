@@ -1,4 +1,4 @@
-use a_series_of_tubes::*;
+use aoc_2017_19::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

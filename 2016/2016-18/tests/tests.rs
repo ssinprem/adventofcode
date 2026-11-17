@@ -1,4 +1,4 @@
-use like_a_rogue::*;
+use aoc_2016_18::*;
 use utility::test_case_n;
 
 test_case_n!(example1,

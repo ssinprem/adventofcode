@@ -1,4 +1,4 @@
-use memory_reallocation::*;
+use aoc_2017_06::*;
 use utility::test_case_n;
 
 test_case_n!(example,

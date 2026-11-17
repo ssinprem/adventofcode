@@ -1,4 +1,4 @@
-use electromagnetic_moat::*;
+use aoc_2017_24::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

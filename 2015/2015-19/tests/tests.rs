@@ -1,4 +1,4 @@
-use medicine_for_rudolph::*;
+use aoc_2015_19::*;
 use utility::test_case_n;
 
 test_case_n!(example1,

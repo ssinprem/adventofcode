@@ -1,4 +1,4 @@
-use christmas_tree_farm::*;
+use aoc_2025_12::*;
 
 #[test]
 fn test_display_non_rotate() {

@@ -1,4 +1,4 @@
-use pipe_maze::*;
+use aoc_2023_10::*;
 use utility::test_case_n;
 
 test_case_n!(example,"

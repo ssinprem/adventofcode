@@ -1,5 +1,5 @@
 [package]
-name = "inverse_captcha"
+name = "aoc_2017_01"
 version = "0.1.0"
 edition = "2024"
 

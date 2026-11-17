@@ -1,4 +1,4 @@
-use pulse_propagation::*;
+use aoc_2023_20::*;
 use utility::test_case_n;
 
 test_case_n!(example,

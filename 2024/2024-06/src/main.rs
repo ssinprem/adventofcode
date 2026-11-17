@@ -1,4 +1,4 @@
-use guard_gallivant::*;
+use aoc_2024_06::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

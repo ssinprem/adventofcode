@@ -1,4 +1,4 @@
-use no_time_for_a_taxicab::*;
+use aoc_2016_01::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

@@ -1,4 +1,4 @@
-use christmas_tree_farm::*;
+use aoc_2025_12::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

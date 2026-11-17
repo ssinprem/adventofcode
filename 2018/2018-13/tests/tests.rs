@@ -1,4 +1,4 @@
-use mine_cart_madness::*;
+use aoc_2018_13::*;
 use utility::test_case_n;
 
 test_case_n!(example,

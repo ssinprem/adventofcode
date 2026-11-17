@@ -1,4 +1,4 @@
-use never_tell_me_the_odds::*;
+use aoc_2023_24::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

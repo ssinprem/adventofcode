@@ -1,4 +1,4 @@
-use parabolic_reflector_dish::*;
+use aoc_2023_14::*;
 use utility::test_case_n;
 
 test_case_n!(example,"

@@ -1,4 +1,4 @@
-use chronal_coordinates::*;
+use aoc_2018_06::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

@@ -1,4 +1,4 @@
-use a_long_walk::*;
+use aoc_2023_23::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

@@ -1,4 +1,4 @@
-use code_chronicle::*;
+use aoc_2024_25::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

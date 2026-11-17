@@ -1,5 +1,5 @@
 use utility::test_case_n;
-use wait_for_it::*;
+use aoc_2023_06::*;
 
 test_case_n!(example,
 "Time:      7  15   30

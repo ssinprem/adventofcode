@@ -1,6 +1,6 @@
 use std::error::Error;
 use std::fs::read_to_string;
-use the_sum_of_its_parts::*;
+use aoc_2018_07::*;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let file = read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/input.txt"))?;

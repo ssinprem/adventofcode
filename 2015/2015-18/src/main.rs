@@ -1,4 +1,4 @@
-use like_a_gif_for_your_yard::*;
+use aoc_2015_18::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

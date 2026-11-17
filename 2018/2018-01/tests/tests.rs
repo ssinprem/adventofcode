@@ -1,4 +1,4 @@
-use chronal_calibration::*;
+use aoc_2018_01::*;
 use utility::test_case_n;
 
 test_case_n!(example1,

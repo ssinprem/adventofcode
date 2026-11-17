@@ -1,4 +1,4 @@
-use signals_and_noise::*;
+use aoc_2016_06::*;
 use utility::test_case_n;
 
 test_case_n!(example,

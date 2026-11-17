@@ -1,4 +1,4 @@
-use haunted_wasteland::*;
+use aoc_2023_08::*;
 use utility::test_case_n;
 
 test_case_n!(example,

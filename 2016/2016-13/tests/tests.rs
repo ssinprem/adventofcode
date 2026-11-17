@@ -1,4 +1,4 @@
-use a_maze_of_twisty_little_cubicles::*;
+use aoc_2016_13::*;
 use utility::test_case_n;
 
 test_case_n!(example,

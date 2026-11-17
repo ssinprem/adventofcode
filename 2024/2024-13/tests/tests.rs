@@ -1,4 +1,4 @@
-use clew_contrapion::*;
+use aoc_2024_13::*;
 use utility::test_case_n;
 
 test_case_n!(example,"

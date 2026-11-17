@@ -1,4 +1,4 @@
-use scrambles_letters_and_hash::*;
+use aoc_2016_21::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

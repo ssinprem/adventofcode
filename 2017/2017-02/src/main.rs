@@ -1,4 +1,4 @@
-use corruption_checksum::*;
+use aoc_2017_02::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

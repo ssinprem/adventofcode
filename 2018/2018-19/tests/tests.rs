@@ -1,4 +1,4 @@
-use go_with_the_flow::*;
+use aoc_2018_19::*;
 use utility::test_case_n;
 
 test_case_n!(example,

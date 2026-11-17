@@ -1,4 +1,4 @@
-use wizard_simulator_20xx::*;
+use aoc_2015_22::*;
 use utility::test_case_n;
 
 test_case_n!(example1,

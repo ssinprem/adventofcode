@@ -1,4 +1,4 @@
-use i_heard_you_like_registers::*;
+use aoc_2017_08::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

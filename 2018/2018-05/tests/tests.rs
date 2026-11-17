@@ -1,4 +1,4 @@
-use alchemical_reduction::*;
+use aoc_2018_05::*;
 use utility::test_case_n;
 
 test_case_n!(example,

@@ -1,4 +1,4 @@
-use trebuchet::*;
+use aoc_2023_01::*;
 use utility::test_case_n;
 
 test_case_n!(example,

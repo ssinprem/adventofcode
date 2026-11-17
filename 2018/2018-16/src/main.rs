@@ -1,4 +1,4 @@
-use chronal_classification::*;
+use aoc_2018_16::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

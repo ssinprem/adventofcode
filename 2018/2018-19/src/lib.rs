@@ -1,4 +1,4 @@
-use chronal_classification::{Opcode};
+use aoc_2018_16::{Opcode};
 
 pub fn parse(file: String) -> (usize,Vec<(Opcode, u64, u64, u64)>) {
     use regex::Regex;
@@ -46,7 +46,7 @@ pub fn parse(file: String) -> (usize,Vec<(Opcode, u64, u64, u64)>) {
 }
 
 pub mod part1 {
-    use chronal_classification::operate;
+    use aoc_2018_16::operate;
     use crate::parse;
 
     pub fn solve(file: String) -> u64 {
@@ -63,7 +63,7 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    use chronal_classification::operate;
+    use aoc_2018_16::operate;
     use crate::parse;
 
     pub fn solve(file: String) -> u64 {

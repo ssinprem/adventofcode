@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use keypad_conundrum::*;
+use aoc_2024_21::*;
 use utility::test_case_n;
 
 test_case_n!(example,"

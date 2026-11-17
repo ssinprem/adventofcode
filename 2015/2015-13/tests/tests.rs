@@ -1,4 +1,4 @@
-use knights_of_the_dinner_table::*;
+use aoc_2015_13::*;
 use utility::test_case_n;
 
 test_case_n!(example,

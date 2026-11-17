@@ -1,4 +1,4 @@
-use mull_it_over::*;
+use aoc_2024_03::*;
 use utility::test_case_n;
 
 test_case_n!(example,

@@ -1,4 +1,4 @@
-use laboraories::*;
+use aoc_2025_07::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

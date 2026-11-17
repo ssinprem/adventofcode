@@ -1,4 +1,4 @@
-use immune_system_simulator_20xx::*;
+use aoc_2018_24::*;
 use utility::test_case_n;
 
 test_case_n!(example,

@@ -1,4 +1,4 @@
-use memory_reallocation::*;
+use aoc_2017_06::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

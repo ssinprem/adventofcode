@@ -1,4 +1,4 @@
-use cafetaria::*;
+use aoc_2025_05::*;
 use utility::test_case_n;
 
 test_case_n!(example,

@@ -1,4 +1,4 @@
-use safe_cracking::*;
+use aoc_2016_23::*;
 use utility::test_case_n;
 
 test_case_n!(example,

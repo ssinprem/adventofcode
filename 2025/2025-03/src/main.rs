@@ -1,4 +1,4 @@
-use lobby::*;
+use aoc_2025_03::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

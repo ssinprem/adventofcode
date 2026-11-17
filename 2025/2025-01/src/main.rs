@@ -1,4 +1,4 @@
-use secret_entrance::*;
+use aoc_2025_01::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

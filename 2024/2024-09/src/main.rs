@@ -1,4 +1,4 @@
-use disk_fragmenter::*;
+use aoc_2024_09::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

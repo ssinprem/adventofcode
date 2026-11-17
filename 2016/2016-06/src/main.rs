@@ -1,4 +1,4 @@
-use signals_and_noise::*;
+use aoc_2016_06::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

@@ -1,4 +1,4 @@
-use digital_plumber::*;
+use aoc_2017_12::*;
 use utility::test_case_n;
 
 test_case_n!(example,

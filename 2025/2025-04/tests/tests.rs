@@ -1,4 +1,4 @@
-use print_dept::*;
+use aoc_2025_04::*;
 use utility::test_case_n;
 
 test_case_n!(example,

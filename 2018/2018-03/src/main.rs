@@ -1,4 +1,4 @@
-use no_matter_how_you_slice_it::*;
+use aoc_2018_03::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

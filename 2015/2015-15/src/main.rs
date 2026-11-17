@@ -1,4 +1,4 @@
-use science_for_hungry_people::*;
+use aoc_2015_15::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

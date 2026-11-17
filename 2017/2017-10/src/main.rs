@@ -1,4 +1,4 @@
-use knot_hash::*;
+use aoc_2017_10::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

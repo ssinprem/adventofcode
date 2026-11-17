@@ -1,4 +1,4 @@
-use aplenty::*;
+use aoc_2023_19::*;
 use utility::test_case_n;
 
 test_case_n!(example,

@@ -1,4 +1,4 @@
-use disk_defragmentation::*;
+use aoc_2017_14::*;
 use utility::test_case_n;
 
 test_case_n!(example,

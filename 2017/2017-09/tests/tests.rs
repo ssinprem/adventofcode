@@ -1,4 +1,4 @@
-use stream_processing::*;
+use aoc_2017_09::*;
 
 #[test]
 fn example() {

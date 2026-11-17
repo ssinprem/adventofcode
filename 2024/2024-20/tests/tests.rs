@@ -1,4 +1,4 @@
-use race_condition::*;
+use aoc_2024_20::*;
 use utility::test_case_n;
 
 test_case_n!(example,"

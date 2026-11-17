@@ -1,4 +1,4 @@
-use gift_shop::*;
+use aoc_2025_02::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

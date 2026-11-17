@@ -1,4 +1,4 @@
-use pulse_propagation::*;
+use aoc_2023_20::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

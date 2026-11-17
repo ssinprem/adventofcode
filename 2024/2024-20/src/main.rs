@@ -1,4 +1,4 @@
-use race_condition::*;
+use aoc_2024_20::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

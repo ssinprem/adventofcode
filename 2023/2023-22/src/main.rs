@@ -1,4 +1,4 @@
-use sand_slabs::*;
+use aoc_2023_22::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

@@ -1,4 +1,4 @@
-use two_factor_authentication::*;
+use aoc_2016_08::*;
 use utility::test_case_n;
 
 test_case_n!(example,

@@ -1,4 +1,4 @@
-use how_about_a_nice_game_of_chess::*;
+use aoc_2016_05::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

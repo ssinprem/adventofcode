@@ -1,4 +1,4 @@
-use air_duct_spelunking::*;
+use aoc_2016_24::*;
 use utility::test_case_n;
 
 test_case_n!(example,

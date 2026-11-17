@@ -1,4 +1,4 @@
-use a_maze_of_twisty_little_cubicles::*;
+use aoc_2016_13::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

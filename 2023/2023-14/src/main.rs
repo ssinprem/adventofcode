@@ -1,4 +1,4 @@
-use parabolic_reflector_dish::*;
+use aoc_2023_14::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

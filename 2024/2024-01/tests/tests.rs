@@ -1,4 +1,4 @@
-use historian_hysteria::*;
+use aoc_2024_01::*;
 use utility::test_case_n;
 
 test_case_n!(example,

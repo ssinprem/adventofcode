@@ -1,4 +1,4 @@
-use if_you_give_a_seed_a_fertilizer::*;
+use aoc_2023_05::*;
 use utility::test_case_n;
 
 test_case_n!(example,

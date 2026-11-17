@@ -1,4 +1,4 @@
-use historian_hysteria::*;
+use aoc_2024_01::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

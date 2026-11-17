@@ -1,4 +1,4 @@
-use clumsy_crucible::*;
+use aoc_2023_17::*;
 use utility::test_case_n;
 
 test_case_n!(example,

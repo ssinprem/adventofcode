@@ -1,4 +1,4 @@
-use two_factor_authentication::*;
+use aoc_2016_08::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

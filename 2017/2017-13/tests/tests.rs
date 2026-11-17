@@ -1,4 +1,4 @@
-use packet_scanners::*;
+use aoc_2017_13::*;
 use utility::test_case_n;
 
 test_case_n!(example,

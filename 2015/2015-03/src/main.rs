@@ -1,4 +1,4 @@
-use perfectly_spherical_houses_in_a_vacuum::*;
+use aoc_2015_03::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

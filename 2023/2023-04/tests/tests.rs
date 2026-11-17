@@ -1,4 +1,4 @@
-use scratchcards::*;
+use aoc_2023_04::*;
 use utility::test_case_n;
 
 test_case_n!(example,

@@ -1,4 +1,4 @@
-use a_regular_map::*;
+use aoc_2018_20::*;
 use utility::test_case_n;
 
 test_case_n!(example1,

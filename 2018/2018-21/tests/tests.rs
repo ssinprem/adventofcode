@@ -1,4 +1,4 @@
-use chronal_conversion::*;
+use aoc_2018_21::*;
 use utility::test_case_n;
 
 test_case_n!(example,

@@ -1,4 +1,4 @@
-use corruption_checksum::*;
+use aoc_2017_02::*;
 use utility::test_case_n;
 
 test_case_n!(example,

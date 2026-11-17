@@ -1,4 +1,4 @@
-use bathroom_security::*;
+use aoc_2016_02::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

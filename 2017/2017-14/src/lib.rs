@@ -2,7 +2,7 @@ pub mod part1 {
     pub fn solve(file: String) -> usize {
         (0..128).map(|row| {
             let key = format!("{file}-{row}");
-            let hash = knot_hash::part2::solve(key.to_string());
+            let hash = aoc_2017_10::part2::solve(key.to_string());
             let binary = hash.chars().map(|char| {
                 match char {
                     '0' => "0000",
@@ -37,7 +37,7 @@ pub mod part2 {
         let mut grid = Grid::new(128,128);
         (0..128).for_each(|row| {
             let key = format!("{file}-{row}");
-            let hash = knot_hash::part2::solve(key.to_string());
+            let hash = aoc_2017_10::part2::solve(key.to_string());
             let binary = hash.chars().map(|char| {
                 match char {
                     '0' => "0000",

@@ -1,4 +1,4 @@
-use print_queue::*;
+use aoc_2024_05::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

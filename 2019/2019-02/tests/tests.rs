@@ -1,4 +1,4 @@
-use n1202_program_alarm::*;
+use aoc_2019_02::*;
 
 #[test]
 fn test_example() {

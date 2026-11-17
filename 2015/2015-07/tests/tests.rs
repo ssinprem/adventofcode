@@ -1,4 +1,4 @@
-use some_assembly_required::*;
+use aoc_2015_07::*;
 
 #[test]
 fn example(){

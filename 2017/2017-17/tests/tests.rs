@@ -1,4 +1,4 @@
-use spinlock::*;
+use aoc_2017_17::*;
 use utility::test_case_n;
 
 test_case_n!(example,

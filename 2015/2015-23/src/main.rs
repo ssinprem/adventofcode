@@ -1,4 +1,4 @@
-use opening_the_turing_lock::*;
+use aoc_2015_23::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

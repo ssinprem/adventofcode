@@ -1,4 +1,4 @@
-use movie_theater::*;
+use aoc_2025_09::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

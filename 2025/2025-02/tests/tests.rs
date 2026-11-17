@@ -1,4 +1,4 @@
-use gift_shop::*;
+use aoc_2025_02::*;
 use utility::test_case_n;
 
 test_case_n!(example,

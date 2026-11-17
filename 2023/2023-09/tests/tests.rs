@@ -1,4 +1,4 @@
-use mirage_maintenance::*;
+use aoc_2023_09::*;
 use utility::test_case_n;
 
 test_case_n!(example,

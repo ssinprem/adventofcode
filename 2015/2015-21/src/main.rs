@@ -1,4 +1,4 @@
-use rpg_simulator_20xx::*;
+use aoc_2015_21::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

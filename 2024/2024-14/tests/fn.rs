@@ -1,4 +1,4 @@
-use restroon_redoubt::*;
+use aoc_2024_14::*;
 
 #[test]
 fn test_robot() {

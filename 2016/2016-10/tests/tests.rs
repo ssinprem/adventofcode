@@ -1,4 +1,4 @@
-use balance_bots::*;
+use aoc_2016_10::*;
 use utility::test_case_n;
 
 test_case_n!(example,

@@ -1,4 +1,4 @@
-use laboraories::*;
+use aoc_2025_07::*;
 use utility::test_case_n;
 
 test_case_n!(example,

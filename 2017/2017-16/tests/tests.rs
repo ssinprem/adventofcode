@@ -1,4 +1,4 @@
-use permutaion_promenade::*;
+use aoc_2017_16::*;
 use utility::test_case_n;
 
 test_case_n!(example,

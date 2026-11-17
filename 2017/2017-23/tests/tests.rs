@@ -1,4 +1,4 @@
-use coprocessor_conflagration::*;
+use aoc_2017_23::*;
 use utility::test_case_n;
 
 #[test]

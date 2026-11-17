@@ -1,4 +1,4 @@
-use the_floor_will_be_lava::*;
+use aoc_2023_16::*;
 use utility::test_case_n;
 
 test_case_n!(example,

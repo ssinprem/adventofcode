@@ -1,4 +1,4 @@
-use pipe_maze::*;
+use aoc_2023_10::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

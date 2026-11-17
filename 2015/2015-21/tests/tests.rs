@@ -1,4 +1,4 @@
-use rpg_simulator_20xx::*;
+use aoc_2015_21::*;
 
 #[test]
 fn test_fight() {

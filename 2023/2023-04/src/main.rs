@@ -1,4 +1,4 @@
-use scratchcards::*;
+use aoc_2023_04::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

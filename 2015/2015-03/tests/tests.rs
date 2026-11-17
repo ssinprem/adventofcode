@@ -1,4 +1,4 @@
-use perfectly_spherical_houses_in_a_vacuum::*;
+use aoc_2015_03::*;
 use utility::test_case_n;
 
 test_case_n!(example1,

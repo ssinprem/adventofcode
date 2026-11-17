@@ -1,4 +1,4 @@
-use dragon_checksum::*;
+use aoc_2016_16::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

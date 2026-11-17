@@ -1,4 +1,4 @@
-use high_entropy_passphrases::*;
+use aoc_2017_04::*;
 use utility::test_case_n;
 
 test_case_n!(example,

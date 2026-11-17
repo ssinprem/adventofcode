@@ -1,4 +1,4 @@
-use radioisotope_thermoelectric_generators::*;
+use aoc_2016_11::*;
 use utility::test_case_n;
 
 test_case_n!(example,

@@ -1,4 +1,4 @@
-use four_dimensional_adventure::*;
+use aoc_2018_25::*;
 use utility::test_case_n;
 
 test_case_n!(example1,

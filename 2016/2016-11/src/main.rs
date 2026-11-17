@@ -1,4 +1,4 @@
-use radioisotope_thermoelectric_generators::*;
+use aoc_2016_11::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

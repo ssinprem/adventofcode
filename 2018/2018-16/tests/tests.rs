@@ -1,4 +1,4 @@
-use chronal_classification::*;
+use aoc_2018_16::*;
 
 #[test]
 fn test_operate() {

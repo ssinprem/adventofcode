@@ -1,4 +1,4 @@
-use elves_look_elves_say::*;
+use aoc_2015_10::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

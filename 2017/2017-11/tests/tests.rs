@@ -1,4 +1,4 @@
-use hex_ed::*;
+use aoc_2017_11::*;
 use utility::test_case_n;
 
 test_case_n!(example1,

@@ -1,4 +1,4 @@
-use hex_ed::*;
+use aoc_2017_11::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

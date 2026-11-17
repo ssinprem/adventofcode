@@ -1,4 +1,4 @@
-use probably_a_fire_hazard::*;
+use aoc_2015_06::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

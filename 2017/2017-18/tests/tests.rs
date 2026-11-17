@@ -1,4 +1,4 @@
-use duet::*;
+use aoc_2017_18::*;
 use utility::test_case_n;
 
 test_case_n!(example,

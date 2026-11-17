@@ -1,4 +1,4 @@
-use like_a_rogue::*;
+use aoc_2016_18::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

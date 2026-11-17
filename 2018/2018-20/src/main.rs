@@ -1,4 +1,4 @@
-use a_regular_map::*;
+use aoc_2018_20::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

@@ -1,4 +1,4 @@
-use knights_of_the_dinner_table::*;
+use aoc_2015_13::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

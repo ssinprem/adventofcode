@@ -1,4 +1,4 @@
-use how_about_a_nice_game_of_chess::*;
+use aoc_2016_05::*;
 use utility::test_case_n;
 
 test_case_n!(example,

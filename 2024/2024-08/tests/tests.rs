@@ -1,4 +1,4 @@
-use resonant_collinearity::*;
+use aoc_2024_08::*;
 use utility::test_case_n;
 
 test_case_n!(example,

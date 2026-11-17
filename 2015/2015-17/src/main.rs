@@ -1,4 +1,4 @@
-use no_such_thing_as_too_much::*;
+use aoc_2015_17::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

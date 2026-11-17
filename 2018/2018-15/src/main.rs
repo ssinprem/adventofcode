@@ -1,4 +1,4 @@
-use beverage_bandits::*;
+use aoc_2018_15::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

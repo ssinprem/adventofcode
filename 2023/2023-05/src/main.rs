@@ -1,4 +1,4 @@
-use if_you_give_a_seed_a_fertilizer::*;
+use aoc_2023_05::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

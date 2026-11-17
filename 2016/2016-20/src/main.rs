@@ -1,4 +1,4 @@
-use firwall_rules::*;
+use aoc_2016_20::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

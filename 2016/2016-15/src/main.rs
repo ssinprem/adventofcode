@@ -1,4 +1,4 @@
-use timing_is_everything::*;
+use aoc_2016_15::*;
 use std::error::Error;
 use std::fs::read_to_string;
 

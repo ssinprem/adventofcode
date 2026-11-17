@@ -1,4 +1,4 @@
-use memory_maneuver::*;
+use aoc_2018_08::*;
 use utility::test_case_n;
 
 test_case_n!(example,

@@ -1,4 +1,4 @@
-use guard_gallivant::*;
+use aoc_2024_06::*;
 use utility::test_case_n;
 
 test_case_n!(example,

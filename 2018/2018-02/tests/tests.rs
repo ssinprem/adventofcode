@@ -1,4 +1,4 @@
-use inventory_management_system::*;
+use aoc_2018_02::*;
 use utility::test_case_n;
 
 test_case_n!(example,
