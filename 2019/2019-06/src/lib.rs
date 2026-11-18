@@ -1,10 +1,10 @@
 use std::collections::HashMap;
 
-use petgraph::Graph;
+use petgraph::graph::UnGraph;
 
-pub fn parse(file: String) -> Graph<String, usize> {
+pub fn parse(file: String) -> UnGraph<String, usize> {
     let mut map = HashMap::new();
-    let mut graph = Graph::new();
+    let mut graph = UnGraph::new_undirected();
     file.lines().for_each(|line| {
         let (src, dst) = line.split_once(")").unwrap();
         let src = src.to_string();
@@ -48,17 +48,44 @@ pub mod part1 {
             .iter()
             .filter_map(|n| {
                 let res = dijkstra(&graph, *com_nodes, Some(*n), |_| 1);
-                let len = res
+                res
                     .iter()
-                    .find_map(|(k, v)| if k == n { Some(*v as usize) } else { None });
-                len
+                    .find_map(|(k, v)| if k == n { Some(*v as usize) } else { None })
             })
             .sum::<usize>()
     }
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use crate::parse;
+    use petgraph::algo::dijkstra;
+
+    pub fn solve(file: String) -> usize {
+        let graph = parse(file);
+
+        let nodes = graph.node_indices().collect::<Vec<_>>();
+
+        let you_nodes = nodes
+            .iter()
+            .find(|node_id| graph.node_weight(**node_id) == Some(&"YOU".to_string()))
+            .unwrap();
+        let san_nodes = nodes
+            .iter()
+            .find(|node_id| graph.node_weight(**node_id) == Some(&"SAN".to_string()))
+            .unwrap();
+
+        let you_parent = graph.neighbors_undirected(*you_nodes).collect::<Vec<_>>()[0];
+        let san_parent = graph.neighbors_undirected(*san_nodes).collect::<Vec<_>>()[0];
+
+        let res = dijkstra(&graph, you_parent, Some(san_parent), |_| 1);
+        res.iter()
+            .find_map(|(k, v)| {
+                if k == &san_parent {
+                    Some(*v as usize)
+                } else {
+                    None
+                }
+            })
+            .unwrap()
     }
 }
