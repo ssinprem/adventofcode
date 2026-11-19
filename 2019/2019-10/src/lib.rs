@@ -58,7 +58,6 @@ pub mod part1 {
                 diff.remove(0);
                 let mut target = vec![];
 
-                
                 for (dx, dy) in diff {
                     let mut mul = 1;
                     let mut block = false;
@@ -92,11 +91,11 @@ pub mod part1 {
 pub mod part2 {
     use std::f64::consts::PI;
 
-use crate::{fn_base, parse, part1};
+    use crate::{parse, part1};
 
     fn find_angle(dx: isize, dy: isize) -> f64 {
         let v = (-dx as f64).atan2(dy as f64);
-        if v < 0.0 { v + 2.0 * PI} else { v }
+        if v < 0.0 { v + 2.0 * PI } else { v }
     }
 
     pub fn solve(file: String) -> usize {
@@ -104,35 +103,33 @@ use crate::{fn_base, parse, part1};
         let mut target = parse(file);
         target.retain(|t| t != &station);
 
-        let mut target = target.iter().map(|(tx,ty)| {
-            let dx = station.0 as isize - *tx as isize;
-            let dy = station.1 as isize - *ty as isize;
-            
-            ((tx,ty), find_angle(dx, dy), dx.abs() + dy.abs())
-        }).collect::<Vec<_>>();
+        let mut target = target
+            .iter()
+            .map(|(tx, ty)| {
+                let dx = station.0 as isize - *tx as isize;
+                let dy = station.1 as isize - *ty as isize;
 
-        target.sort_by_key(|((_tx,_ty),angle,range)| {
-            ((angle * 100_000.0) as usize, *range)
-        });
+                ((tx, ty), find_angle(dx, dy), dx.abs() + dy.abs())
+            })
+            .collect::<Vec<_>>();
+
+        target.sort_by_key(|((_tx, _ty), angle, range)| ((angle * 100_000.0) as usize, *range));
 
         let mut destroyed = Vec::new();
         let first = target.remove(0);
-        println!("{first:?}");
         destroyed.push(first.0);
         let mut angle = first.1;
-        while ! target.is_empty() {
-            if let Some(next_p) = target.iter().position(|((_,_),a,_len)| *a > angle) {
+        while !target.is_empty() {
+            if let Some(next_p) = target.iter().position(|((_, _), a, _len)| *a > angle) {
                 let next = target.remove(next_p);
                 angle = next.1;
-                println!("{next:?}");
                 destroyed.push(next.0);
             } else {
                 angle = -1.0;
             }
         }
 
-
-        let th200 = destroyed.iter().nth(199).unwrap();
+        let th200 = destroyed.get(199).unwrap();
         th200.0 * 100 + th200.1
     }
 }
