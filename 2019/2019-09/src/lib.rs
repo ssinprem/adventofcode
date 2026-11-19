@@ -130,7 +130,13 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use crate::{parse, process};
+
+    pub fn solve(file: String) -> String {
+        let memory = parse(file);
+        let signal = 2;
+        let (_, output) = process(&memory, signal);
+
+        output
     }
 }
