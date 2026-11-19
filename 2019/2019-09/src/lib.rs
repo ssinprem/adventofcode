@@ -17,11 +17,7 @@ pub fn process(memory: &HashMap<usize,i128>, input: i128) -> (HashMap<usize,i128
         let p1_mode = (inst / 100) % 10;
         let p2_mode = (inst / 1000) % 10;
         let p3_mode = (inst / 10000) % 10;
-        if p3_mode != 0 {
-            // p3 never be in immediate mode
-            unreachable!()
-        }
-        
+
         let a_value = if ![1,2,4,5,6,7,8,9].contains(&(inst % 100)) {
             0
         } else if p1_mode == 0 {
@@ -29,9 +25,11 @@ pub fn process(memory: &HashMap<usize,i128>, input: i128) -> (HashMap<usize,i128
             *memory.get(&addr).unwrap_or(&0)
         } else if p1_mode == 1 {
             *memory.get(&(pc+1)).unwrap_or(&0)
-        } else {
+        } else if p1_mode == 2 {
             let offset = *memory.get(&(pc+1)).unwrap() as isize;
             *memory.get(&((relative_base + offset) as usize)).unwrap_or(&0)
+        } else {
+            unreachable!()
         };
         let b_value = if ![1,2,5,6,7,8].contains(&(inst % 100)) {
             0
@@ -40,9 +38,21 @@ pub fn process(memory: &HashMap<usize,i128>, input: i128) -> (HashMap<usize,i128
             *memory.get(&addr).unwrap_or(&0)
         } else if p2_mode == 1 {
             *memory.get(&(pc+2)).unwrap_or(&0)
-        } else {
+        } else if p2_mode == 2 {
             let offset = *memory.get(&(pc+2)).unwrap() as isize;
             *memory.get(&((relative_base + offset) as usize)).unwrap_or(&0)
+        } else {
+            unreachable!()
+        };
+
+        let write_addr = if ![1,2,7,8].contains(&(inst % 100)) {
+            0
+        } else if p3_mode == 0 {
+            *memory.get(&(pc+3)).unwrap() as usize
+        } else if p3_mode == 2 {
+            (relative_base + (*memory.get(&(pc+3)).unwrap()) as isize) as usize
+        } else {
+            unreachable!()
         };
         if inst % 100 == 1 {
             // Add
@@ -81,13 +91,11 @@ pub fn process(memory: &HashMap<usize,i128>, input: i128) -> (HashMap<usize,i128
             }
         } else if inst % 100 == 7 {
             // less than  ,, true put 1
-            let p3 = memory[&(pc + 3)] as usize;
-            memory.insert(p3, if a_value < b_value { 1 } else { 0 });
+            memory.insert(write_addr, if a_value < b_value { 1 } else { 0 });
             pc += 4;
         } else if inst % 100 == 8 {
             // equal ,, true put 1
-            let p3 = memory[&(pc + 3)] as usize;
-            memory.insert(p3, if a_value == b_value { 1 } else { 0 });
+            memory.insert(write_addr, if a_value == b_value { 1 } else { 0 });
             pc += 4;
         } else if inst % 100 == 9 {
             // move relative
