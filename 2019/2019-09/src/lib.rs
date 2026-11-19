@@ -1,17 +1,19 @@
-pub fn parse(file: String) -> Vec<isize> {
+use std::collections::HashMap;
+
+pub fn parse(file: String) -> HashMap<usize, i128> {
     file.split(",")
-        .map(|str| str.parse::<isize>().unwrap())
+        .map(|str| str.parse::<i128>().unwrap())
+        .enumerate()
         .collect()
 }
 
-pub fn process(memory: &[isize], input: isize) -> (Vec<isize>, String) {
-    let mut memory = memory.to_vec();
+pub fn process(memory: &HashMap<usize,i128>, input: i128) -> (HashMap<usize,i128>, String) {
+    let mut memory = memory.clone();
     let mut output = Vec::new();
     let mut relative_base = 0_isize;
     let mut pc = 0;
     loop {
-        println!("[{pc}]  {memory:?}  {output:?}");
-        let inst = memory[pc];
+        let inst = memory.get(&pc).expect("cannot access pc mem");
         let p1_mode = (inst / 100) % 10;
         let p2_mode = (inst / 1000) % 10;
         let p3_mode = (inst / 10000) % 10;
@@ -19,42 +21,45 @@ pub fn process(memory: &[isize], input: isize) -> (Vec<isize>, String) {
             // p3 never be in immediate mode
             unreachable!()
         }
-
+        
         let a_value = if ![1,2,4,5,6,7,8,9].contains(&(inst % 100)) {
             0
         } else if p1_mode == 0 {
-            memory[memory[pc + 1] as usize]
+            let addr = *memory.get(&(pc+1)).unwrap() as usize;
+            *memory.get(&addr).unwrap_or(&0)
         } else if p1_mode == 1 {
-            memory[pc + 1]
+            *memory.get(&(pc+1)).unwrap_or(&0)
         } else {
-            memory[(relative_base + memory[pc + 1]) as usize]
+            let offset = *memory.get(&(pc+1)).unwrap() as isize;
+            *memory.get(&((relative_base + offset) as usize)).unwrap_or(&0)
         };
         let b_value = if ![1,2,5,6,7,8].contains(&(inst % 100)) {
             0
         } else if p2_mode == 0 {
-            memory[memory[pc + 2] as usize]
+            let addr = *memory.get(&(pc+2)).unwrap() as usize;
+            *memory.get(&addr).unwrap_or(&0)
         } else if p2_mode == 1 {
-            memory[pc + 2]
+            *memory.get(&(pc+2)).unwrap_or(&0)
         } else {
-            memory[(relative_base + memory[pc + 1]) as usize]
+            let offset = *memory.get(&(pc+2)).unwrap() as isize;
+            *memory.get(&((relative_base + offset) as usize)).unwrap_or(&0)
         };
-        println!("a= {a_value} b={b_value}");
         if inst % 100 == 1 {
             // Add
             let result = a_value + b_value;
-            let p3 = memory[pc + 3] as usize;
-            memory[p3] = result;
+            let p3 = memory[&(pc + 3)] as usize;
+            memory.insert(p3, result);
             pc += 4;
         } else if inst % 100 == 2 {
             // Mul
             let result = a_value * b_value;
-            let p3 = memory[pc + 3] as usize;
-            memory[p3] = result;
+            let p3 = memory[&(pc + 3)] as usize;
+            memory.insert(p3, result);
             pc += 4;
         } else if inst % 100 == 3 {
             // Input
-            let a_pos = memory[pc + 1];
-            memory[a_pos as usize] = input;
+            let a_pos = memory[&(pc + 1)] as usize;
+            memory.insert(a_pos, input);
             pc += 2;
         } else if inst % 100 == 4 {
             // Output
@@ -76,19 +81,19 @@ pub fn process(memory: &[isize], input: isize) -> (Vec<isize>, String) {
             }
         } else if inst % 100 == 7 {
             // less than  ,, true put 1
-            let p3 = memory[pc + 3] as usize;
-            memory[p3] = if a_value < b_value { 1 } else { 0 };
+            let p3 = memory[&(pc + 3)] as usize;
+            memory.insert(p3, if a_value < b_value { 1 } else { 0 });
             pc += 4;
         } else if inst % 100 == 8 {
             // equal ,, true put 1
-            let p3 = memory[pc + 3] as usize;
-            memory[p3] = if a_value == b_value { 1 } else { 0 };
+            let p3 = memory[&(pc + 3)] as usize;
+            memory.insert(p3, if a_value == b_value { 1 } else { 0 });
             pc += 4;
         } else if inst % 100 == 9 {
             // move relative
-            relative_base += a_value;
+            relative_base += a_value as isize;
             pc += 2;
-        } else if inst == 99 {
+        } else if inst % 100 == 99 {
             break;
         } else {
             unreachable!();
