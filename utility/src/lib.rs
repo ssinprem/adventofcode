@@ -10,6 +10,15 @@ pub fn _pause() {
     let _ = stdin.read(&mut [0u8]).unwrap();
 }
 
+pub fn gcd(mut a: usize, mut b: usize) -> usize {
+    while b != 0 {
+        let r = a % b;
+        a = b;
+        b = r;
+    }
+    a
+}
+
 #[macro_export]
 macro_rules! test_case {
     (
