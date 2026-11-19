@@ -36,8 +36,12 @@ pub fn _display(list: &[((usize, usize), usize)]) {
     }
 }
 
+pub fn fn_base(dx: isize, dy: isize) -> (isize, isize) {
+    let div = utility::gcd(dx.unsigned_abs(), dy.unsigned_abs()) as isize;
+    (dx / div, dy / div)
+}
 pub mod part1 {
-    use crate::{_display, parse};
+    use crate::{fn_base, parse};
     use std::cmp::Reverse;
 
     pub fn solve(file: String) -> ((usize, usize), usize) {
@@ -54,10 +58,7 @@ pub mod part1 {
                 diff.remove(0);
                 let mut target = vec![];
 
-                let fn_base = |dx: isize, dy: isize| {
-                    let div = utility::gcd(dx.unsigned_abs(), dy.unsigned_abs()) as isize;
-                    (dx / div, dy / div)
-                };
+                
                 for (dx, dy) in diff {
                     let mut mul = 1;
                     let mut block = false;
@@ -84,14 +85,54 @@ pub mod part1 {
 
         candidate.sort_by_key(|((cx, cy), count)| (Reverse(*count), Reverse(*cy), Reverse(*cx)));
 
-        _display(&candidate);
-
         *candidate.first().unwrap()
     }
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use std::f64::consts::PI;
+
+use crate::{fn_base, parse, part1};
+
+    fn find_angle(dx: isize, dy: isize) -> f64 {
+        let v = (-dx as f64).atan2(dy as f64);
+        if v < 0.0 { v + 2.0 * PI} else { v }
+    }
+
+    pub fn solve(file: String) -> usize {
+        let (station, _v) = part1::solve(file.to_string());
+        let mut target = parse(file);
+        target.retain(|t| t != &station);
+
+        let mut target = target.iter().map(|(tx,ty)| {
+            let dx = station.0 as isize - *tx as isize;
+            let dy = station.1 as isize - *ty as isize;
+            
+            ((tx,ty), find_angle(dx, dy), dx.abs() + dy.abs())
+        }).collect::<Vec<_>>();
+
+        target.sort_by_key(|((_tx,_ty),angle,range)| {
+            ((angle * 100_000.0) as usize, *range)
+        });
+
+        let mut destroyed = Vec::new();
+        let first = target.remove(0);
+        println!("{first:?}");
+        destroyed.push(first.0);
+        let mut angle = first.1;
+        while ! target.is_empty() {
+            if let Some(next_p) = target.iter().position(|((_,_),a,_len)| *a > angle) {
+                let next = target.remove(next_p);
+                angle = next.1;
+                println!("{next:?}");
+                destroyed.push(next.0);
+            } else {
+                angle = -1.0;
+            }
+        }
+
+
+        let th200 = destroyed.iter().nth(199).unwrap();
+        th200.0 * 100 + th200.1
     }
 }
