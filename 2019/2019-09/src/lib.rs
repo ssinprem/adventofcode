@@ -45,31 +45,38 @@ pub fn process(memory: &HashMap<usize,i128>, input: i128) -> (HashMap<usize,i128
             unreachable!()
         };
 
-        let write_addr = if ![1,2,7,8].contains(&(inst % 100)) {
+        let write_addr = if ![1,2,3,7,8].contains(&(inst % 100)) {
             0
-        } else if p3_mode == 0 {
-            *memory.get(&(pc+3)).unwrap() as usize
-        } else if p3_mode == 2 {
-            (relative_base + (*memory.get(&(pc+3)).unwrap()) as isize) as usize
+        } else if inst % 100 == 3 {
+            if p1_mode == 0 {
+                *memory.get(&(pc+1)).unwrap() as usize
+            } else if p1_mode == 2 {
+                (relative_base + (*memory.get(&(pc+1)).unwrap()) as isize) as usize
+            } else {
+                unreachable!()
+            }
         } else {
-            unreachable!()
+            if p3_mode == 0 {
+                *memory.get(&(pc+3)).unwrap() as usize
+            } else if p3_mode == 2 {
+                (relative_base + (*memory.get(&(pc+3)).unwrap()) as isize) as usize
+            } else {
+                unreachable!()
+            }
         };
         if inst % 100 == 1 {
             // Add
             let result = a_value + b_value;
-            let p3 = memory[&(pc + 3)] as usize;
-            memory.insert(p3, result);
+            memory.insert(write_addr, result);
             pc += 4;
         } else if inst % 100 == 2 {
             // Mul
             let result = a_value * b_value;
-            let p3 = memory[&(pc + 3)] as usize;
-            memory.insert(p3, result);
+            memory.insert(write_addr, result);
             pc += 4;
         } else if inst % 100 == 3 {
             // Input
-            let a_pos = memory[&(pc + 1)] as usize;
-            memory.insert(a_pos, input);
+            memory.insert(write_addr, input);
             pc += 2;
         } else if inst % 100 == 4 {
             // Output
