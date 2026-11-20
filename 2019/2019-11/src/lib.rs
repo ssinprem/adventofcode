@@ -48,7 +48,7 @@ pub fn process(
     pc: &mut usize,
     relative_base: &mut isize,
     input: i128,
-) -> Option<usize> {
+) -> Option<isize> {
     loop {
         let inst = memory.get(pc).expect("cannot access pc mem");
         let p1_mode = (inst / 100) % 10;
@@ -122,7 +122,7 @@ pub fn process(
         } else if inst % 100 == 4 {
             // Output
             *pc += 2;
-            return Some(a_value as usize);
+            return Some(a_value as isize);
             // output.push(format!("{a_value}"));
         } else if inst % 100 == 5 {
             // Jump if true
@@ -232,7 +232,7 @@ pub mod part1 {
             let input = paint.get(&robot.pos).unwrap_or(&0);
             if let Some(output) = process(&mut memory, &mut pc, &mut relative_base, *input as i128)
             {
-                painting_bot(output, &mut robot, &mut paint);
+                painting_bot(output as usize, &mut robot, &mut paint);
             } else {
                 break;
             }
@@ -265,7 +265,7 @@ pub mod part2 {
             let input = paint.get(&robot.pos).unwrap_or(&0);
             if let Some(output) = process(&mut memory, &mut pc, &mut relative_base, *input as i128)
             {
-                painting_bot(output, &mut robot, &mut paint);
+                painting_bot(output as usize, &mut robot, &mut paint);
             } else {
                 break;
             }

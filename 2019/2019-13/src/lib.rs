@@ -9,9 +9,16 @@ pub fn _display(pad: &HashMap<(usize, usize), usize>) {
     for y in min_y..=max_y {
         for x in min_x..=max_x {
             if let Some(v) = pad.get(&(x, y)) {
-                print!("{v}");
+                print!("{}", match *v {
+                    0 => " ",
+                    1 => "|",
+                    2 => "#",
+                    3 => "_",
+                    4 => "@",
+                    _ => "?",
+                });
             } else {
-                print!(" ");
+                print!("?");
             }
         }
         println!();
@@ -40,7 +47,44 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use std::collections::HashMap;
+
+    pub fn solve(file: String) -> usize {
+        
+        let mut pad_x = 0;
+        let mut ball_x = 0;
+        let mut score = 0;
+        let mut output = vec![];
+        let mut memory = aoc_2019_09::parse(file.to_string());
+        memory.insert(0, 2);
+
+        fn get_joystick ( ball_x: isize, pad_x: isize ) -> i128 {
+            if ball_x < pad_x {
+                -1_i128
+            } else if ball_x > pad_x {
+                1_i128
+            } else {
+                0_i128
+            }
+        }
+
+        let mut pc = 0;
+        let mut relative_base = 0;
+
+        while let Some(out) = aoc_2019_11::process(&mut memory, &mut pc, &mut relative_base, get_joystick(ball_x, pad_x)) {
+            output.push(out);
+            if output.len() == 3 {
+                let (x,y,v) = (output[0], output[1], output[2]);
+                output.clear();
+                if x == -1 && y == 0 {
+                    score = v as usize;
+                } else if v == 3 {
+                    pad_x = x;
+                } else if v == 4 {
+                    ball_x = x;
+                }
+            }
+        }
+        score
     }
 }

@@ -7,3 +7,4 @@ edition = "2024"
 paste = "1.0.15"
 utility = { path = "../../utility" }
 aoc_2019_09 = { path = "../2019-09" }
+aoc_2019_11 = { path = "../2019-11" }
