@@ -19,6 +19,10 @@ pub fn gcd(mut a: usize, mut b: usize) -> usize {
     a
 }
 
+pub fn lcm(a: usize, b: usize) -> usize {
+    a / gcd(a,b) * b
+}
+
 #[macro_export]
 macro_rules! test_case {
     (
