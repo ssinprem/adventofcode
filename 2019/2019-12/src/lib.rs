@@ -1,8 +1,7 @@
-#[derive(Clone, Debug)]
-pub struct Moon
-{
-    pos: (isize,isize,isize),
-    vec: (isize,isize,isize)
+#[derive(Clone, Debug, PartialEq)]
+pub struct Moon {
+    pos: (isize, isize, isize),
+    vec: (isize, isize, isize),
 }
 
 impl Moon {
@@ -41,25 +40,26 @@ impl Moon {
 
     fn get_value(&self) -> usize {
         (self.pos.0.abs() + self.pos.1.abs() + self.pos.2.abs()) as usize
-        *
-        (self.vec.0.abs() + self.vec.1.abs() + self.vec.2.abs()) as usize
+            * (self.vec.0.abs() + self.vec.1.abs() + self.vec.2.abs()) as usize
     }
 }
 
 pub fn parse(file: String) -> Vec<Moon> {
     let regex = regex::Regex::new(r"<x=([-0-9]+), y=([-0-9]+), z=([-0-9]+)").unwrap();
 
-    file.lines().map(|line| {
-        let cap = regex.captures(line).unwrap();
-        let x = cap.get(1).unwrap().as_str().parse::<isize>().unwrap();
-        let y = cap.get(2).unwrap().as_str().parse::<isize>().unwrap();
-        let z = cap.get(3).unwrap().as_str().parse::<isize>().unwrap();
+    file.lines()
+        .map(|line| {
+            let cap = regex.captures(line).unwrap();
+            let x = cap.get(1).unwrap().as_str().parse::<isize>().unwrap();
+            let y = cap.get(2).unwrap().as_str().parse::<isize>().unwrap();
+            let z = cap.get(3).unwrap().as_str().parse::<isize>().unwrap();
 
-        Moon {
-            pos: (x,y,z),
-            vec: (0,0,0)
-        }
-    }).collect()
+            Moon {
+                pos: (x, y, z),
+                vec: (0, 0, 0),
+            }
+        })
+        .collect()
 }
 
 pub mod part1 {
@@ -83,7 +83,57 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use utility::lcm;
+
+    use crate::parse;
+
+    pub fn solve(file: String) -> usize {
+        let mut moons = parse(file);
+        let original = moons.clone();
+
+        let mut repeat = (0, 0, 0);
+        for i in 0.. {
+            if i != 0 {
+                if repeat.0 == 0
+                    && moons
+                        .iter()
+                        .zip(original.clone())
+                        .all(|(m, o)| m.pos.0 == o.pos.0 && m.vec.0 == o.vec.0)
+                {
+                    repeat.0 = i
+                }
+
+                if repeat.1 == 0
+                    && moons
+                        .iter()
+                        .zip(original.clone())
+                        .all(|(m, o)| m.pos.1 == o.pos.1 && m.vec.1 == o.vec.1)
+                {
+                    repeat.1 = i
+                }
+
+                if repeat.2 == 0
+                    && moons
+                        .iter()
+                        .zip(original.clone())
+                        .all(|(m, o)| m.pos.2 == o.pos.2 && m.vec.2 == o.vec.2)
+                {
+                    repeat.2 = i
+                }
+            }
+            if repeat.0 != 0 && repeat.1 != 0 && repeat.2 != 0 {
+                break;
+            }
+
+            let temp = moons.clone();
+            for moon in moons.iter_mut() {
+                moon.update_vec(&temp);
+            }
+            for moon in moons.iter_mut() {
+                moon.update_pos();
+            }
+        }
+
+        lcm(repeat.0, lcm(repeat.1, repeat.2))
     }
 }
