@@ -9,7 +9,7 @@ test_case_n!(example1,
 7 A, 1 D => 1 E
 7 A, 1 E => 1 FUEL",
     part1: (part1::solve, 31),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 34482758620)
 );
 
 test_case_n!(example2,
@@ -23,7 +23,7 @@ test_case_n!(example2,
 165 ORE => 2 GPVTF
 3 DCFZ, 7 NZVS, 5 HKGWZ, 10 PSHF => 8 KHKGT",
     part1: (part1::solve, 13312),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 82892753)
 );
 
 test_case_n!(example3,
@@ -40,7 +40,7 @@ test_case_n!(example3,
 1 VJHF, 6 MNCFX => 4 RFSQX
 176 ORE => 6 VJHF",
     part1: (part1::solve, 180697),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 5586022)
 );
 
 test_case_n!(example4,
@@ -62,5 +62,5 @@ test_case_n!(example4,
 7 XCVML => 6 RJRHP
 5 BHXH, 4 VRPVC => 5 LTCX",
     part1: (part1::solve, 2210736),
-    part2: (part2::solve, 0)
+    part2: (part2::solve, 460664)
 );

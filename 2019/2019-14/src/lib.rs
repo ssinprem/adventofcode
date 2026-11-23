@@ -20,65 +20,68 @@ pub fn parse(file: String) -> HashMap<String, (isize, Vec<(String, isize)>)> {
         .collect()
 }
 
-pub mod part1 {
-    use std::collections::HashMap;
-
-    use crate::parse;
-
-    fn convert(
-        needs: &mut HashMap<String, isize>,
-        product: &String,
-        formular: &HashMap<String, (isize, Vec<(String, isize)>)>,
-    ) {
-        let (amu, reactants) = formular.get(&product.to_string()).unwrap();
-        needs.entry(product.to_string()).and_modify(|n| *n -= amu);
-        needs.retain(|_name, c| *c != 0);
-        for (re_str, re_amu) in reactants {
-            needs
-                .entry(re_str.to_string())
-                .and_modify(|n| *n += *re_amu)
-                .or_insert(*re_amu);
-        }
+#[allow(clippy::type_complexity)]
+pub fn convert(
+    needs: &mut HashMap<String, isize>,
+    product: &String,
+    formular: &HashMap<String, (isize, Vec<(String, isize)>)>,
+) {
+    let (amu, reactants) = &formular[product];
+    let qty = needs[product];
+    let batches = (qty + amu - 1) / amu;
+    *needs.get_mut(product).unwrap() -= batches * amu;
+    for (name, n) in reactants {
+        *needs.entry(name.to_string()).or_insert(0) += batches * n;
     }
+}
+
+#[allow(clippy::type_complexity)]
+pub fn ore_for_fuel(
+    formular: &HashMap<String, (isize, Vec<(String, isize)>)>,
+    fuel: isize,
+) -> isize {
+    let mut needs = HashMap::new();
+    needs.insert("FUEL".to_string(), fuel);
+
+    // find the product able to convert with effciailcy number
+    while let Some(product) = needs
+        .iter()
+        .find(|(s, n)| s != &&"ORE".to_string() && **n > 0)
+        .map(|(s, _)| s.to_string())
+    {
+        convert(&mut needs, &product, formular);
+    }
+    needs["ORE"]
+}
+
+pub mod part1 {
+    use crate::{ore_for_fuel, parse};
 
     pub fn solve(file: String) -> usize {
         let formular = parse(file);
-
-        let mut needs = HashMap::new();
-        needs.insert("FUEL".to_string(), 1_isize);
-
-        while needs
-            .iter()
-            .filter(|(s, _n)| s != &&"ORE".to_string())
-            .any(|(_s, n)| *n > 0)
-        {
-            // find the product able to convert with effciailcy number
-            while let Some(product) = needs
-                .iter()
-                .find(|(s, n)| {
-                    s != &&"ORE".to_string() && **n >= formular.get(&s.to_string()).unwrap().0
-                })
-                .map(|(s, _)| s.to_string())
-            {
-                convert(&mut needs, &product, &formular);
-            }
-
-            // find the product able to convert, with non-efficialcy
-            if let Some(product) = needs
-                .iter()
-                .find(|(s, n)| s != &&"ORE".to_string() && n > &&0)
-                .map(|(s, _)| s.to_string())
-            {
-                convert(&mut needs, &product, &formular);
-            }
-        }
-
-        *needs.get("ORE").unwrap() as usize
+        ore_for_fuel(&formular, 1) as usize
     }
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use crate::{ore_for_fuel, parse};
+
+    pub fn solve(file: String) -> usize {
+        let formular = parse(file);
+        const ORE: isize = 1_000_000_000_000;
+
+        let per_one = ore_for_fuel(&formular, 1);
+        let (mut lo, mut hi) = (ORE / per_one, ORE);
+
+        while lo < hi {
+            let mid = (lo + hi + 1) / 2;
+            let num = ore_for_fuel(&formular, mid);
+            if num <= ORE {
+                lo = mid
+            } else {
+                hi = mid - 1;
+            }
+        }
+        lo as usize
     }
 }
