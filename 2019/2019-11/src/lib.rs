@@ -20,7 +20,7 @@ impl Robot {
     fn turn(&mut self, inst: usize) {
         // inst 0 - turn left 90
         //      1 - turn right 90
-        self.dir = match (inst, self.dir.clone()) {
+        self.dir = match (inst, self.dir) {
             (0, N) => W,
             (0, E) => N,
             (0, S) => E,
