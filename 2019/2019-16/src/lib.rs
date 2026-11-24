@@ -15,29 +15,33 @@ pub fn get_multipy(round: usize, size: usize) -> Vec<isize> {
     total.into_iter().skip(1).take(size).collect()
 }
 
+pub fn parse(file: String) -> Vec<isize> {
+    file.chars()
+        .map(|c| c.to_digit(10).unwrap() as isize)
+        .collect::<Vec<isize>>()
+}
+
+pub fn calculate(num: Vec<isize>) -> Vec<isize> {
+    let size = num.len();
+    let temp = num.clone();
+    (1..=size)
+        .map(|r| {
+            temp.iter()
+                .zip(get_multipy(r, size))
+                .map(|(n, m)| n * m)
+                .sum::<isize>()
+                .abs()
+                % 10
+        })
+        .collect::<Vec<isize>>()
+}
 pub mod part1 {
-    use crate::get_multipy;
+    use crate::{calculate, parse};
 
     pub fn solve(file: String) -> u64 {
-        let input = file
-            .chars()
-            .map(|c| c.to_digit(10).unwrap() as isize)
-            .collect::<Vec<isize>>();
-        let size = input.len();
-        let mut num = input.clone();
+        let mut num = parse(file);
         for _ in 0..100 {
-            let temp = num.clone();
-
-            num = (1..=size)
-                .map(|r| {
-                    temp.iter()
-                        .zip(get_multipy(r, size))
-                        .map(|(n, m)| n * m)
-                        .sum::<isize>()
-                        .abs()
-                        % 10
-                })
-                .collect::<Vec<isize>>();
+            num = calculate(num)
         }
 
         num.into_iter()
@@ -48,7 +52,27 @@ pub mod part1 {
 }
 
 pub mod part2 {
-    pub fn solve(_file: String) -> u64 {
-        0
+    use crate::parse;
+
+    pub fn solve(file: String) -> u64 {
+        let mut num = parse(file);
+        let offset = num
+            .clone()
+            .into_iter()
+            .take(7)
+            .reduce(|acc, n| acc * 10 + n)
+            .unwrap();
+        num = num.repeat(10_000);
+        num = num.into_iter().skip(offset as usize).collect();
+        for _ in 0..100 {
+            for i in (0..num.len() - 1).rev() {
+                num[i] = (num[i] + num[i + 1]) % 10;
+            }
+        }
+
+        num.into_iter()
+            .take(8)
+            .reduce(|acc, n| acc * 10 + n)
+            .unwrap() as u64
     }
 }
