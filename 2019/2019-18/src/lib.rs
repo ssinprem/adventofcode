@@ -131,49 +131,38 @@ pub fn convert_map_to_graph(map: &Grid<Cell>)
 }
 
 pub mod part1 {
-    use std::collections::{BTreeSet, HashMap};
+    use std::{cmp::Reverse, collections::{BinaryHeap, HashMap}};
     use petgraph::visit::EdgeRef;
 
 use crate::{Cell, convert_map_to_graph, parse};
 
-    #[derive(Debug, PartialOrd, Ord, Eq, PartialEq, Clone)]
-    pub struct State {
-        step: usize,
-        pos: (usize,usize),
-        keys: u64,
-    }
-
     pub fn solve(file: String) -> usize {
         let (map, walker) = parse(file);
-        let mut stack = BTreeSet::new();
+        let mut heap = BinaryHeap::new();
         let mut best = HashMap::new();
         let keys_len = map.iter().filter(|cell| matches!(cell, Cell::Key(_))).count();
         let all_keys = 2_u64.pow(keys_len as u32) - 1;
 
         let (graph, nodes) = convert_map_to_graph(&map);
 
-        stack.insert(State {
-            step : 0,
-            pos : walker,
-            keys : 0
-        });
+        heap.push((Reverse(0),walker,0));
 
-        while let Some(state) = stack.pop_first() {
+        while let Some((Reverse(step), pos, keys)) = heap.pop() {
             // If better history for state (position, keys holder), ignore this run
-            if let Some(score) = best.get(&(state.pos, state.keys))
-            && *score < state.step
+            if let Some(score) = best.get(&(pos, keys))
+            && *score < step
             {
                 // println!("{state:?} ignore {} < {}", score, state.step);
                 continue;
             } else {
-                best.insert((state.pos, state.keys), state.step);
+                best.insert((pos, keys), step);
             }
             
             // Got all keys end journey
-            if state.keys == all_keys {
-                continue;
+            if keys == all_keys {
+                return step;
             }
-            if let Some((current_node,_)) = nodes.get(&state.pos)
+            if let Some((current_node,_)) = nodes.get(&pos)
             {
                 let adjacents = graph.edges(*current_node);
                 for edge in adjacents {
@@ -181,46 +170,17 @@ use crate::{Cell, convert_map_to_graph, parse};
                     let next = edge.target();
 
                     if let Some((npos,ncel)) = graph.node_weight(next) {
-                        match ncel {
-                            Cell::Start => {
-                                stack.insert( 
-                                    State { 
-                                        step: state.step + cost,
-                                        pos: *npos,
-                                        keys: state.keys
-                                    }
-                                );
-                            },
-                            Cell::Key(c) => {
-                                stack.insert( 
-                                    State { 
-                                        step: state.step + cost,
-                                        pos: *npos,
-                                        keys: state.keys | 1 << *c
-                                    }
-                                );
-                            },
-                            Cell::Door(c) if state.keys & 1 << *c != 0 => {
-                                stack.insert( 
-                                    State { 
-                                        step: state.step + cost,
-                                        pos: *npos,
-                                        keys: state.keys
-                                    }
-                                );
-                            },
-                            _ => {}
-                        }
+                        let nkeys = match ncel {
+                            Cell::Key(c) => keys | 1 << *c,
+                            Cell::Door(c) if keys & 1 << *c == 0 => continue,
+                            _ => keys
+                        };
+                        heap.push((Reverse(step + cost), *npos, nkeys));
                     }
                 }
             }
         }
-
-        best.into_iter()
-        .map(|((_pos,keys),step)| (step, keys))
-        .filter(|(_step, keys)| *keys == all_keys)
-        .min_by_key(|(step,_)| *step).unwrap().0
-
+        0
     }
 }
 
