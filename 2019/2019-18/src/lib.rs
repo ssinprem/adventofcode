@@ -1,15 +1,17 @@
-use grid::Grid;
+use std::collections::{HashMap, HashSet};
 
-#[derive(Debug, Default)]
+use grid::Grid;
+use petgraph::{algo::{astar}, graph::{NodeIndex, UnGraph}};
+
+#[derive(Debug, Default, Clone, PartialEq)]
 pub enum Cell {
     #[default]
     Space,
+    Start,
     Wall,
     Key(u8),
     Door(u8),
 }
-
-
 
 pub fn parse(file: String) -> (Grid<Cell>, (usize,usize)) {
     let mut walker = (0,0);
@@ -20,12 +22,12 @@ pub fn parse(file: String) -> (Grid<Cell>, (usize,usize)) {
                 match char {
                     '@' => {
                         walker = (x,y);
-                        Cell::Space
+                        Cell::Start
                     },
                     '.' => Cell::Space,
                     '#' => Cell::Wall,
-                    c if c.is_lowercase() => Cell::Key(c as u8 - 'a' as u8),
-                    c if c.is_uppercase() => Cell::Door(c as u8 - 'A' as u8),
+                    c if c.is_lowercase() => Cell::Key(c as u8 - b'a'),
+                    c if c.is_uppercase() => Cell::Door(c as u8 - b'A'),
                     _ => unreachable!()
                 }
             }).collect()
@@ -34,9 +36,105 @@ pub fn parse(file: String) -> (Grid<Cell>, (usize,usize)) {
     (map, walker)
 }
 
+#[allow(clippy::type_complexity)]
+pub fn convert_map_to_graph(map: &Grid<Cell>)
+ -> 
+( UnGraph<((usize,usize),Cell), usize>, HashMap<(usize,usize), (NodeIndex, Cell)> ) {
+    // big graph for every node
+    let mut big_graph = UnGraph::new_undirected();
+    let mut big_nodes = HashMap::new();
+    
+    // graph for only every node, not-wall and space
+    let mut graph = UnGraph::new_undirected();
+    let mut nodes= HashMap::new();
+
+    let rows = map.rows();
+    let cols = map.cols();
+    
+    // add node for every cell
+    for row in 0..rows {
+        for col in 0..cols {
+            if let Some(cell) = map.get(row, col) {
+                big_nodes.insert(
+                    (col,row),
+                    (
+                        big_graph.add_node(((col,row), cell.clone())),
+                        cell.clone()
+                    )
+                );
+
+                nodes.insert(
+                    (col,row),
+                    (
+                        graph.add_node( ((col,row),cell.clone())),
+                        cell.clone()
+                    )
+                );
+            }
+        }
+    }
+
+    // add edge for not-wall cell
+    for row in 0..rows {
+        for col in 0..cols {
+            if let Some((id, cel)) = big_nodes.get(&(col,row)) 
+            && cel != &Cell::Wall
+            {
+                for (dx,dy) in [(-1,0),(1,0),(0,1),(0,-1)] {
+                    let ncol = (col as isize + dx) as usize;
+                    let nrow = (row as isize + dy) as usize;
+                    if let Some((nid, ncel)) =  big_nodes.get(&(ncol,nrow)) 
+                    && ncel != &Cell::Wall
+                    && big_graph.edges_connecting(*id, *nid).count() == 0
+                    {
+                        big_graph.add_edge(*id, *nid, 1);
+                    }
+                }
+            }
+        }
+    }
+
+    for (pos,(node,cel)) in big_nodes.iter() {
+        if matches!(cel, Cell::Start | Cell::Key(_) | Cell::Door(_))
+        {
+            // println!("{pos:?} {node:?} {cel:?}");
+            let anode = nodes.get(&(pos.0,pos.1)).unwrap().0;
+
+            let mut ignore = HashSet::new();
+            let mut targets = HashMap::new();
+            while let Some((cost, path)) = astar(&big_graph,
+                *node,
+                |n| {
+                    n != *node && ! targets.contains_key(&n) && ! ignore.contains(&n) &&
+                    matches!(big_graph.node_weight(n).unwrap().1, Cell::Key(_) | Cell::Door(_))
+                },
+                |_| 1,
+                |_| 0
+            ) {
+                let target = *path.last().unwrap();
+                if targets.iter().any(|(p,_c)| path.contains(p)) {
+                    ignore.insert(target);
+                    continue;
+                }
+                targets.insert(target, cost);
+
+                let target_pos = big_graph.node_weight(target).unwrap().0;
+                let bnode = nodes.get(&target_pos).unwrap().0;
+                if graph.edges_connecting(anode, bnode).count() == 0 {
+                    graph.add_edge(anode, bnode, cost);
+                }
+            }
+        }
+    }
+
+    (graph, nodes)
+}
+
 pub mod part1 {
     use std::collections::{BTreeSet, HashMap};
-    use crate::{Cell, parse};
+    use petgraph::visit::EdgeRef;
+
+use crate::{Cell, convert_map_to_graph, parse};
 
     #[derive(Debug, PartialOrd, Ord, Eq, PartialEq, Clone)]
     pub struct State {
@@ -51,6 +149,9 @@ pub mod part1 {
         let mut best = HashMap::new();
         let keys_len = map.iter().filter(|cell| matches!(cell, Cell::Key(_))).count();
         let all_keys = 2_u64.pow(keys_len as u32) - 1;
+
+        let (graph, nodes) = convert_map_to_graph(&map);
+
         stack.insert(State {
             step : 0,
             pos : walker,
@@ -62,6 +163,7 @@ pub mod part1 {
             if let Some(score) = best.get(&(state.pos, state.keys))
             && *score < state.step
             {
+                // println!("{state:?} ignore {} < {}", score, state.step);
                 continue;
             } else {
                 best.insert((state.pos, state.keys), state.step);
@@ -71,37 +173,51 @@ pub mod part1 {
             if state.keys == all_keys {
                 continue;
             }
+            if let Some((current_node,_)) = nodes.get(&state.pos)
+            {
+                let adjacents = graph.edges(*current_node);
+                for edge in adjacents {
+                    let cost = *edge.weight();
+                    let next = edge.target();
 
-            // adjacent cell able to walk only 4 axis, N E W S,
-            [(-1,0),(1,0),(0,1),(0,-1)].iter().for_each(|(dx,dy)| {
-                let next_pos = (state.pos.0 as isize + dx, state.pos.1 as isize + dy);
-
-                if (0..map.cols() as isize).contains(&next_pos.0)
-                && (0..map.rows() as isize).contains(&next_pos.1) {
-                    let next_pos = (next_pos.0 as usize, next_pos.1 as usize);
-                    let cell = map.get(next_pos.1, next_pos.0).expect("cannot find cell");
-
-                    match cell {
-                        Cell::Space => {
-                            stack.insert(State { step: state.step+1, pos: next_pos, keys: state.keys });
-                        },
-                        Cell::Key(c) => {
-                            stack.insert(State { step: state.step+1, pos: next_pos, keys: state.keys | 1 << c});
-                        },
-                        Cell::Door(c) => {
-                            // able to walk through the door, If got the pair key.
-                            if state.keys & 1 << c != 0{
-                                stack.insert(State { step: state.step+1, pos: next_pos, keys: state.keys.clone() });
-                            }
-                        },
-                        Cell::Wall => {}
+                    if let Some((npos,ncel)) = graph.node_weight(next) {
+                        match ncel {
+                            Cell::Start => {
+                                stack.insert( 
+                                    State { 
+                                        step: state.step + cost,
+                                        pos: *npos,
+                                        keys: state.keys
+                                    }
+                                );
+                            },
+                            Cell::Key(c) => {
+                                stack.insert( 
+                                    State { 
+                                        step: state.step + cost,
+                                        pos: *npos,
+                                        keys: state.keys | 1 << *c
+                                    }
+                                );
+                            },
+                            Cell::Door(c) if state.keys & 1 << *c != 0 => {
+                                stack.insert( 
+                                    State { 
+                                        step: state.step + cost,
+                                        pos: *npos,
+                                        keys: state.keys
+                                    }
+                                );
+                            },
+                            _ => {}
+                        }
                     }
                 }
-            });
+            }
         }
 
         best.into_iter()
-        .map(|((_pos,keys),step)| (step, keys.clone()))
+        .map(|((_pos,keys),step)| (step, keys))
         .filter(|(_step, keys)| *keys == all_keys)
         .min_by_key(|(step,_)| *step).unwrap().0
 
@@ -156,7 +272,7 @@ use crate::{Cell, parse};
             {
                 continue;
             } else {
-                best.insert((state.pos.clone(), state.keys), state.step);
+                best.insert((state.pos, state.keys), state.step);
             }
             
             // Got all keys end journey
@@ -175,10 +291,10 @@ use crate::{Cell, parse};
                     && (0..map.rows() as isize).contains(&next_pos.1) {
                         let next_pos = (next_pos.0 as usize, next_pos.1 as usize);
                         let cell = map.get(next_pos.1, next_pos.0).expect("cannot find cell");
-                        let mut next_walkers = state.pos.clone();
+                        let mut next_walkers = state.pos;
                         next_walkers[id] = next_pos;
                         match cell {
-                            Cell::Space => {
+                            Cell::Space | Cell::Start => {
                                 stack.insert(State { step: state.step+1, pos: next_walkers, keys: state.keys });
                             },
                             Cell::Key(c) => {
@@ -187,7 +303,7 @@ use crate::{Cell, parse};
                             Cell::Door(c) => {
                                 // able to walk through the door, If got the pair key.
                                 if state.keys & 1 << c != 0{
-                                    stack.insert(State { step: state.step+1, pos: next_walkers, keys: state.keys.clone() });
+                                    stack.insert(State { step: state.step+1, pos: next_walkers, keys: state.keys });
                                 }
                             },
                             Cell::Wall => {}
@@ -198,7 +314,7 @@ use crate::{Cell, parse};
         }
 
         best.into_iter()
-        .map(|((_pos,keys),step)| (step, keys.clone()))
+        .map(|((_pos,keys),step)| (step, keys))
         .filter(|(_step, keys)| *keys == all_keys)
         .min_by_key(|(step,_)| *step).unwrap().0
     }
