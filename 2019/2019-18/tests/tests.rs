@@ -5,8 +5,7 @@ test_case_n!(example1,
 "#########
 #b.A.@.a#
 #########",
-    part1: (part1::solve, 8),
-    part2: (part2::solve, 0)
+    part1: (part1::solve, 8)
 );
 
 test_case_n!(example2,
@@ -15,8 +14,7 @@ test_case_n!(example2,
 ######################.#
 #d.....................#
 ########################",
-    part1: (part1::solve, 86),
-    part2: (part2::solve, 0)
+    part1: (part1::solve, 86)
 );
 
 test_case_n!(example3,
@@ -25,8 +23,7 @@ test_case_n!(example3,
 #.######################
 #.....@.a.B.c.d.A.e.F.g#
 ########################",
-    part1: (part1::solve, 132),
-    part2: (part2::solve, 0)
+    part1: (part1::solve, 132)
 );
 
 test_case_n!(example4,
@@ -39,8 +36,7 @@ test_case_n!(example4,
 ########.########
 #l.F..d...h..C.m#
 #################",
-    part1: (part1::solve, 136),
-    part2: (part2::solve, 0)
+    part1: (part1::solve, 136)
 );
 
 test_case_n!(example5,
@@ -50,6 +46,51 @@ test_case_n!(example5,
 ###A#B#C################
 ###g#h#i################
 ########################",
-    part1: (part1::solve, 81),
-    part2: (part2::solve, 0)
+    part1: (part1::solve, 81)
+);
+
+test_case_n!(example1,
+"#######
+#a.#Cd#
+##...##
+##.@.##
+##...##
+#cB#Ab#
+#######",
+    part2: (part2::solve, 8)
+);
+
+test_case_n!(example2,
+"###############
+#d.ABC.#.....a#
+######...######
+######.@.######
+######...######
+#b.....#.....c#
+###############",
+    part2: (part2::solve, 24)
+);
+
+test_case_n!(example3,
+"#############
+#DcBa.#.GhKl#
+#.###...#I###
+#e#d#.@.#j#k#
+###C#...###J#
+#fEbA.#.FgHi#
+#############",
+    part2: (part2::solve, 32)
+);
+
+test_case_n!(example4,
+"#############
+#g#f.D#..h#l#
+#F###e#E###.#
+#dCba...BcIJ#
+#####.@.#####
+#nK.L...G...#
+#M###N#H###.#
+#o#m..#i#jk.#
+#############",
+    part2: (part2::solve, 72)
 );
