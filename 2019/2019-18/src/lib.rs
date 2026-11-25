@@ -5,15 +5,15 @@ pub enum Cell {
     #[default]
     Space,
     Wall,
-    Key(char),
-    Door(char),
+    Key(u8),
+    Door(u8),
 }
 
 #[derive(Debug, PartialOrd, Ord, Eq, PartialEq, Clone)]
 pub struct State {
     step: usize,
     pos: (usize,usize),
-    keys: Vec<char>,
+    keys: u64,
 }
 
 pub fn parse(file: String) -> (Grid<Cell>, (usize,usize)) {
@@ -29,8 +29,8 @@ pub fn parse(file: String) -> (Grid<Cell>, (usize,usize)) {
                     },
                     '.' => Cell::Space,
                     '#' => Cell::Wall,
-                    c if c.is_lowercase() => Cell::Key(c),
-                    c if c.is_uppercase() => Cell::Door(c.to_ascii_lowercase()),
+                    c if c.is_lowercase() => Cell::Key(c as u8 - 'a' as u8),
+                    c if c.is_uppercase() => Cell::Door(c as u8 - 'A' as u8),
                     _ => unreachable!()
                 }
             }).collect()
@@ -48,10 +48,11 @@ pub mod part1 {
         let mut stack = BTreeSet::new();
         let mut best = HashMap::new();
         let keys_len = map.iter().filter(|cell| matches!(cell, Cell::Key(_))).count();
+        let all_keys = 2_u64.pow(keys_len as u32) - 1;
         stack.insert(State {
             step : 0,
             pos : walker,
-            keys : vec![]
+            keys : 0
         });
 
         while let Some(state) = stack.pop_first() {
@@ -65,7 +66,7 @@ pub mod part1 {
             }
             
             // Got all keys end journey
-            if state.keys.len() == keys_len {
+            if state.keys == all_keys {
                 continue;
             }
 
@@ -80,20 +81,14 @@ pub mod part1 {
 
                     match cell {
                         Cell::Space => {
-                            stack.insert(State { step: state.step+1, pos: next_pos, keys: state.keys.clone() });
+                            stack.insert(State { step: state.step+1, pos: next_pos, keys: state.keys });
                         },
                         Cell::Key(c) => {
-                            // found the key, keep in bag
-                            // not care ordering, let sort by alphabet
-                            let mut new_keys = state.keys.clone();
-                            if !new_keys.contains(c) { new_keys.push(*c); }
-                            new_keys.sort();
-
-                            stack.insert(State { step: state.step+1, pos: next_pos, keys: new_keys});
+                            stack.insert(State { step: state.step+1, pos: next_pos, keys: state.keys | 1 << c});
                         },
                         Cell::Door(c) => {
                             // able to walk through the door, If got the pair key.
-                            if state.keys.contains(c) {
+                            if state.keys & 1 << c != 0{
                                 stack.insert(State { step: state.step+1, pos: next_pos, keys: state.keys.clone() });
                             }
                         },
@@ -105,7 +100,7 @@ pub mod part1 {
 
         best.into_iter()
         .map(|((_pos,keys),step)| (step, keys.clone()))
-        .filter(|(_step, keys)| keys.len() == keys_len)
+        .filter(|(_step, keys)| *keys == all_keys)
         .min_by_key(|(step,_)| *step).unwrap().0
 
     }
